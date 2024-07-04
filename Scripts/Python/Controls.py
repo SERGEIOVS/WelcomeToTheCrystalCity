@@ -699,9 +699,9 @@ while run :
                 if event.button == 1 and pos[0] >= int(screen_width) / 2 : text_updating()
 
         if event.type == pg.QUIT : run = False
-
+        testt = 111
     keys = pg.key.get_pressed()
-    test = 123
+    
     
     player_movement()
 
@@ -713,6 +713,7 @@ while run :
         if keys [load_game_btn  ] : load_game() #load game
         if keys [save_game_btn  ] : save_game() #save game
         if keys [pg.K_f] : fuel += 0.1 ; show_fuel = big_font.render('Fuel  : ' + str(fuel)    , False , small_font_color ) ; print('Fuel : ' , fuel)
+
         #if keys [pg.K_h] : fuel += 0.1 ; show_fuel = big_font.render('Fuel  : ' + str(fuel)    , False , small_font_color ) ; print('Fuel : ' , fuel)
 
         #if keys [pg.K_f] : fuel_bar_width += 10 ; print('Fuel bar width : ' , fuel_bar_width)
