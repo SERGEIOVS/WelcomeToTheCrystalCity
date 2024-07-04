@@ -701,6 +701,7 @@ while run :
         if event.type == pg.QUIT : run = False
 
     keys = pg.key.get_pressed()
+    test = 123
     
     player_movement()
 
