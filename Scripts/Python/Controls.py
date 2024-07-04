@@ -699,7 +699,7 @@ while run :
                 if event.button == 1 and pos[0] >= int(screen_width) / 2 : text_updating()
 
         if event.type == pg.QUIT : run = False
-        testt = 111
+        #testt = 111
     keys = pg.key.get_pressed()
     
     
