@@ -61,6 +61,7 @@ walll_size  = 10
 
 sidewalk_width , sidewalk_height = 3 * meter , 3 * meter
 
+hero_path_lenght = 100
 #def cutscene() : pass
 
 def draw_mini_map():
@@ -504,7 +505,7 @@ def start():
         quests_surf.set_colorkey(( 0 , 0 , 0 ))
 
         #screen.blit( hero_image , ( hero_x , hero_y ) )
-        screen.blit( hero_image , ( hero_x + fuel_bar_width * -math.cos(fuel) , hero_y + fuel_bar_width * -math.sin(-fuel) ) )
+        screen.blit( hero_image , ( hero_x + hero_path_lenght * -math.cos(fuel) , hero_y + hero_path_lenght * -math.sin(-fuel) ) )
 
         pg.draw.line( screen , (0 , 255 , 0) , (400 , 400) , ( 400 + fuel_bar_width * -math.cos(fuel) , 400 + fuel_bar_width * -math.sin(-fuel)) , 1)
 
@@ -713,16 +714,16 @@ while run :
         if keys [load_game_btn  ] : load_game() #load game
         if keys [save_game_btn  ] : save_game() #save game
         if keys [pg.K_f] : fuel += 0.1 ; show_fuel = big_font.render('Fuel  : ' + str(fuel)    , False , small_font_color ) ; print('Fuel : ' , fuel)
+        if keys [pg.K_c] : hero_path_lenght += 10
+        if keys [pg.K_v] : hero_path_lenght -= 10
 
+
+        if keys [pg.K_g  ] and keys[pg.K_LCTRL]  : toggle_god_mode() ;  spawn_sound.play() #GOD MODE - no damage , no limit etc
+    if keys[back_btn]  : bg_image = bg_images[ random.randint( 0 , len(bg_images) - 1 ) ] ; game_state = 'Main menu'
         #if keys [pg.K_h] : fuel += 0.1 ; show_fuel = big_font.render('Fuel  : ' + str(fuel)    , False , small_font_color ) ; print('Fuel : ' , fuel)
 
         #if keys [pg.K_f] : fuel_bar_width += 10 ; print('Fuel bar width : ' , fuel_bar_width)
         #if keys [pg.K_g] : fuel_bar_width -= 10 ; print('Fuel bar width : ' , fuel_bar_width)
-
-
-    if keys [pg.K_g  ] and keys[pg.K_LCTRL]  : toggle_god_mode() ;  spawn_sound.play() #GOD MODE - no damage , no limit etc
-    if keys[back_btn]  : bg_image = bg_images[ random.randint( 0 , len(bg_images) - 1 ) ] ; game_state = 'Main menu'
-
     mini_map_keyboard_controls()
     
     mini_map_surf.fill((minimapBGcolor))
