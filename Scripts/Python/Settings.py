@@ -1,7 +1,7 @@
-import pygame as pg , datetime ; from Units import * ; from Items import * ; import os , math , logging ;import sys
+import pygame as pg , datetime ; from Units import * ; from Items import * ; import os , math , logging ;import sys ; import sqlite3 
+import  getpass ;
+
 pg.init() ; pg.font.init()
-#import tabulate ; from tabulate import tabulate
-import  getpass;import pymysql
 
 #Game directory
 cwd = os.getcwd()
@@ -38,7 +38,7 @@ islands_file_name = 'txt/Objects/' + str(saving_type) + '/Islands.txt' ; islands
 roads_file_name   = 'txt/Objects/' + str(saving_type) + '/Roads.txt' ; roads_file_mode = 'r' ; roads_file = open (roads_file_name , roads_file_mode) ; roads_file1 = roads_file.readlines() ; roads_list = []
 Colors_list       = [] ; Colors_file_name = 'txt/Colors.txt' ; Colors_file_mode = 'r' ; Colors_file = open (Colors_file_name , Colors_file_mode) ; Colors_file1 = Colors_file.readlines()
 resolutions_list  = [] ; resolutions_file_name = 'txt/Resolutions.txt' ; resolutions_file_mode = 'r' ; resolutions_file = open (resolutions_file_name , resolutions_file_mode) ; resolutions_file1 = resolutions_file.readlines()
-saves_list        = [] ; saves_file_name = 'txt/Saves/' + str(saving_type) + '/2023 - 8 - 10/0.txt' ; saves_file_mode = 'r' ; saves_file = open (saves_file_name , saves_file_mode) ; saves_file1 = saves_file.readlines()
+saves_list        = [] ; saves_file_name = 'txt/saves/' + str(saving_type) + '/2023 - 8 - 10/0.txt' ; saves_file_mode = 'r' ; saves_file = open (saves_file_name , saves_file_mode) ; saves_file1 = saves_file.readlines()
 langs_file_name   = 'txt/Languages.txt' ; langs_file_mode = 'r' ; langs_file = open (langs_file_name  , langs_file_mode , encoding= "utf-8") ; langs_file1 = langs_file.readlines() ; langs_list = []
 dialoges_list     = [] ; dialoges_file_name     = 'txt/langs/' + str(language) + '/Dialoges.txt' ; dialoges_file_mode = 'r' ; dialoges_file = open (dialoges_file_name , dialoges_file_mode , encoding = "utf-8") ; dialoges_file1 = dialoges_file.readlines() ; dialoge_num = 0 ; dialoge_started = 0
 checkpoints_list  = [] ; checkpoints_file_name  = 'txt/Objects/' + str(saving_type) + '/Checkpoints.txt' ; checkpoints_file_mode = 'r' ; checkpoints_file = open (checkpoints_file_name , checkpoints_file_mode , encoding = "utf-8") ; checkpoints_file1 = checkpoints_file.readlines() ; checkpoint_size = 100 ; checkpoint_num = 0
@@ -106,66 +106,3 @@ minimap_location    =  'right_up'  ; minimap_x = 15 / 2 ; minimap_y = 15 / 2
 if minimap_location == 'left_up'   : minimap_x = 0      ; minimap_y = 0
 minimap_location    =  'left_up'   ; minimap_x = 15 / 2 ; minimap_y = 15 / 2
 if minimap_location == 'left_down' : minimap_x = 0      ; minimap_y = 0
-
-class cam :
-    def __init__( self , x , y ) : self.rect = pg.Rect( int(camera_x) , int(camera_y) , int(screen_width) , int(screen_height))
-    def move( self , vector ) : self.rect[0] += vector[0] ; self.rect[1] += vector[1]
-camera = cam( 0 , 0 ) ; vector = [ 0 , 0 ]
-
-#hero_x and hero_y
-x_1_list =  -camera.rect[ 0 ] + int(camera_x) + int(screen_width) / 2 + hero_checkpoint_offset_x ; y_1_list =  -camera.rect[ 1 ] + int(camera_y) + int(screen_height) / 2 + 100 + hero_checkpoint_offset_y ; x_2_list =  -camera.rect[ 0 ] + int(checkpoints_file1[checkpoint_num ].split(',')[0]) ; y_2_list =  -camera.rect[ 1 ] + int(checkpoints_file1[checkpoint_num ].split(',')[1]) #checkpoint_x andd checkpoint_y
-distances = [] ; distance_num = 0 ; calc_dist = math.sqrt( (( x_2_list - x_1_list * hero_checkpoint_offset_x) ** 2) +  ((y_2_list - y_1_list * hero_checkpoint_offset_y) ** 2 ) // meter) ; show_distance  = small_font.render('Distance : ' + str(int(calc_dist) // meter) + ' m' , False , small_font_color ) ; blit_action = 0 ; blit_distance  = 0
-db_user = "root"
-host = "localhost" ; user = db_user ; password = "" ; db_name = "game" ; db_table_name = "units"
-
-try:
-    connection = pymysql.connect(host = host , port = 3306 , user = user , password = password , database = db_name , cursorclass = pymysql.cursors.DictCursor)
-    print("successfully connected...") ; print() ; print()
-    try:
-        cursor = connection.cursor()
-
-        # create table
-        with connection.cursor() as cursor:
-             create_table_query = "CREATE TABLE if not exists `users`(id int AUTO_INCREMENT," , " name varchar(32)," , " password varchar(32)," , " email varchar(32), PRIMARY KEY (id));"
-             cursor.execute(create_table_query) ; print("Table created successfully")
-
-        # insert data
-        for i in range(len(Companions_file1)):
-            with connection.cursor() as cursor:
-                insert_query = "INSERT INTO " + str(db_table_name) + " (x,y) VALUES (" + "'" + Companions_file1[i].split(',')[0] + "','" + Companions_file1[i].split(',')[1] + "' ) ; "
-                cursor.execute(insert_query) ; connection.commit()
-
-        # select all data from table
-        with connection.cursor() as cursor:
-            select_all_rows = "SELECT * FROM `units` "
-            cursor.execute(select_all_rows)
-            rows = cursor.fetchall()
-            for row in rows : print(row)
-            print() ; print()
-
-    finally : connection.close()
-
-except Exception as ex : print("Connection refused...") ; print(ex)
-
-        # with connection.cursor() as cursor:
-        #     insert_query = "INSERT INTO `users` (name, password, email) VALUES ('Victor', '123456', 'victor@gmail.com');"
-        #     cursor.execute(insert_query)
-        #     connection.commit()
-        #
-
-        # update data
-        # with connection.cursor() as cursor:
-        #     update_query = "UPDATE `users` SET password = 'xxxXXX' WHERE name = 'Oleg';"
-        #     cursor.execute(update_query)
-        #     connection.commit()
-
-        # delete data
-        # with connection.cursor() as cursor:
-        #     delete_query = "DELETE FROM `users` WHERE id = 5;"
-        #     cursor.execute(delete_query)
-        #     connection.commit()
-
-        # drop table
-        # with connection.cursor() as cursor:
-        #     drop_table_query = "DROP TABLE `users`;"
-        #     cursor.execute(drop_table_query)

@@ -62,6 +62,115 @@ sidewalk_width , sidewalk_height = 3 * meter , 3 * meter
 hero_path_lenght = 100
 hero_path_angle = 100
 
+
+class cam :
+    def __init__( self , x , y ) : self.rect = pg.Rect( int(camera_x) + hero_path_lenght * -math.cos(hero_path_angle) , int(camera_y) + hero_path_lenght * -math.sin(-hero_path_angle) , int(screen_width) , int(screen_height))
+    def move( self , vector ) : self.rect[0] += vector[0] ; self.rect[1] += vector[1]
+camera = cam( 0 , 0 ) 
+#vector = [ 0 , 0 ]
+vector = [ 0 , 0]
+
+#hero_x and hero_y
+x_1_list =  -camera.rect[ 0 ] + int(camera_x) + int(screen_width) / 2 + hero_checkpoint_offset_x ; y_1_list =  -camera.rect[ 1 ] + int(camera_y) + int(screen_height) / 2 + 100 + hero_checkpoint_offset_y ; x_2_list =  -camera.rect[ 0 ] + int(checkpoints_file1[checkpoint_num ].split(',')[0]) ; y_2_list =  -camera.rect[ 1 ] + int(checkpoints_file1[checkpoint_num ].split(',')[1]) #checkpoint_x andd checkpoint_y
+distances = [] ; distance_num = 0 ; calc_dist = math.sqrt( (( x_2_list - x_1_list * hero_checkpoint_offset_x) ** 2) +  ((y_2_list - y_1_list * hero_checkpoint_offset_y) ** 2 ) // meter) ; show_distance  = small_font.render('Distance : ' + str(int(calc_dist) // meter) + ' m' , False , small_font_color ) ; blit_action = 0 ; blit_distance  = 0
+
+
+usr = input('your querry : ')
+if usr== 'create_table':
+    db_name = input('db name : ')
+    table_name = input('table name : ')
+
+
+
+
+
+# Функция для создания соединения с базой данных SQLite
+def create_connection(db_file):
+    conn = None
+    try:
+        conn = sqlite3.connect(db_file)
+        print(f"Connected to {db_file}")
+    except sqlite3.Error as e:
+        print(e)
+    return conn
+
+# Функция для создания таблицы
+def create_table(conn, create_table_sql):
+    try:
+        c = conn.cursor()
+        c.execute(create_table_sql)
+        print("Table created successfully")
+    except sqlite3.Error as e:
+        print(e)
+
+# Функция для вставки данных в таблицу
+def insert_data(conn, insert_data_sql, data):
+    try:
+        c = conn.cursor()
+        c.execute(insert_data_sql, data)
+        conn.commit()
+        print("Data inserted successfully")
+    except sqlite3.Error as e:
+        print(e)
+
+# Функция для выборки данных из таблицы
+def select_data(conn, select_data_sql):
+    try:
+        c = conn.cursor()
+        c.execute(select_data_sql)
+        rows = c.fetchall()
+        for row in rows:
+            print(row)
+
+
+    except sqlite3.Error as e:
+        print(e)
+
+# Пример использования функций
+if __name__ == '__main__':
+    database = str(db_name) + ".sql"
+
+    # SQL-запросы
+    create_table_sql = """
+    CREATE TABLE IF NOT EXISTS contacts (
+        id integer PRIMARY KEY,
+        name text NOT NULL,
+        phone text
+    );
+    """
+
+    insert_data_sql = """
+    INSERT INTO contacts (name, phone) VALUES (?, ?)
+    """
+
+    select_data_sql = """
+    SELECT * FROM + str(table_name)"""
+
+    # Создание соединения с базой данных
+    conn = create_connection(database)
+
+    # Создание таблицы
+    if conn is not None:
+        create_table(conn, create_table_sql)
+    else:
+        print("Error! cannot create the database connection.")
+
+    # Вставка данных
+    data_to_insert = (int(camera.rect[0]) , int(camera.rect[1]))
+    insert_data(conn, insert_data_sql, data_to_insert)
+
+    # Выборка данных
+    select_data(conn, select_data_sql)
+
+    # Закрытие соединения с базой данных
+    conn.close()
+
+
+
+
+
+
+
 def draw_mini_map():
     if show_map == 1:
         for i in range( len ( islands_file1 ) ) :
@@ -351,13 +460,21 @@ def player_movement():
         keys = pg.key.get_pressed()
         if game_state == 'Play':
 
-            if keys[pg.K_s] and camera.rect[0] >= 0 and camera.rect[1] >= 0 : hero_path_lenght += 10
-            if keys[pg.K_w] and camera.rect[0] >= 0 and camera.rect[1] >= 0 : hero_path_lenght -= 10
+            if keys[pg.K_a] and camera.rect[0] >= 0 and camera.rect[1] >= 0 : state = 'go' ; turn  = 'left'; hero_speed = 4 ; vector[0] -= hero_speed ; hero_checkpoint_offset_x -= hero_speed;calc_dist = math.sqrt( (( x_2_list - x_1_list - hero_checkpoint_offset_x) ** 2 ) +  ( (  y_2_list - y_1_list - hero_checkpoint_offset_y) ** 2 ));show_distance    = small_font.render('Distance : ' + str(int(calc_dist) /100) + ' m' , False , small_font_color ) ; minimap_object_offset += 1 / (map_scale * hero_speed * 10)
             
-            if keys[pg.K_a] and camera.rect[0] >= 0 and camera.rect[1] >= 0 : hero_path_angle += 0.1
-            if keys[pg.K_d] and camera.rect[0] >= 0 and camera.rect[1] >= 0 : hero_path_angle -= 0.1
+            if keys[pg.K_d] and camera.rect[0] <= map_width and camera.rect[1] >= 0 : state = 'go' ; turn = 'right' ; hero_speed = 4 ;vector[ 0 ]  += hero_speed ; hero_checkpoint_offset_x += hero_speed ; calc_dist = math.sqrt( (( x_2_list - x_1_list - hero_checkpoint_offset_x) ** 2 ) +  ( (  y_2_list - y_1_list - hero_checkpoint_offset_y) ** 2 )) ; show_distance = small_font.render('Distance : ' + str(int(calc_dist) /100) + ' m' , False , small_font_color ) ; minimap_object_offset -= 1 / (map_scale * hero_speed * 10)  #hero_image =  pg.image.load(hero) ; heroimage = Image.open(hero) ; hero_x , hero_y = int(screen_width) / 2  - heroimage.width / 2 , int(screen_height)  / 2 - heroimage.height / 2
             
-            if vector != [ 0 , 0 ] : camera.move(vector) #Если игрок ходил
+            if keys[pg.K_w] and camera.rect[0] >= 0 and camera.rect[1] >= 0 :vector[1] -= hero_speed ; hero_checkpoint_offset_y -= hero_speed ; calc_dist = math.sqrt( (( x_2_list - x_1_list - hero_checkpoint_offset_x) ** 2 ) +  ( (  y_2_list - y_1_list - hero_checkpoint_offset_y) ** 2 )) ; show_distance = small_font.render('Distance : ' + str(int(calc_dist) /100) + ' m' , False , small_font_color ) ; minimap_object_offset1 += 1 / (map_scale * hero_speed * 10)
+            if keys[pg.K_s] and camera.rect[0] >= 0 and camera.rect[1] >= 0 : vector[ 1 ]   += hero_speed ; hero_checkpoint_offset_y += hero_speed; hero_x , hero_y = int(screen_width) / 2  - heroimage.width / 2 , int(screen_height)  / 2 - heroimage.height / 2 ; calc_dist = math.sqrt( (( x_2_list - x_1_list - hero_checkpoint_offset_x) ** 2) + ((y_2_list - y_1_list - hero_checkpoint_offset_y) ** 2 )) ; show_distance = small_font.render('Distance : ' + str(int(calc_dist) /100) + ' m' , False , small_font_color ) ; minimap_object_offset -= 1 / (map_scale * hero_speed * 10)
+            
+
+            if keys[pg.K_q] and camera.rect[0] >= 0 and camera.rect[1] >= 0 : hero_path_lenght += 10
+            if keys[pg.K_e] and camera.rect[0] >= 0 and camera.rect[1] >= 0 : hero_path_lenght -= 10
+            
+            if keys[pg.K_h] and camera.rect[0] >= 0 and camera.rect[1] >= 0 : hero_path_angle += 0.1
+            if keys[pg.K_b] and camera.rect[0] >= 0 and camera.rect[1] >= 0 : hero_path_angle -= 0.1
+            
+        if vector != [ 0 , 0 ] : camera.move(vector) #Если игрок ходил
 
 def start():
     if game_state == 'Saves':
@@ -576,10 +693,13 @@ run = True ; logging.info( msg = 'GAME STARTED!' )
 multiplayer = 0
 
 while run :
+
     if dark_level <= max_dark_level : dark_level += 0.01 ; clock.tick(FPS / fps_1)
     
     Animations()
-    vector = [ 0 , 0 ]
+    #vector = [ 0, 0]
+    vector = [ 0 , 0]
+
     for event in pg.event.get() :
         if event.type == pg.MOUSEMOTION : pos = pg.mouse.get_pos()
         pg.display.update()

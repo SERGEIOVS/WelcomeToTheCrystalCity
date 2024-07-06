@@ -1,5 +1,6 @@
-import pygame as pg ; from Items import * ; from PIL import Image ; from Items import * ; import random ; import os ; import sys
+import pygame as pg ; from PIL import Image ; import random ; import os ; import sys
 from Settings import * ; pg.font.init()
+
 saving_type = 'Default' ; game_state = 'Main menu'
 
 item = 0 ; items = 0 ; items_max = 6 ; items_stack = 100
@@ -11,7 +12,7 @@ hero_backpack_inventory_images = []
 
 for i in screen_file1 : screen_width , screen_height , camera_x , camera_y = i.split(',')[0] , i.split(',')[1] , i.split(',')[2] , i.split(',')[3]
 
-name = 2 ; state = 'idle' ; turn = 'left' ; animation = 0 ; hero_speed = 3
+name = 2 ; state = 'idle' ; turn = 'left' ; animation = 0 ; hero_speed =0.1
 ammo_used = 0
 health , max_health         = int(hero_file1[0].split(',')[0]) , int(hero_file1[0].split(',')[0])
 armor  , max_armor          = int(hero_file1[0].split(',')[1]) , int(hero_file1[0].split(',')[1])
@@ -37,7 +38,6 @@ show_hero_armor = big_font.render( str( armor     ).strip() + " / " + str( max_a
 show_radiation  = big_font.render( str( radiation ).strip() + " / " + str( max_radiation   ).strip() , False , ( 255 , 0 , 0 ) ) ; show_energy  = big_font.render( str( energy).strip()     + ' / ' + str( max_energy      ).strip() , False , ( 255 , 0 , 0 ) )
 nicknames_file_name = 'txt/nicknames.txt' ; nicknamesfile_mode = 'r' ; nicknames_file = open (nicknames_file_name , nicknamesfile_mode) ; nicknames_file1 = nicknames_file.readlines() ; nicknameslist = []
 
-Companions_class_values = ['x','y','image']
 
 class Companions:
     def __init__(self , x  , y , image ):

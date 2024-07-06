@@ -11,9 +11,9 @@ class Background:
         self.y = y
         self.image = image
 
-for i in range(len(islands_file1)) : islands_images.append(pg.image.load('Objects/Background/islands/0/0.png'))
-i = Background( islands_file1[i].split(',')[0] , islands_file1[i].split(',')[1] , islands_images[0] )
-islands_list.append( i )
+#for i in range(len(islands_file1)) : islands_images.append(pg.image.load('Objects/Background/islands/0/0.png'))
+#i = Background( islands_file1[i].split(',')[0] , islands_file1[i].split(',')[1] , islands_images[0] )
+#islands_list.append( i )
 
 BGcolor   = colors[0] ; minimapBGcolor = colors[0]
 screen.fill((BGcolor))
