@@ -27,8 +27,6 @@ game_modes_file = open('txt/Game_modes.txt','r')
 game_modes_file1 = game_modes_file.readlines()
 game_modes  = ['Survival' , 'God mode' , 'Hardcore'] ; game_modes1 = [] ; game_mode_num = 0 ; game_mode = game_modes_file1[game_mode_num]
 
-
-#for i in range(len(game_modes_file)) :  pass
 for i in range(len(game_modes)) : i = big_font.render(game_modes[i].split(',')[0].strip() , False , small_font_color ) ; game_modes1.append(i)     
 
 menu_titles = ['Backpack' , 'Crafting' , 'Quests'] ; menu_titles1 = [] ; menu_title_num = 0 ; menu_title = menu_titles[menu_title_num]
@@ -62,7 +60,7 @@ walll_size  = 10
 sidewalk_width , sidewalk_height = 3 * meter , 3 * meter
 
 hero_path_lenght = 100
-#def cutscene() : pass
+hero_path_angle = 100
 
 def draw_mini_map():
     if show_map == 1:
@@ -349,13 +347,16 @@ def text_updating():
     show_game_state = big_font.render('Menüü' , False , small_font_color)
 
 def player_movement():
-        global calc_dist,show_distance,hero_checkpoint_offset_x,hero_checkpoint_offset_y,state,hero_x,hero_y,turn,hero_speed,minimap_object_offset,minimap_object_offset1
+        global calc_dist,show_distance,hero_checkpoint_offset_x,hero_checkpoint_offset_y,state,hero_x,hero_y,turn,hero_speed,minimap_object_offset,minimap_object_offset1,hero_path_lenght,hero_path_angle
         keys = pg.key.get_pressed()
         if game_state == 'Play':
-            if keys[pg.K_a] and camera.rect[0] >= 0 and camera.rect[1] >= 0 : state = 'go' ; turn  = 'left'; hero_speed = 4 ; vector[0] -= hero_speed ; hero_checkpoint_offset_x -= hero_speed;calc_dist = math.sqrt( (( x_2_list - x_1_list - hero_checkpoint_offset_x) ** 2 ) +  ( (  y_2_list - y_1_list - hero_checkpoint_offset_y) ** 2 ));show_distance    = small_font.render('Distance : ' + str(int(calc_dist) /100) + ' m' , False , small_font_color ) ; minimap_object_offset += 1 / (map_scale * hero_speed * 10)
-            if keys[pg.K_d] and camera.rect[0] <= map_width and camera.rect[1] >= 0 : state = 'go' ; turn = 'right' ; hero_speed = 4 ;vector[ 0 ]  += hero_speed ; hero_checkpoint_offset_x += hero_speed ; calc_dist = math.sqrt( (( x_2_list - x_1_list - hero_checkpoint_offset_x) ** 2 ) +  ( (  y_2_list - y_1_list - hero_checkpoint_offset_y) ** 2 )) ; show_distance = small_font.render('Distance : ' + str(int(calc_dist) /100) + ' m' , False , small_font_color ) ; minimap_object_offset -= 1 / (map_scale * hero_speed * 10)  #hero_image =  pg.image.load(hero) ; heroimage = Image.open(hero) ; hero_x , hero_y = int(screen_width) / 2  - heroimage.width / 2 , int(screen_height)  / 2 - heroimage.height / 2
-            if keys[pg.K_w] and camera.rect[0] >= 0 and camera.rect[1] >= 0 :vector[1] -= hero_speed ; hero_checkpoint_offset_y -= hero_speed ; calc_dist = math.sqrt( (( x_2_list - x_1_list - hero_checkpoint_offset_x) ** 2 ) +  ( (  y_2_list - y_1_list - hero_checkpoint_offset_y) ** 2 )) ; show_distance = small_font.render('Distance : ' + str(int(calc_dist) /100) + ' m' , False , small_font_color ) ; minimap_object_offset1 += 1 / (map_scale * hero_speed * 10)
-            if keys[pg.K_s] and camera.rect[0] >= 0 and camera.rect[1] >= 0 : vector[ 1 ]   += hero_speed ; hero_checkpoint_offset_y += hero_speed; hero_x , hero_y = int(screen_width) / 2  - heroimage.width / 2 , int(screen_height)  / 2 - heroimage.height / 2 ; calc_dist = math.sqrt( (( x_2_list - x_1_list - hero_checkpoint_offset_x) ** 2) + ((y_2_list - y_1_list - hero_checkpoint_offset_y) ** 2 )) ; show_distance = small_font.render('Distance : ' + str(int(calc_dist) /100) + ' m' , False , small_font_color ) ; minimap_object_offset -= 1 / (map_scale * hero_speed * 10)
+
+            if keys[pg.K_s] and camera.rect[0] >= 0 and camera.rect[1] >= 0 : hero_path_lenght += 10
+            if keys[pg.K_w] and camera.rect[0] >= 0 and camera.rect[1] >= 0 : hero_path_lenght -= 10
+            
+            if keys[pg.K_a] and camera.rect[0] >= 0 and camera.rect[1] >= 0 : hero_path_angle += 0.1
+            if keys[pg.K_d] and camera.rect[0] >= 0 and camera.rect[1] >= 0 : hero_path_angle -= 0.1
+            
             if vector != [ 0 , 0 ] : camera.move(vector) #Если игрок ходил
 
 def start():
@@ -504,8 +505,7 @@ def start():
         interface_surf.set_alpha(50)
         quests_surf.set_colorkey(( 0 , 0 , 0 ))
 
-        #screen.blit( hero_image , ( hero_x , hero_y ) )
-        screen.blit( hero_image , ( hero_x + hero_path_lenght * -math.cos(fuel) , hero_y + hero_path_lenght * -math.sin(-fuel) ) )
+        screen.blit( hero_image , ( hero_x + hero_path_lenght * -math.cos(hero_path_angle) , hero_y + hero_path_lenght * -math.sin(-hero_path_angle) ) )
 
         pg.draw.line( screen , (0 , 255 , 0) , (400 , 400) , ( 400 + fuel_bar_width * -math.cos(fuel) , 400 + fuel_bar_width * -math.sin(-fuel)) , 1)
 
@@ -700,7 +700,6 @@ while run :
                 if event.button == 1 and pos[0] >= int(screen_width) / 2 : text_updating()
 
         if event.type == pg.QUIT : run = False
-        #testt = 111
     keys = pg.key.get_pressed()
     
     
@@ -714,16 +713,12 @@ while run :
         if keys [load_game_btn  ] : load_game() #load game
         if keys [save_game_btn  ] : save_game() #save game
         if keys [pg.K_f] : fuel += 0.1 ; show_fuel = big_font.render('Fuel  : ' + str(fuel)    , False , small_font_color ) ; print('Fuel : ' , fuel)
-        if keys [pg.K_c] : hero_path_lenght += 10
-        if keys [pg.K_v] : hero_path_lenght -= 10
+
 
 
         if keys [pg.K_g  ] and keys[pg.K_LCTRL]  : toggle_god_mode() ;  spawn_sound.play() #GOD MODE - no damage , no limit etc
     if keys[back_btn]  : bg_image = bg_images[ random.randint( 0 , len(bg_images) - 1 ) ] ; game_state = 'Main menu'
-        #if keys [pg.K_h] : fuel += 0.1 ; show_fuel = big_font.render('Fuel  : ' + str(fuel)    , False , small_font_color ) ; print('Fuel : ' , fuel)
 
-        #if keys [pg.K_f] : fuel_bar_width += 10 ; print('Fuel bar width : ' , fuel_bar_width)
-        #if keys [pg.K_g] : fuel_bar_width -= 10 ; print('Fuel bar width : ' , fuel_bar_width)
     mini_map_keyboard_controls()
     
     mini_map_surf.fill((minimapBGcolor))
@@ -767,6 +762,21 @@ while run :
             pg.draw.rect(mini_map_surf , (cell_color) , ( cell_size * x , cell_size * y , cell_size , cell_size ) , 2 , 0 , button_border_radius , button_border_radius , button_border_radius , button_border_radius ) #drawing a inventory cells
             
     pg.display.update()
+
+
+        #screen.blit( hero_image , ( hero_x , hero_y ) )
+
+            #if keys [pg.K_h] : fuel += 0.1 ; show_fuel = big_font.render('Fuel  : ' + str(fuel)    , False , small_font_color ) ; print('Fuel : ' , fuel)
+
+        #if keys [pg.K_f] : fuel_bar_width += 10 ; print('Fuel bar width : ' , fuel_bar_width)
+        #if keys [pg.K_g] : fuel_bar_width -= 10 ; print('Fuel bar width : ' , fuel_bar_width)
+
+                    #if keys[pg.K_a] and camera.rect[0] >= 0 and camera.rect[1] >= 0 : state = 'go' ; turn  = 'left'; hero_speed = 4 ; vector[0] -= hero_speed ; hero_checkpoint_offset_x -= hero_speed;calc_dist = math.sqrt( (( x_2_list - x_1_list - hero_checkpoint_offset_x) ** 2 ) +  ( (  y_2_list - y_1_list - hero_checkpoint_offset_y) ** 2 ));show_distance    = small_font.render('Distance : ' + str(int(calc_dist) /100) + ' m' , False , small_font_color ) ; minimap_object_offset += 1 / (map_scale * hero_speed * 10)
+            #if keys[pg.K_d] and camera.rect[0] <= map_width and camera.rect[1] >= 0 : state = 'go' ; turn = 'right' ; hero_speed = 4 ;vector[ 0 ]  += hero_speed ; hero_checkpoint_offset_x += hero_speed ; calc_dist = math.sqrt( (( x_2_list - x_1_list - hero_checkpoint_offset_x) ** 2 ) +  ( (  y_2_list - y_1_list - hero_checkpoint_offset_y) ** 2 )) ; show_distance = small_font.render('Distance : ' + str(int(calc_dist) /100) + ' m' , False , small_font_color ) ; minimap_object_offset -= 1 / (map_scale * hero_speed * 10)  #hero_image =  pg.image.load(hero) ; heroimage = Image.open(hero) ; hero_x , hero_y = int(screen_width) / 2  - heroimage.width / 2 , int(screen_height)  / 2 - heroimage.height / 2
+            
+            #if keys[pg.K_w] and camera.rect[0] >= 0 and camera.rect[1] >= 0 :vector[1] -= hero_speed ; hero_checkpoint_offset_y -= hero_speed ; calc_dist = math.sqrt( (( x_2_list - x_1_list - hero_checkpoint_offset_x) ** 2 ) +  ( (  y_2_list - y_1_list - hero_checkpoint_offset_y) ** 2 )) ; show_distance = small_font.render('Distance : ' + str(int(calc_dist) /100) + ' m' , False , small_font_color ) ; minimap_object_offset1 += 1 / (map_scale * hero_speed * 10)
+            #if keys[pg.K_s] and camera.rect[0] >= 0 and camera.rect[1] >= 0 : vector[ 1 ]   += hero_speed ; hero_checkpoint_offset_y += hero_speed; hero_x , hero_y = int(screen_width) / 2  - heroimage.width / 2 , int(screen_height)  / 2 - heroimage.height / 2 ; calc_dist = math.sqrt( (( x_2_list - x_1_list - hero_checkpoint_offset_x) ** 2) + ((y_2_list - y_1_list - hero_checkpoint_offset_y) ** 2 )) ; show_distance = small_font.render('Distance : ' + str(int(calc_dist) /100) + ' m' , False , small_font_color ) ; minimap_object_offset -= 1 / (map_scale * hero_speed * 10)
+            
 
                 #pg.draw.rect(screen    , (100 , 50 , 0) , ( -camera.rect[0] + meter * 30 , -camera.rect[1] + meter * 30 , km * 5 , km * 5  ))
 
