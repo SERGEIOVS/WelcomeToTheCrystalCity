@@ -12,7 +12,7 @@ hero_backpack_inventory_images = []
 
 for i in screen_file1 : screen_width , screen_height , camera_x , camera_y = i.split(',')[0] , i.split(',')[1] , i.split(',')[2] , i.split(',')[3]
 
-name = 2 ; state = 'idle' ; turn = 'left' ; animation = 0 ; hero_speed =0.1
+name = 2 ; state = 'idle' ; turn = 'left' ; animation = 0 ; hero_speed = 0.1
 ammo_used = 0
 health , max_health         = int(hero_file1[0].split(',')[0]) , int(hero_file1[0].split(',')[0])
 armor  , max_armor          = int(hero_file1[0].split(',')[1]) , int(hero_file1[0].split(',')[1])

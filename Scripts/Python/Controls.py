@@ -62,6 +62,7 @@ sidewalk_width , sidewalk_height = 3 * meter , 3 * meter
 hero_path_lenght = 100
 hero_path_angle = 100
 
+cameras_list = []
 
 class cam :
     def __init__( self , x , y ) : self.rect = pg.Rect( int(camera_x) + hero_path_lenght * -math.cos(hero_path_angle) , int(camera_y) + hero_path_lenght * -math.sin(-hero_path_angle) , int(screen_width) , int(screen_height))
@@ -580,10 +581,21 @@ def start():
 
         for i in range(len(Companions_file1)) : 
              if camera.rect[0] + int(screen_width) - fov >= int(Companions_file1[i].split(',')[0]) and camera.rect[1] + int(screen_height) - fov >= int(Companions_file1[i].split(',')[1]):
-                screen.blit( Companions_images_list[i]  , ( -camera.rect[ 0 ] + int(Companions_file1[i].split(',')[0]) , -camera.rect[ 1 ] + int(Companions_file1[i].split(',')[1])  ) )
+                screen.blit( Companions_images_list[i]  , (
+                                                           
+                                                           -camera.rect[ 0 ] + int(Companions_file1[i].split(',')[0]) + hero_path_lenght * -math.cos( hero_path_angle),
+                                                           -camera.rect[ 1 ] + int(Companions_file1[i].split(',')[1]) + hero_path_lenght * -math.sin(-hero_path_angle) 
+
+                                                           ) 
+                                                           )
+                
                 screen.blit(hero_shadow_surf  , ( int(Companions_file1[i].split(',')[0]) , int(Companions_file1[i].split(',')[1]) + 200))
             
                 pg.draw.circle(hero_shadow_surf , (10 , 0 , 0)  , ( 50 , 50 ) , 50) 
+                
+                #Companion_movement_vector(green color)
+                pg.draw.line( screen , (0 , 255 , 0) , (- camera.rect[0] + int(Companions_file1[i].split(',')[0]) , - camera.rect[1] +  int(Companions_file1[i].split(',')[1])  ) , ( - camera.rect[0] + int(Companions_file1[i].split(',')[0]) + hero_path_lenght * -math.cos(hero_path_angle) , - camera.rect[1] + int(Companions_file1[i].split(',')[1]) + hero_path_lenght * -math.sin(-hero_path_angle)) , 1)
+
 
 
         if multiplayer == 1 and len(players_file1) != 0: 
@@ -623,7 +635,8 @@ def start():
         quests_surf.set_colorkey(( 0 , 0 , 0 ))
 
         screen.blit( hero_image , ( hero_x + hero_path_lenght * -math.cos(hero_path_angle) , hero_y + hero_path_lenght * -math.sin(-hero_path_angle) ) )
-
+        
+        #fuel_bar(green color)
         pg.draw.line( screen , (0 , 255 , 0) , (400 , 400) , ( 400 + fuel_bar_width * -math.cos(fuel) , 400 + fuel_bar_width * -math.sin(-fuel)) , 1)
 
 
@@ -830,8 +843,8 @@ while run :
         if keys [pg.K_ESCAPE]   and open_backpack == 1: open_backpack  = 0
         if keys [reload_btn] and mags >= 1 : reloadsound = pg.mixer.Sound( 'Audio/sounds/firegun/reload.mp3' ) ; reloadsound.play() ; mags -= 1 ; hero_file_name = 'txt/hero.txt' ; hero_file_mode = 'w' ; hero_file = open (hero_file_name , hero_file_mode) ; hero_file.write(str(mags)) ; hero_file.write(str(health)) ; hero_file.write(str(health)) ; hero_file.write(str(health)) ; hero_file.write(str(mags)) ; hero_file.write(str(mags)) ; hero_file.close() ; ammo = max_ammo ; show_ammo  = big_font.render(str(ammo) + " / "  + str( ammo * mags ) , False , colors[2] ) ; show_armor = big_font.render(str(armor).strip() + " / "  + str( max_armor ).strip() , False , ( 250 , 0, 0 ) ) ; show_health    = big_font.render(str(health).strip()     + " / "  + str( max_health ).strip() , False , ( 255 , 0 , 0 ) ) ; show_radiation = big_font.render(str(radiation ).strip() + " / "  + str( max_radiation ).strip() , False , ( 255 , 0 , 0 ) ) ; cursor = pg.image.load( 'Interface/icons/refresh_icon.png' ) ; pg.display.update()
         if keys [screenshot_btn ] : make_screenshot() ; logging.info( msg = 'SCREENSHOT SAVED!') ; print('Screenshot saved ! ')
-        if keys [load_game_btn  ] : load_game() #load game
-        if keys [save_game_btn  ] : save_game() #save game
+        #if keys [load_game_btn  ] : load_game() #load game
+        #if keys [save_game_btn  ] : save_game() #save game
         if keys [pg.K_f] : fuel += 0.1 ; show_fuel = big_font.render('Fuel  : ' + str(fuel)    , False , small_font_color ) ; print('Fuel : ' , fuel)
 
 

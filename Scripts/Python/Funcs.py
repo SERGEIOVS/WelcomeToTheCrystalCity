@@ -78,11 +78,11 @@ def make_screenshot() :
     screenshots = 1 ; screenshot = pyautogui.screenshot() 
     for i in range(screenshots)  : screenshot.save( 'screenshots/' + str(d1.year) + ' - ' + str(d1.month) + ' - ' + str(d1.day) + ' - ' + str(d1.hour) + ' - ' +  str(d1.minute) + ' - ' + str(d1.second) + '.png' )
 
-def save_game_and_quit() :saves_file_mode = 'w' ; saves_file = open (saves_file_name , saves_file_mode) ; saves_file.write( str(screen_width) + ',' + str(screen_height) + ',' + str(camera.rect[0]) + ',' + str(camera.rect[1])) ; saves_file.close() ; logging.info(msg = 'GAME SAVED!' ) ; pg.quit() ; logging.info(msg = 'QUIT GAME!' )
+#def save_game_and_quit() :saves_file_mode = 'w' ; saves_file = open (saves_file_name , saves_file_mode) ; saves_file.write( str(screen_width) + ',' + str(screen_height) + ',' + str(camera.rect[0]) + ',' + str(camera.rect[1])) ; saves_file.close() ; logging.info(msg = 'GAME SAVED!' ) ; pg.quit() ; logging.info(msg = 'QUIT GAME!' )
 def toggle_god_mode()    : global print_god_mode , god_mode ; god_mode = 0 ; print_god_mode = print('GOD MODE ACTIVATED!')
 
-def load_game() : saves_file_mode = 'r' ; saves_file = open (saves_file_name , saves_file_mode) ; saves_file.close() ; logging.info(msg = 'GAME LOADED!' ) ; print('Game loaded!')
-def save_game() : saves_file_mode = 'w' ; saves_file = open (saves_file_name , saves_file_mode) ; saves_file.write( str(screen_width) + ',' + str(screen_height) + ',' + str(camera.rect[0]) + ',' + str(camera.rect[1])  );saves_file.close() ; logging.info(msg = 'GAME SAVED!' ) ; print('GAME SAVED!')
+#def load_game() : saves_file_mode = 'r' ; saves_file = open (saves_file_name , saves_file_mode) ; saves_file.close() ; logging.info(msg = 'GAME LOADED!' ) ; print('Game loaded!')
+#def save_game() : saves_file_mode = 'w' ; saves_file = open (saves_file_name , saves_file_mode) ; saves_file.write( str(screen_width) + ',' + str(screen_height) + ',' + str(camera.rect[0]) + ',' + str(camera.rect[1])  );saves_file.close() ; logging.info(msg = 'GAME SAVED!' ) ; print('GAME SAVED!')
 
 def draw_menu():
         mouse_visible = False
