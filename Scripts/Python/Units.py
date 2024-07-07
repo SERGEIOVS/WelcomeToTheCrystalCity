@@ -1,4 +1,5 @@
-import pygame as pg ; from PIL import Image ; import random ; import os ; import sys
+import pygame as pg ; from PIL import Image ; import random ; import os ; import sys;import sqlite3
+
 from Settings import * ; pg.font.init()
 
 saving_type = 'Default' ; game_state = 'Main menu'
@@ -39,6 +40,65 @@ show_radiation  = big_font.render( str( radiation ).strip() + " / " + str( max_r
 nicknames_file_name = 'txt/nicknames.txt' ; nicknamesfile_mode = 'r' ; nicknames_file = open (nicknames_file_name , nicknamesfile_mode) ; nicknames_file1 = nicknames_file.readlines() ; nicknameslist = []
 
 
+
+
+# Определение базового класса персонажа
+class Character:
+    def __init__(self,id,x,y,angle,category,health,damage,item,sound):
+        self.id       = id
+        self.x        = x
+        self.y        = y
+        self.angle = angle
+        self.category = category
+        self.health   = health  # Пример общей характеристики
+        self.damage   = damage  # Пример общей характеристики
+        self.item     = item
+        self.sound = sound
+
+
+# Подключение к базе данных (предполагается использование SQLite)
+my_querry = input('Write a querry : ')
+if my_querry == 'create db':
+    db_name = input('Write a db new name : ')
+
+    conn = sqlite3.connect(str(db_name))
+    c = conn.cursor()
+
+    def save_to_db(self):
+        # Сохранение в базу данных
+        c.execute("INSERT INTO characters (name, category, health, level) VALUES (?, ?, ?, ?)",
+        (self.id, self.x, self.y, self.angle))
+        conn.commit()
+        # Создание таблицы в базе данных
+        c.execute('''CREATE TABLE IF NOT EXISTS characters
+             (id int , x int , y int , angle int , category text , health int , damage int,item text , sound , text)''')
+
+# Пример наследования для категорий персонажей
+class Warrior(Character):
+    def __init__(        self,id,x,y,angle,category,health,damage,item,sound):
+        super().__init__(id,x,y,angle,category,health,damage,item,sound)
+        self.id       = 1  # Характеристика для воина
+        self.x        = 10  # Характеристика для воина
+        self.y        = 10  # Характеристика для воина
+        self.angle    = 10  # Характеристика для воина
+        self.category = 'monsters' # Характеристика для воина
+        self.health   = 20 # Характеристика для воина
+        self.damage   = 3 # Характеристика для воина
+        self.item     = 'pistol' # Характеристика для воина
+        self.sound    = 'sound' # Характеристика для воина
+
+
+
+# Пример создания персонажей
+warrior = Warrior(1,199,100,90,'monsters',20,3,'pistol','sound')
+
+# Сохранение персонажей в базу данных
+print( 'warrior health : ', int(warrior.health) ) 
+
+
+
+"""
+
 class Companions:
     def __init__(self , x  , y , image ):
         self.x         = x
@@ -66,6 +126,7 @@ for i in range( len ( Companions_file1 ) ) :
     Companions_inventory[i].append('123')
     i = Companions(Companions_file1[i].split(',')[0] , Companions_file1[i].split(',')[1] , Companions_images_list[Companion_animation])
     Companions_list.append( i )
+
 
 class Players:
     def __init__( self ,x,y,image) :
@@ -121,4 +182,5 @@ for i in range(len(Enemies_file1)) :
 
 killed_units        = []
 selected_units      = []
-units_with_a_quests = [Companions_images_list[0]]
+units_with_a_quests = [Companions_images_list[0]]    
+"""

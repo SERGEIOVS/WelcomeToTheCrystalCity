@@ -62,6 +62,10 @@ sidewalk_width , sidewalk_height = 3 * meter , 3 * meter
 hero_path_lenght = 100
 hero_path_angle = 100
 
+unit_path_lenght = 100
+unit_path_angle = 100
+
+
 cameras_list = []
 
 class cam :
@@ -200,40 +204,41 @@ def draw_mini_map():
                 for y in range(grid_size2):
                         pg.draw.rect(mini_map_surf , ( cell_color) , ( cell_size * x / map_scale * minimap_object_offset , cell_size * y / map_scale * minimap_object_offset1 , mini_map_grid_cell_size / map_scale , mini_map_grid_cell_size / map_scale) , 1 ) #drawing a inventory cells
 
-def Animations():
-        global Companion_image , player_image , Companion_animation,animation,hero_animations_dir,hero_image,hero_image1,Enemy_image,Enemy_animation
-        for i in range(len(Companions_file1)) :    #Companion animation
-            if camera.rect[0] + int(screen_width) - fov >= int(Companions_file1[i].split(',')[0]) and camera.rect[1] + int(screen_height) - fov >= int(Companions_file1[i].split(',')[1]):
-                if  Companion_animation  <= len(os.listdir(                        'Objects/Characters/Companions/' + str(Companion_types[i]) + '/' + str(i) + '/' + str(Companion_state) + '/' + str(Companion_turn) + '/')) - 1:
-                    Companion_image = pg.image.load(                               'Objects/Characters/Companions/' + str(Companion_types[i]) + '/' + str(i) + '/' + str(Companion_state) + '/' + str(Companion_turn) + '/' + str(Companion_animation) + '.png')
-                    Companion_animation += 1 ; Companion_image  = pg.image.load(   'Objects/Characters/Companions/' + str(Companion_types[i]) + '/' + str(i) + '/' + str(Companion_state) + '/' + str(Companion_turn) + '/' + str(Companion_animation) + '.png')
-                if  Companion_animation >= len(os.listdir(                         'Objects/Characters/Companions/' + str(Companion_types[i]) + '/' + str(i) + '/' + str(Companion_state) + '/' + str(Companion_turn) + '/')) - 1 : 
-                        Companion_animation =  0 ; Companion_image = pg.image.load('Objects/Characters/Companions/' + str(Companion_types[i]) + '/' + str(i) + '/' + str(Companion_state) + '/' + str(Companion_turn) + '/' + str(Companion_animation) + '.png')
-                        Companion_animation += 1 ; Companion_image = pg.image.load('Objects/Characters/Companions/' + str(Companion_types[i]) + '/' + str(i) + '/' + str(Companion_state) + '/' + str(Companion_turn) + '/' + str(Companion_animation) + '.png')
+#def Animations():
+#        global Companion_image , player_image , Companion_animation,animation,hero_animations_dir,hero_image,hero_image1,Enemy_image,Enemy_animation
+#        for i in range(len(Companions_file1)) :    #Companion animation
+#            if camera.rect[0] + int(screen_width) - fov >= int(Companions_file1[i].split(',')[0]) and camera.rect[1] + int(screen_height) - fov >= int(Companions_file1[i].split(',')[1]):
+#                if  Companion_animation  <= len(os.listdir(                        'Objects/Characters/Companions/' + str(Companion_types[i]) + '/' + str(i) + '/' + str(Companion_state) + '/' + str(Companion_turn) + '/')) - 1:
+#                    Companion_image = pg.image.load(                               'Objects/Characters/Companions/' + str(Companion_types[i]) + '/' + str(i) + '/' + str(Companion_state) + '/' + str(Companion_turn) + '/' + str(Companion_animation) + '.png')
+#                    Companion_animation += 1 ; Companion_image  = pg.image.load(   'Objects/Characters/Companions/' + str(Companion_types[i]) + '/' + str(i) + '/' + str(Companion_state) + '/' + str(Companion_turn) + '/' + str(Companion_animation) + '.png')
+#                if  Companion_animation >= len(os.listdir(                         'Objects/Characters/Companions/' + str(Companion_types[i]) + '/' + str(i) + '/' + str(Companion_state) + '/' + str(Companion_turn) + '/')) - 1 : 
+#                        Companion_animation =  0 ; Companion_image = pg.image.load('Objects/Characters/Companions/' + str(Companion_types[i]) + '/' + str(i) + '/' + str(Companion_state) + '/' + str(Companion_turn) + '/' + str(Companion_animation) + '.png')
+#                        Companion_animation += 1 ; Companion_image = pg.image.load('Objects/Characters/Companions/' + str(Companion_types[i]) + '/' + str(i) + '/' + str(Companion_state) + '/' + str(Companion_turn) + '/' + str(Companion_animation) + '.png')
         
-        if multiplayer == 1 : 
-            for i in range(len(players_file1)) :    #Player animation
-                if int(players_file1[i].split(',')[0]) >= camera.rect[0] + fov and  int(players_file1[i].split(',')[0]) <= camera.rect[0] + int(screen_width) - fov \
-                    and int(players_file1[i].split(',')[1]) >= camera.rect[1] + fov and  int(players_file1[i].split(',')[1]) <= camera.rect[1] + int(screen_height) - fov :
-                    if  player_animation <= len(os.listdir(                      'Objects/Characters/Players/' + str(player_types[i]) + '/' + str(player_state) + '/' + str(player_turn)  + '/')) - 1 :
-                        player_image = pg.image.load(                            'Objects/Characters/Players/' + str(player_types[i]) + '/' + str(player_state) + '/' + str(player_turn)  + '/' + str(player_animation) + '.png') 
-                        player_animation += 1 ; player_image  = pg.image.load(   'Objects/Characters/Players/' + str(player_types[i]) + '/' + str(player_state) + '/' + str(player_turn)  + '/' + str(player_animation) + '.png')
-                    if player_animation  >= len(os.listdir(                      'Objects/Characters/Players/' + str(player_types[i]) + '/' + str(player_state) + '/' + str(player_turn)  + '/')) - 1 : 
-                            player_animation = 0  ; player_image = pg.image.load('Objects/Characters/Players/' + str(player_types[i]) + '/' + str(player_state) + '/'  + str(player_turn) + '/' + str(player_animation) + '.png')
-                            player_animation += 1 ; player_image = pg.image.load('Objects/Characters/Players/' + str(player_types[i]) + '/' + str(player_state) + '/'  + str(player_turn) + '/' + str(player_animation) + '.png')
-            
-        #Enemy animation
-        if game_mode != 'Peaceful':
-            for i in range(len(Enemies_file1)) :
-                if int(Enemies_file1[i].split(',')[0]) >= camera.rect[0] + fov and  int(Enemies_file1[i].split(',')[0]) <= camera.rect[0] + int(screen_width) - fov \
-                    and int(Enemies_file1[i].split(',')[1]) >= camera.rect[1] + fov and  int(Enemies_file1[i].split(',')[1]) <= camera.rect[1] + int(screen_height) - fov and Enemy_image not in killed_units :
-                    if  Enemy_animation <= len(os.listdir(                     'Objects/Characters/Enemies/' + str(enemy_types[i]) + '/' + str(i) + '/' + str(enemy_state) + '/' + str(enemy_turn) + '/')) - 1:
-                        Enemy_image = pg.image.load(                           'Objects/Characters/Enemies/' + str(enemy_types[i]) + '/' + str(i) + '/' + str(enemy_state) + '/' + str(enemy_turn) + '/' + str(Enemy_animation) + '.png')
-                        Enemy_animation += 1 ; Enemy_image  = pg.image.load(   'Objects/Characters/Enemies/' + str(enemy_types[i]) + '/' + str(i) + '/' + str(enemy_state) + '/' + str(enemy_turn) + '/' + str(Enemy_animation) + '.png')
-                    if  Enemy_animation >= len(os.listdir(                     'Objects/Characters/Enemies/' + str(enemy_types[i]) + '/' + str(i) + '/' + str(enemy_state) + '/' + str(enemy_turn) + '/')) - 1: 
-                            Enemy_animation =  0 ; Enemy_image = pg.image.load('Objects/Characters/Enemies/' + str(enemy_types[i]) + '/' + str(i) + '/' + str(enemy_state) + '/' + str(enemy_turn) + '/' + str(Enemy_animation) + '.png')
-                            Enemy_animation += 1 ; Enemy_image = pg.image.load('Objects/Characters/Enemies/' + str(enemy_types[i]) + '/' + str(i) + '/' + str(enemy_state) + '/' + str(enemy_turn) + '/' + str(Enemy_animation) + '.png')
+#        if multiplayer == 1 : 
+#            for i in range(len(players_file1)) :    #Player animation
+#                if int(players_file1[i].split(',')[0]) >= camera.rect[0] + fov and  int(players_file1[i].split(',')[0]) <= camera.rect[0] + int(screen_width) - fov \
+#                    and int(players_file1[i].split(',')[1]) >= camera.rect[1] + fov and  int(players_file1[i].split(',')[1]) <= camera.rect[1] + int(screen_height) - fov :
+#                    if  player_animation <= len(os.listdir(                      'Objects/Characters/Players/' + str(player_types[i]) + '/' + str(player_state) + '/' + str(player_turn)  + '/')) - 1 :
+#                        player_image = pg.image.load(                            'Objects/Characters/Players/' + str(player_types[i]) + '/' + str(player_state) + '/' + str(player_turn)  + '/' + str(player_animation) + '.png') 
+#                        player_animation += 1 ; player_image  = pg.image.load(   'Objects/Characters/Players/' + str(player_types[i]) + '/' + str(player_state) + '/' + str(player_turn)  + '/' + str(player_animation) + '.png')
+#                    if player_animation  >= len(os.listdir(                      'Objects/Characters/Players/' + str(player_types[i]) + '/' + str(player_state) + '/' + str(player_turn)  + '/')) - 1 : 
+#                            player_animation = 0  ; player_image = pg.image.load('Objects/Characters/Players/' + str(player_types[i]) + '/' + str(player_state) + '/'  + str(player_turn) + '/' + str(player_animation) + '.png')
+#                            player_animation += 1 ; player_image = pg.image.load('Objects/Characters/Players/' + str(player_types[i]) + '/' + str(player_state) + '/'  + str(player_turn) + '/' + str(player_animation) + '.png')
+#   
+#        #Enemy animation
+#        if game_mode != 'Peaceful':
+#            for i in range(len(Enemies_file1)) :
+#                if int(Enemies_file1[i].split(',')[0]) >= camera.rect[0] + fov and  int(Enemies_file1[i].split(',')[0]) <= camera.rect[0] + int(screen_width) - fov \
+#                    and int(Enemies_file1[i].split(',')[1]) >= camera.rect[1] + fov and  int(Enemies_file1[i].split(',')[1]) <= camera.rect[1] + int(screen_height) - fov and Enemy_image not in killed_units :
+#                    if  Enemy_animation <= len(os.listdir(                     'Objects/Characters/Enemies/' + str(enemy_types[i]) + '/' + str(i) + '/' + str(enemy_state) + '/' + str(enemy_turn) + '/')) - 1:
+#                        Enemy_image = pg.image.load(                           'Objects/Characters/Enemies/' + str(enemy_types[i]) + '/' + str(i) + '/' + str(enemy_state) + '/' + str(enemy_turn) + '/' + str(Enemy_animation) + '.png')
+#                        Enemy_animation += 1 ; Enemy_image  = pg.image.load(   'Objects/Characters/Enemies/' + str(enemy_types[i]) + '/' + str(i) + '/' + str(enemy_state) + '/' + str(enemy_turn) + '/' + str(Enemy_animation) + '.png')
+#                    if  Enemy_animation >= len(os.listdir(                     'Objects/Characters/Enemies/' + str(enemy_types[i]) + '/' + str(i) + '/' + str(enemy_state) + '/' + str(enemy_turn) + '/')) - 1: 
+#                            Enemy_animation =  0 ; Enemy_image = pg.image.load('Objects/Characters/Enemies/' + str(enemy_types[i]) + '/' + str(i) + '/' + str(enemy_state) + '/' + str(enemy_turn) + '/' + str(Enemy_animation) + '.png')
+#                            Enemy_animation += 1 ; Enemy_image = pg.image.load('Objects/Characters/Enemies/' + str(enemy_types[i]) + '/' + str(i) + '/' + str(enemy_state) + '/' + str(enemy_turn) + '/' + str(Enemy_animation) + '.png')
 
+"""
         #Hero animation
         if vihicle_sit == 0:
             if game_state == 'Play' and camera.rect[0] >= 0 and camera.rect[1] >= 0:
@@ -257,6 +262,13 @@ def Animations():
                         hero_image = pg.image.load( 'Objects/Characters/Hero/' + str(name) + '/' + str(state) + '/' + str(turn) + '/' + str(animation) + '.png')
                         heroimage  = Image.open(    'Objects/Characters/Hero/' + str(name) + '/' + str(state) + '/' + str(turn) + '/' + str(animation) + '.png')
                         hero_x , hero_y = int(screen_width) / 2  - heroimage.width / 2 , int(screen_height)  / 2 - heroimage.height / 2
+
+
+
+"""
+
+
+
 
 def mini_map_keyboard_controls():
 
@@ -457,7 +469,7 @@ def text_updating():
     show_game_state = big_font.render('Menüü' , False , small_font_color)
 
 def player_movement():
-        global calc_dist,show_distance,hero_checkpoint_offset_x,hero_checkpoint_offset_y,state,hero_x,hero_y,turn,hero_speed,minimap_object_offset,minimap_object_offset1,hero_path_lenght,hero_path_angle
+        global calc_dist,show_distance,hero_checkpoint_offset_x,hero_checkpoint_offset_y,state,hero_x,hero_y,turn,hero_speed,minimap_object_offset,minimap_object_offset1,unit_path_lenght,unit_path_angle
         keys = pg.key.get_pressed()
         if game_state == 'Play':
 
@@ -469,11 +481,11 @@ def player_movement():
             if keys[pg.K_s] and camera.rect[0] >= 0 and camera.rect[1] >= 0 : vector[ 1 ]   += hero_speed ; hero_checkpoint_offset_y += hero_speed; hero_x , hero_y = int(screen_width) / 2  - heroimage.width / 2 , int(screen_height)  / 2 - heroimage.height / 2 ; calc_dist = math.sqrt( (( x_2_list - x_1_list - hero_checkpoint_offset_x) ** 2) + ((y_2_list - y_1_list - hero_checkpoint_offset_y) ** 2 )) ; show_distance = small_font.render('Distance : ' + str(int(calc_dist) /100) + ' m' , False , small_font_color ) ; minimap_object_offset -= 1 / (map_scale * hero_speed * 10)
             
 
-            if keys[pg.K_q] and camera.rect[0] >= 0 and camera.rect[1] >= 0 : hero_path_lenght += 10
-            if keys[pg.K_e] and camera.rect[0] >= 0 and camera.rect[1] >= 0 : hero_path_lenght -= 10
+            if keys[pg.K_q] and camera.rect[0] >= 0 and camera.rect[1] >= 0 : unit_path_lenght += 10
+            if keys[pg.K_e] and camera.rect[0] >= 0 and camera.rect[1] >= 0 : unit_path_lenght -= 10
             
-            if keys[pg.K_h] and camera.rect[0] >= 0 and camera.rect[1] >= 0 : hero_path_angle += 0.1
-            if keys[pg.K_b] and camera.rect[0] >= 0 and camera.rect[1] >= 0 : hero_path_angle -= 0.1
+            if keys[pg.K_h] and camera.rect[0] >= 0 and camera.rect[1] >= 0 : unit_path_angle += 0.1
+            if keys[pg.K_b] and camera.rect[0] >= 0 and camera.rect[1] >= 0 : unit_path_angle -= 0.1
             
         if vector != [ 0 , 0 ] : camera.move(vector) #Если игрок ходил
 
@@ -579,41 +591,7 @@ def start():
                 screen.blit(custom_checkpoint_title        , ( -camera.rect[ 0 ] + int(custom_checkpoints_list_x[i]) , -camera.rect[ 1 ] + int(custom_checkpoints_list_y[i]) - 50 ))
                 mini_map_surf.blit(custom_checkpoint_title , ( -camera.rect[ 0 ] + int(custom_checkpoints_list_x[i]) , -camera.rect[ 1 ] + int(custom_checkpoints_list_y[i]) - 50 ))
 
-        for i in range(len(Companions_file1)) : 
-             if camera.rect[0] + int(screen_width) - fov >= int(Companions_file1[i].split(',')[0]) and camera.rect[1] + int(screen_height) - fov >= int(Companions_file1[i].split(',')[1]):
-                screen.blit( Companions_images_list[i]  , (
-                                                           
-                                                           -camera.rect[ 0 ] + int(Companions_file1[i].split(',')[0]) + hero_path_lenght * -math.cos( hero_path_angle),
-                                                           -camera.rect[ 1 ] + int(Companions_file1[i].split(',')[1]) + hero_path_lenght * -math.sin(-hero_path_angle) 
 
-                                                           ) 
-                                                           )
-                
-                screen.blit(hero_shadow_surf  , ( int(Companions_file1[i].split(',')[0]) , int(Companions_file1[i].split(',')[1]) + 200))
-            
-                pg.draw.circle(hero_shadow_surf , (10 , 0 , 0)  , ( 50 , 50 ) , 50) 
-                
-                #Companion_movement_vector(green color)
-                pg.draw.line( screen , (0 , 255 , 0) , (- camera.rect[0] + int(Companions_file1[i].split(',')[0]) , - camera.rect[1] +  int(Companions_file1[i].split(',')[1])  ) , ( - camera.rect[0] + int(Companions_file1[i].split(',')[0]) + hero_path_lenght * -math.cos(hero_path_angle) , - camera.rect[1] + int(Companions_file1[i].split(',')[1]) + hero_path_lenght * -math.sin(-hero_path_angle)) , 1)
-
-
-
-        if multiplayer == 1 and len(players_file1) != 0: 
-            for i in range(len(players_file1)):
-                if hide_nicknames == 0 and camera.rect[0] + int(screen_width) - fov >= int(players_file1[i].split(',')[0]) and camera.rect[1] + int(screen_height) - fov >= int(players_file1[i].split(',')[1]):
-                    pg.draw.rect(screen , (45 , 45 , 45) , ( -camera.rect[ 0 ] + int(players_file1[i].split(',')[0]) + bigfont , -camera.rect[ 1 ] + int(players_file1[i].split(',')[1]) - 20 , len(nicknames_file1[i]) * len(nicknames_file1[i]) - len(nicknames_file1[i]) , smallfont))
-                    screen.blit(nicknameslist[i] , ( -camera.rect[ 0 ] + int(players_file1[i].split(',')[0]) + bigfont , -camera.rect[ 1 ] + int(players_file1[i].split(',')[1]) - 20 , 100 , bigfont ) )
-                        
-                if int(players_file1[i].split(',')[0]) >= camera.rect[0] + fov and  int(players_file1[i].split(',')[0]) <= camera.rect[0] + int(screen_width) - fov \
-                    and int(players_file1[i].split(',')[1]) >= camera.rect[1] + fov and  int(players_file1[i].split(',')[1]) <= camera.rect[1] + int(screen_height) - fov :  screen.blit( Companion_image , ( -camera.rect[ 0 ] + int(players_file1[i].split(',')[0]) , -camera.rect[ 1 ] + int(players_file1[i].split(',')[1])  ) )
-                
-        for i in range(len(units_with_a_quests)) : screen.blit(new_quest , ( -camera.rect[ 0 ] + int(players_file1[i].split(',')[0])  , -camera.rect[ 1 ] + int(players_file1[i].split(',')[1]) - 20 , 100 , bigfont ) )
-
-        #drawing an enemies(images)
-        for i in range(len(Enemies_file1)):
-            if int(Enemies_file1[i].split(',')[0]) >= camera.rect[0] + fov and  int(Enemies_file1[i].split(',')[0]) <= camera.rect[0] + int(screen_width) - fov \
-                and int(Enemies_file1[i].split(',')[1]) >= camera.rect[1] + fov and  int(Enemies_file1[i].split(',')[1]) <= camera.rect[1] + int(screen_height) - fov and Enemy_image not in killed_units and difficulty != 'Peaceful' : screen.blit( Enemy_image , ( -camera.rect[ 0 ] + int(Enemies_file1[i].split(',')[0]) , -camera.rect[ 1 ] + int(Enemies_file1[i].split(',')[1])  ) )
-        
         #drawing a text for a quests menu
         if len(quests_file1) != 0:
             for i in range(len(quests_file1)) : quests_surf.blit(quests_list[i] , (5 , 5 + bigfont / 2 * i * 1.6 ) ) ; #screen.blit(show_quests_num , (int(screen_width ) - int(screen_width) /3  , int(screen_height ) - int(screen_height) /3 - bigfont ) )
@@ -709,7 +687,7 @@ while run :
 
     if dark_level <= max_dark_level : dark_level += 0.01 ; clock.tick(FPS / fps_1)
     
-    Animations()
+    #Animations()
     #vector = [ 0, 0]
     vector = [ 0 , 0]
 
@@ -733,16 +711,16 @@ while run :
             if event.button == 3 and pos[0] >= hero_x and pos[0] <= hero_x + hero_image.get_width() and pos[1] >=  hero_y and pos[1] <= hero_y + hero_image.get_height() and open_backpack == 0 and game_state == 'Play':                
                 game_state = 'Backpack'
             
-            for i in range(len(Companions_file1)):
-                    if event.button == 3 and  pos[0] >=  -camera.rect[0] + int(Companions_file1[i].split(',')[0]) and pos[0] <=  -camera.rect[0] + int(Companions_file1[i].split(',')[0]) + Companions_images_list[i].get_width() and pos[1] >=  -camera.rect[1] + int(Companions_file1[i].split(',')[1])  and pos[1] <=  -camera.rect[1] + int(Companions_file1[i].split(',')[1]) + Companions_images_list[i].get_height():
-                        game_state = 'Trade menu'
-                        if welcome_num  >= 0 and welcome_num <= len(welcome_speech_dir) - 1 : welcome_num += 0.5 ; welcome = pg.mixer.Sound('Audio/speech/langs/' + str(language) + '/welcome/' + str(int(welcome_num)) + '.mp3') ; welcome.play()
-                        if welcome_num  >= len(welcome_speech_dir) - 1 : welcome_num = 0 ; welcome_num += 0.5 ; welcome = pg.mixer.Sound('Audio/speech/langs/' + str(language) + '/welcome/' + str(int(welcome_num)) + '.mp3') ; welcome.play()
+            #for i in range(len(Companions_file1)):
+            #        if event.button == 3 and  pos[0] >=  -camera.rect[0] + int(Companions_file1[i].split(',')[0]) and pos[0] <=  -camera.rect[0] + int(Companions_file1[i].split(',')[0]) + Companions_images_list[i].get_width() and pos[1] >=  -camera.rect[1] + int(Companions_file1[i].split(',')[1])  and pos[1] <=  -camera.rect[1] + int(Companions_file1[i].split(',')[1]) + Companions_images_list[i].get_height():
+            #            game_state = 'Trade menu'
+            #            if welcome_num  >= 0 and welcome_num <= len(welcome_speech_dir) - 1 : welcome_num += 0.5 ; welcome = pg.mixer.Sound('Audio/speech/langs/' + str(language) + '/welcome/' + str(int(welcome_num)) + '.mp3') ; welcome.play()
+            #            if welcome_num  >= len(welcome_speech_dir) - 1 : welcome_num = 0 ; welcome_num += 0.5 ; welcome = pg.mixer.Sound('Audio/speech/langs/' + str(language) + '/welcome/' + str(int(welcome_num)) + '.mp3') ; welcome.play()
 
-            for i in range(len(Enemies_file1)):
-                    if Enemy_image not in killed_units and  event.button == 1 and pos[0] >=  -camera.rect[0] + int(Enemies_file1[i].split(',')[0])  and pos[0] <=  -camera.rect[0] + int(Enemies_file1[i].split(',')[0]) + Enemy_image.get_width() and pos[1] >=  -camera.rect[1] + int(Enemies_file1[i].split(',')[1]) and pos[1] <=  -camera.rect[1] + int(Enemies_file1[i].split(',')[1]) + Enemy_image.get_height():
-                        if enemy_sound_num <= len(enemy_sounds_dir) - 1:enemy_sound.play() ; enemy_sound_num += 0.5 ; enemy_sound = pg.mixer.Sound('Audio/sounds/roar/' + str(int(enemy_sound_num)) + '.mp3')
-                        if enemy_sound_num >= len(enemy_sounds_dir) - 1:enemy_sound_num = 0 ; enemy_sound.play() ; enemy_sound_num += 0.5 ; enemy_sound = pg.mixer.Sound('Audio/sounds/roar/' + str(int(enemy_sound_num)) + '.mp3') ; killed_units.append(Enemy_image)
+            #for i in range(len(Enemies_file1)):
+            #        if Enemy_image not in killed_units and  event.button == 1 and pos[0] >=  -camera.rect[0] + int(Enemies_file1[i].split(',')[0])  and pos[0] <=  -camera.rect[0] + int(Enemies_file1[i].split(',')[0]) + Enemy_image.get_width() and pos[1] >=  -camera.rect[1] + int(Enemies_file1[i].split(',')[1]) and pos[1] <=  -camera.rect[1] + int(Enemies_file1[i].split(',')[1]) + Enemy_image.get_height():
+            #            if enemy_sound_num <= len(enemy_sounds_dir) - 1:enemy_sound.play() ; enemy_sound_num += 0.5 ; enemy_sound = pg.mixer.Sound('Audio/sounds/roar/' + str(int(enemy_sound_num)) + '.mp3')
+            #            if enemy_sound_num >= len(enemy_sounds_dir) - 1:enemy_sound_num = 0 ; enemy_sound.play() ; enemy_sound_num += 0.5 ; enemy_sound = pg.mixer.Sound('Audio/sounds/roar/' + str(int(enemy_sound_num)) + '.mp3') ; killed_units.append(Enemy_image)
 
             for i in range(len(vihicles_file1)):
                 if event.button == 3 and  pos[0] >=  -camera.rect[0] + int(vihicles_file1[i].split(',')[0])  and pos[0] <=  -camera.rect[0] + int(vihicles_file1[i].split(',')[0]) + vihicles_images_list[i].get_width() and pos[1] >=  -camera.rect[1] + int(vihicles_file1[i].split(',')[1]) and pos[1] <=  -camera.rect[1] + int(vihicles_file1[i].split(',')[1]) + vihicles_images_list[i].get_height() and vihicle_sit == 0:
@@ -860,15 +838,15 @@ while run :
     
     mouse_visible = False ; cursor = pg.image.load( 'Interface/icons/Select/0.png' ) ; screen.blit( cursor , ( pos[ 0 ] - mouse_horizontal_offset , pos[ 1 ]  - mouse_vertical_offset )) ; calc_dist = math.sqrt( (( x_2_list - x_1_list   * hero_checkpoint_offset_x) ** 2 ) +  ( (  y_2_list - y_1_list * hero_checkpoint_offset_y) ** 2 ) /100) ; show_distance = small_font.render('Distance : ' + str(int(calc_dist) /100) + ' m' , False , small_font_color )
     
-    for i in range(len(Companions_file1)) :  
-        if game_state == 'Play' and dialoge_started == 1 and pos[0] >=  -camera.rect[0] + int(Companions_file1[i].split(',')[0])  and \
-            pos[0] <= -camera.rect[0] + int(Companions_file1[i].split(',')[0]) + Companions_images_list[i].get_width() and\
-                  pos[1] >=  -camera.rect[1] + int(Companions_file1[i].split(',')[1])  and pos[1] <=  -camera.rect[1] + int(Companions_file1[i].split(',')[1]) +  Companions_images_list[i].get_height():
+    #for i in range(len(Companions_file1)) :  
+    #    if game_state == 'Play' and dialoge_started == 1 and pos[0] >=  -camera.rect[0] + int(Companions_file1[i].split(',')[0])  and \
+    #        pos[0] <= -camera.rect[0] + int(Companions_file1[i].split(',')[0]) + Companions_images_list[i].get_width() and\
+    #              pos[1] >=  -camera.rect[1] + int(Companions_file1[i].split(',')[1])  and pos[1] <=  -camera.rect[1] + int(Companions_file1[i].split(',')[1]) +  Companions_images_list[i].get_height():
             
-            for i in range(len(actions_file1)) :
-                 dialoge_surf.blit(actions_list[i] , ( 10 , 10 + i * 20  ))
-                 frame = pg.draw.rect(dialoge_surf , ( Button_frame_color ) , (10 , 10 + action_counter  * 20 , 90 , 20 ) , 2 , 2 )
-                 screen.blit(dialoge_surf , (hero_x , hero_y - 150  ))
+    #for i in range(len(actions_file1)) :
+    #             dialoge_surf.blit(actions_list[i] , ( 10 , 10 + i * 20  ))
+    #             frame = pg.draw.rect(dialoge_surf , ( Button_frame_color ) , (10 , 10 + action_counter  * 20 , 90 , 20 ) , 2 , 2 )
+    #             screen.blit(dialoge_surf , (hero_x , hero_y - 150  ))
 
     if game_state != 'Play' : show_game_state = big_font.render(str(game_state) , False , small_font_color) ; screen.blit( show_game_state ,  (game_state_x , game_state_y))
     

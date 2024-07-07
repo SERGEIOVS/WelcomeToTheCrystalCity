@@ -67,8 +67,8 @@ for i in range(len(crafts_file1))          : i = big_font.render(crafts_file1[i]
 for i in range(len(quests_file1))          : i = small_font.render(quests_file1[i].split(',')[0].strip()                , False , small_font_color ) ; quests_list.append(i)
 for i in range(len(main_menu_file1))       : i = big_font.render(main_menu_file1[i].strip()                             , False , small_font_color ) ; main_menu.append(i)
 for i in range(len(settings_file1 ))       : i = big_font.render(settings_file1[i].strip()                              , False , small_font_color ) ; settings.append(i)
-for i in range(len(Hero_types     ))       : i = big_font.render(Hero_types[i].strip()                                  , False , small_font_color ) ; Hero_types_list.append(i)
-for i in range(len(nicknames_file1))       : i = small_font.render(players_file1[i].split(',')[2].strip()               , False , small_font_color ) ; nicknameslist.append(i)
+#for i in range(len(Hero_types     ))       : i = big_font.render(Hero_types[i].strip()                                  , False , small_font_color ) ; Hero_types_list.append(i)
+#for i in range(len(nicknames_file1))       : i = small_font.render(players_file1[i].split(',')[2].strip()               , False , small_font_color ) ; nicknameslist.append(i)
 for i in range(len(hero_inventory_file1))  : i = big_font.render(hero_inventory_file1[i].split(',')[0].strip()          , False , small_font_color ) ; hero_inventory.append(i)     
 
 screen = pg.display.set_mode((int( screen_width) , int(screen_height))) ; game_icon = pg.display.set_icon(pg.image.load("Interface/icons/Game icons/Game_icon.png"))
