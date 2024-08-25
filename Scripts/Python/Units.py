@@ -39,66 +39,6 @@ show_hero_armor = big_font.render( str( armor     ).strip() + " / " + str( max_a
 show_radiation  = big_font.render( str( radiation ).strip() + " / " + str( max_radiation   ).strip() , False , ( 255 , 0 , 0 ) ) ; show_energy  = big_font.render( str( energy).strip()     + ' / ' + str( max_energy      ).strip() , False , ( 255 , 0 , 0 ) )
 nicknames_file_name = 'txt/nicknames.txt' ; nicknamesfile_mode = 'r' ; nicknames_file = open (nicknames_file_name , nicknamesfile_mode) ; nicknames_file1 = nicknames_file.readlines() ; nicknameslist = []
 
-
-
-
-# Определение базового класса персонажа
-class Character:
-    def __init__(self,id,x,y,angle,category,health,damage,item,sound):
-        self.id       = id
-        self.x        = x
-        self.y        = y
-        self.angle = angle
-        self.category = category
-        self.health   = health  # Пример общей характеристики
-        self.damage   = damage  # Пример общей характеристики
-        self.item     = item
-        self.sound = sound
-
-
-# Подключение к базе данных (предполагается использование SQLite)
-my_querry = input('Write a querry : ')
-if my_querry == 'create db':
-    db_name = input('Write a db new name : ')
-
-    conn = sqlite3.connect(str(db_name))
-    c = conn.cursor()
-
-    def save_to_db(self):
-        # Сохранение в базу данных
-        c.execute("INSERT INTO characters (name, category, health, level) VALUES (?, ?, ?, ?)",
-        (self.id, self.x, self.y, self.angle))
-        conn.commit()
-        # Создание таблицы в базе данных
-        c.execute('''CREATE TABLE IF NOT EXISTS characters
-             (id int , x int , y int , angle int , category text , health int , damage int,item text , sound , text)''')
-
-# Пример наследования для категорий персонажей
-class Warrior(Character):
-    def __init__(        self,id,x,y,angle,category,health,damage,item,sound):
-        super().__init__(id,x,y,angle,category,health,damage,item,sound)
-        self.id       = 1  # Характеристика для воина
-        self.x        = 10  # Характеристика для воина
-        self.y        = 10  # Характеристика для воина
-        self.angle    = 10  # Характеристика для воина
-        self.category = 'monsters' # Характеристика для воина
-        self.health   = 20 # Характеристика для воина
-        self.damage   = 3 # Характеристика для воина
-        self.item     = 'pistol' # Характеристика для воина
-        self.sound    = 'sound' # Характеристика для воина
-
-
-
-# Пример создания персонажей
-warrior = Warrior(1,199,100,90,'monsters',20,3,'pistol','sound')
-
-# Сохранение персонажей в базу данных
-print( 'warrior health : ', int(warrior.health) ) 
-
-
-
-"""
-
 class Companions:
     def __init__(self , x  , y , image ):
         self.x         = x
@@ -156,6 +96,100 @@ for i in range(len(players_file1 )) :
     i = Players( players_file1[i].split(',')[0] , players_file1[i].split(',')[1] , players_images_list[player_animation])
     players_list.append(i)
 
+Enemies_file_name  = 'txt/Objects/' + str(saving_type) + '/Enemies.txt'
+Enemies_file_mode  = 'r' ; Enemies_file    = open (Enemies_file_name    , Enemies_file_mode)
+Enemies_file1      =  Enemies_file.readlines()
+enemy_state        = 'idle' ; enemy_turn     = 'left'
+enemy_types        = os.listdir('Objects/Characters/Enemies/')
+Enemy_animation    = 0  ; Enemies_images_list  = []
+Enemies_routes     = [] ; Enemy_speech = []
+Enemies_list       = []
+Enemies_inventory  = []
+
+
+from PIL import Image
+
+class Enemy:
+    def __init__(self, x, y, image_path, max_health = 100):
+        self.x = x
+        self.y = y
+        self.image_path = image_path
+        self.max_health = max_health
+        self.health = max_health
+        self.inventory = []  # Инвентарь врага
+        self.respawn_point = (x, y)  # Точка возрождения
+        self.load_image()  # Загружаем изображение
+
+    def load_image(self):
+        """Загружает изображение врага из файла."""
+        try:
+            self.image = Image.open(self.image_path)
+        except FileNotFoundError:
+            print(f"Image file not found: {self.image_path}")
+            self.image = None  # Устанавливаем изображение как None, если файл не найден
+
+    def take_damage(self, amount):
+        """Уменьшает здоровье врага на указанное количество и проверяет, жив ли он еще."""
+        self.health -= amount
+        if self.health <= 0:
+            self.die()
+
+    def die(self):
+        """Обрабатывает смерть врага и ставит его на точку возрождения."""
+        self.health = 0
+        # Здесь можно добавить дополнительные действия при смерти, такие как проигрывание анимации
+        self.respawn()  # Вызов метода возрождения
+
+    def respawn(self):
+        """Возрождает врага в исходной точке."""
+        self.health = self.max_health
+        self.x, self.y = self.respawn_point
+        print(self , 'respawned!')
+
+    def update_image(self, new_image_path):
+        """Обновляет изображение врага."""
+        self.image_path = new_image_path
+        self.load_image()
+
+    def set_inventory(self, items):
+        """Устанавливает инвентарь врага."""
+        self.inventory = items
+
+    def add_to_inventory(self, item):
+        """Добавляет предмет в инвентарь врага."""
+        self.inventory.append(item)
+
+    def __repr__(self):
+        return (f"Enemy(x={self.x}, y={self.y}, health={self.health}, "
+                f"inventory={self.inventory}, image_path={self.image_path})")
+
+
+# Создание объекта врага
+enemy = Enemy(x = 100 , y = 150 , image_path = 'Objects/Characters/Enemies/Ghosts/1/idle/right/0.png')
+
+'''
+
+# Обработка урона
+enemy.take_damage(30)
+
+# Обновление изображения врага
+enemy.update_image('path/to/new/image.png')
+
+# Добавление предмета в инвентарь
+enemy.add_to_inventory('Health Potion')
+
+# Возвращение врага к точке возрождения
+enemy.respawn()
+
+# Отображение информации о враге после изменений
+print(enemy)
+
+'''
+
+
+
+'''
+
 class Enemies:
     def __init__( self , x , y , image):
         self.x         = x
@@ -180,7 +214,8 @@ for i in range(len(Enemies_file1)) :
     i = Enemies(Enemies_file1[i].split(',')[0] , Enemies_file1[i].split(',')[1] , Enemies_images_list[Enemy_animation])
     Enemies_list.append(i)
 
+    
+'''
 killed_units        = []
 selected_units      = []
 units_with_a_quests = [Companions_images_list[0]]    
-"""

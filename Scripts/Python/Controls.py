@@ -68,113 +68,17 @@ unit_path_angle = 100
 
 cameras_list = []
 
-class cam :
+class Hero_cam :
     def __init__( self , x , y ) : self.rect = pg.Rect( int(camera_x) + hero_path_lenght * -math.cos(hero_path_angle) , int(camera_y) + hero_path_lenght * -math.sin(-hero_path_angle) , int(screen_width) , int(screen_height))
     def move( self , vector ) : self.rect[0] += vector[0] ; self.rect[1] += vector[1]
-camera = cam( 0 , 0 ) 
+camera  = Hero_cam( 0 , 0 )
+
 #vector = [ 0 , 0 ]
 vector = [ 0 , 0]
 
 #hero_x and hero_y
 x_1_list =  -camera.rect[ 0 ] + int(camera_x) + int(screen_width) / 2 + hero_checkpoint_offset_x ; y_1_list =  -camera.rect[ 1 ] + int(camera_y) + int(screen_height) / 2 + 100 + hero_checkpoint_offset_y ; x_2_list =  -camera.rect[ 0 ] + int(checkpoints_file1[checkpoint_num ].split(',')[0]) ; y_2_list =  -camera.rect[ 1 ] + int(checkpoints_file1[checkpoint_num ].split(',')[1]) #checkpoint_x andd checkpoint_y
 distances = [] ; distance_num = 0 ; calc_dist = math.sqrt( (( x_2_list - x_1_list * hero_checkpoint_offset_x) ** 2) +  ((y_2_list - y_1_list * hero_checkpoint_offset_y) ** 2 ) // meter) ; show_distance  = small_font.render('Distance : ' + str(int(calc_dist) // meter) + ' m' , False , small_font_color ) ; blit_action = 0 ; blit_distance  = 0
-
-
-usr = input('your querry : ')
-if usr== 'create_table':
-    db_name = input('db name : ')
-    table_name = input('table name : ')
-
-
-
-
-
-# Функция для создания соединения с базой данных SQLite
-def create_connection(db_file):
-    conn = None
-    try:
-        conn = sqlite3.connect(db_file)
-        print(f"Connected to {db_file}")
-    except sqlite3.Error as e:
-        print(e)
-    return conn
-
-# Функция для создания таблицы
-def create_table(conn, create_table_sql):
-    try:
-        c = conn.cursor()
-        c.execute(create_table_sql)
-        print("Table created successfully")
-    except sqlite3.Error as e:
-        print(e)
-
-# Функция для вставки данных в таблицу
-def insert_data(conn, insert_data_sql, data):
-    try:
-        c = conn.cursor()
-        c.execute(insert_data_sql, data)
-        conn.commit()
-        print("Data inserted successfully")
-    except sqlite3.Error as e:
-        print(e)
-
-# Функция для выборки данных из таблицы
-def select_data(conn, select_data_sql):
-    try:
-        c = conn.cursor()
-        c.execute(select_data_sql)
-        rows = c.fetchall()
-        for row in rows:
-            print(row)
-
-
-    except sqlite3.Error as e:
-        print(e)
-
-# Пример использования функций
-if __name__ == '__main__':
-    database = str(db_name) + ".sql"
-
-    # SQL-запросы
-    create_table_sql = """
-    CREATE TABLE IF NOT EXISTS contacts (
-        id integer PRIMARY KEY,
-        name text NOT NULL,
-        phone text
-    );
-    """
-
-    insert_data_sql = """
-    INSERT INTO contacts (name, phone) VALUES (?, ?)
-    """
-
-    select_data_sql = """
-    SELECT * FROM + str(table_name)"""
-
-    # Создание соединения с базой данных
-    conn = create_connection(database)
-
-    # Создание таблицы
-    if conn is not None:
-        create_table(conn, create_table_sql)
-    else:
-        print("Error! cannot create the database connection.")
-
-    # Вставка данных
-    data_to_insert = (int(camera.rect[0]) , int(camera.rect[1]))
-    insert_data(conn, insert_data_sql, data_to_insert)
-
-    # Выборка данных
-    select_data(conn, select_data_sql)
-
-    # Закрытие соединения с базой данных
-    conn.close()
-
-
-
-
-
-
 
 def draw_mini_map():
     if show_map == 1:
@@ -314,6 +218,9 @@ def mini_map_mouse_controls():
             spawn_sound.play() ; custom_checkpoints_list_x.append(camera.rect[0] + pos[0]) ; custom_checkpoints_list_y.append(camera.rect[1] + pos[1])
 
 changed_keybinds = []
+
+Random_events =[]
+
 
 def toggle_settings():
     if game_state == 'Settings':
@@ -490,6 +397,7 @@ def player_movement():
         if vector != [ 0 , 0 ] : camera.move(vector) #Если игрок ходил
 
 def start():
+
     if game_state == 'Saves':
         draw_menu()
         draw_mini_map()
@@ -614,6 +522,7 @@ def start():
 
         screen.blit( hero_image , ( hero_x + hero_path_lenght * -math.cos(hero_path_angle) , hero_y + hero_path_lenght * -math.sin(-hero_path_angle) ) )
         
+
         #fuel_bar(green color)
         pg.draw.line( screen , (0 , 255 , 0) , (400 , 400) , ( 400 + fuel_bar_width * -math.cos(fuel) , 400 + fuel_bar_width * -math.sin(-fuel)) , 1)
 
@@ -669,6 +578,7 @@ def start():
             screen.blit(show_radiation  , ( bigfont + 10 , int(screen_height ) - bigfont * 3)) , screen.blit(radiation_icon  , ( 10 , int(screen_height ) - bigfont * 3))
             screen.blit(show_energy     , ( bigfont + 10 , int(screen_height ) - bigfont * 2)) , screen.blit(energy_icon     , ( 10 , int(screen_height ) - bigfont * 2))
             screen.blit(show_money      , ( 10           , int(screen_height ) - bigfont))
+
         
 
             for x in range( int(map_width / km)) : 
@@ -711,16 +621,27 @@ while run :
             if event.button == 3 and pos[0] >= hero_x and pos[0] <= hero_x + hero_image.get_width() and pos[1] >=  hero_y and pos[1] <= hero_y + hero_image.get_height() and open_backpack == 0 and game_state == 'Play':                
                 game_state = 'Backpack'
             
-            #for i in range(len(Companions_file1)):
-            #        if event.button == 3 and  pos[0] >=  -camera.rect[0] + int(Companions_file1[i].split(',')[0]) and pos[0] <=  -camera.rect[0] + int(Companions_file1[i].split(',')[0]) + Companions_images_list[i].get_width() and pos[1] >=  -camera.rect[1] + int(Companions_file1[i].split(',')[1])  and pos[1] <=  -camera.rect[1] + int(Companions_file1[i].split(',')[1]) + Companions_images_list[i].get_height():
-            #            game_state = 'Trade menu'
-            #            if welcome_num  >= 0 and welcome_num <= len(welcome_speech_dir) - 1 : welcome_num += 0.5 ; welcome = pg.mixer.Sound('Audio/speech/langs/' + str(language) + '/welcome/' + str(int(welcome_num)) + '.mp3') ; welcome.play()
-            #            if welcome_num  >= len(welcome_speech_dir) - 1 : welcome_num = 0 ; welcome_num += 0.5 ; welcome = pg.mixer.Sound('Audio/speech/langs/' + str(language) + '/welcome/' + str(int(welcome_num)) + '.mp3') ; welcome.play()
+            for i in range(len(Companions_file1)):
+                if event.button == 3 and  pos[0] >=  -camera.rect[0] + int(Companions_file1[i].split(',')[0]) and pos[0] <=  -camera.rect[0] + int(Companions_file1[i].split(',')[0]) + Companions_images_list[i].get_width() and pos[1] >=  -camera.rect[1] + int(Companions_file1[i].split(',')[1])  and pos[1] <=  -camera.rect[1] + int(Companions_file1[i].split(',')[1]) + Companions_images_list[i].get_height():
+                        game_state = 'Trade menu'
+                        if welcome_num  >= 0 and welcome_num <= len(welcome_speech_dir) - 1 : welcome_num += 0.5 ; welcome = pg.mixer.Sound('Audio/speech/langs/' + str(language) + '/welcome/' + str(int(welcome_num)) + '.mp3') ; welcome.play()
+                        if welcome_num  >= len(welcome_speech_dir) - 1 : welcome_num = 0 ; welcome_num += 0.5 ; welcome = pg.mixer.Sound('Audio/speech/langs/' + str(language) + '/welcome/' + str(int(welcome_num)) + '.mp3') ; welcome.play()
 
             #for i in range(len(Enemies_file1)):
             #        if Enemy_image not in killed_units and  event.button == 1 and pos[0] >=  -camera.rect[0] + int(Enemies_file1[i].split(',')[0])  and pos[0] <=  -camera.rect[0] + int(Enemies_file1[i].split(',')[0]) + Enemy_image.get_width() and pos[1] >=  -camera.rect[1] + int(Enemies_file1[i].split(',')[1]) and pos[1] <=  -camera.rect[1] + int(Enemies_file1[i].split(',')[1]) + Enemy_image.get_height():
             #            if enemy_sound_num <= len(enemy_sounds_dir) - 1:enemy_sound.play() ; enemy_sound_num += 0.5 ; enemy_sound = pg.mixer.Sound('Audio/sounds/roar/' + str(int(enemy_sound_num)) + '.mp3')
             #            if enemy_sound_num >= len(enemy_sounds_dir) - 1:enemy_sound_num = 0 ; enemy_sound.play() ; enemy_sound_num += 0.5 ; enemy_sound = pg.mixer.Sound('Audio/sounds/roar/' + str(int(enemy_sound_num)) + '.mp3') ; killed_units.append(Enemy_image)
+        
+            if event.button == 3 :
+                print(enemy.health)
+                enemy.take_damage(1)
+                print(enemy.health)
+                if enemy.health <= 0:
+                    enemy.respawn()
+
+                
+
+
 
             for i in range(len(vihicles_file1)):
                 if event.button == 3 and  pos[0] >=  -camera.rect[0] + int(vihicles_file1[i].split(',')[0])  and pos[0] <=  -camera.rect[0] + int(vihicles_file1[i].split(',')[0]) + vihicles_images_list[i].get_width() and pos[1] >=  -camera.rect[1] + int(vihicles_file1[i].split(',')[1]) and pos[1] <=  -camera.rect[1] + int(vihicles_file1[i].split(',')[1]) + vihicles_images_list[i].get_height() and vihicle_sit == 0:
