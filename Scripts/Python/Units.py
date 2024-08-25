@@ -107,10 +107,11 @@ Enemies_list       = []
 Enemies_inventory  = []
 
 
+
 from PIL import Image
 
 class Enemy:
-    def __init__(self, x, y, image_path, max_health = 100):
+    def __init__(self, x, y, image_path, max_health = 10):
         self.x = x
         self.y = y
         self.image_path = image_path
@@ -144,7 +145,16 @@ class Enemy:
         """Возрождает врага в исходной точке."""
         self.health = self.max_health
         self.x, self.y = self.respawn_point
-        print(self , 'respawned!')
+
+        print('respawned!')
+        print('image_path = ' , self.image_path)
+        print('image      = ' , self.image)
+        print('x - ' , enemy.x)
+        print('y = ' , enemy.y)
+        print('resp = ' , enemy.respawn_point)
+
+
+
 
     def update_image(self, new_image_path):
         """Обновляет изображение врага."""
@@ -159,13 +169,17 @@ class Enemy:
         """Добавляет предмет в инвентарь врага."""
         self.inventory.append(item)
 
+    def clear_inventory(self, inventory):
+        """Добавляет предмет в инвентарь врага."""
+        self.inventory.clear()
+
     def __repr__(self):
         return (f"Enemy(x={self.x}, y={self.y}, health={self.health}, "
                 f"inventory={self.inventory}, image_path={self.image_path})")
 
 
 # Создание объекта врага
-enemy = Enemy(x = 100 , y = 150 , image_path = 'Objects/Characters/Enemies/Ghosts/1/idle/right/0.png')
+enemy = Enemy(x = 0 , y = 500 , image_path = 'Objects/Characters/Enemies/Ghosts/1/idle/right/0.png')
 
 '''
 

@@ -53,9 +53,9 @@ hero_inventory_num = 0
 hero_inventory_type = hero_inventory_types[hero_inventory_num]
 hero_marker_color = (255 , int(255 / 2) , 0)
 
-room_height , room_width = 3* meter  , 5 * meter
+room_height , room_width = 3 * meter  , 5 * meter
 room_size   = room_height * room_width
-walll_size  = 10
+walll_size  = 22
 
 sidewalk_width , sidewalk_height = 3 * meter , 3 * meter
 
@@ -423,7 +423,7 @@ def start():
 
         if ground == 1:
 
-            world_border = pg.draw.rect(screen , (Button_frame_color) , ( -camera.rect[ 0 ] + 0 ,-camera.rect[ 1 ] + 0 , map_width , map_width) , 100 , 0  )
+            world_border = pg.draw.rect(screen , (Button_frame_color) , ( -camera.rect[ 0 ] + 0 ,-camera.rect[ 1 ] + 0 , map_width , map_width) , 10 , 0  )
 
             #islands
             pg.draw.polygon(screen , (100 , 50 , 0) , ( 
@@ -632,14 +632,18 @@ while run :
             #            if enemy_sound_num <= len(enemy_sounds_dir) - 1:enemy_sound.play() ; enemy_sound_num += 0.5 ; enemy_sound = pg.mixer.Sound('Audio/sounds/roar/' + str(int(enemy_sound_num)) + '.mp3')
             #            if enemy_sound_num >= len(enemy_sounds_dir) - 1:enemy_sound_num = 0 ; enemy_sound.play() ; enemy_sound_num += 0.5 ; enemy_sound = pg.mixer.Sound('Audio/sounds/roar/' + str(int(enemy_sound_num)) + '.mp3') ; killed_units.append(Enemy_image)
         
+            #if event.button == 3 :
+            #    print(enemy.health)
+            #    enemy.take_damage(1)
+            #    print(enemy.health)
+            #    if enemy.health <= 0:
+            #        enemy.respawn()
+            #        enemy.update_image('Objects/Characters/Enemies/Ghosts/1/idle/right/0.png')
+            
             if event.button == 3 :
-                print(enemy.health)
-                enemy.take_damage(1)
-                print(enemy.health)
-                if enemy.health <= 0:
-                    enemy.respawn()
-
-                
+                print(enemy.inventory)
+                enemy.inventory.append(items_categories[0])
+                print(enemy.inventory)
 
 
 
@@ -745,7 +749,10 @@ while run :
         #if keys [load_game_btn  ] : load_game() #load game
         #if keys [save_game_btn  ] : save_game() #save game
         if keys [pg.K_f] : fuel += 0.1 ; show_fuel = big_font.render('Fuel  : ' + str(fuel)    , False , small_font_color ) ; print('Fuel : ' , fuel)
-
+        
+        if keys [pg.K_j] :
+            enemy.inventory.clear()
+            print(enemy.inventory)
 
 
         if keys [pg.K_g  ] and keys[pg.K_LCTRL]  : toggle_god_mode() ;  spawn_sound.play() #GOD MODE - no damage , no limit etc
