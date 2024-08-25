@@ -111,75 +111,27 @@ Enemies_inventory  = []
 from PIL import Image
 
 class Enemy:
-    def __init__(self, x, y, image_path, max_health = 10):
+    def __init__(self, x, y, image_path):
         self.x = x
         self.y = y
         self.image_path = image_path
-        self.max_health = max_health
-        self.health = max_health
-        self.inventory = []  # Инвентарь врага
-        self.respawn_point = (x, y)  # Точка возрождения
-        self.load_image()  # Загружаем изображение
+        self.image = self.load_image()
 
     def load_image(self):
-        """Загружает изображение врага из файла."""
+        """Загружает изображение врага из файла и конвертирует его для Pygame."""
         try:
-            self.image = Image.open(self.image_path)
+            image = pg.image.load(self.image_path)
+            return image
         except FileNotFoundError:
             print(f"Image file not found: {self.image_path}")
-            self.image = None  # Устанавливаем изображение как None, если файл не найден
-
-    def take_damage(self, amount):
-        """Уменьшает здоровье врага на указанное количество и проверяет, жив ли он еще."""
-        self.health -= amount
-        if self.health <= 0:
-            self.die()
-
-    def die(self):
-        """Обрабатывает смерть врага и ставит его на точку возрождения."""
-        self.health = 0
-        # Здесь можно добавить дополнительные действия при смерти, такие как проигрывание анимации
-        self.respawn()  # Вызов метода возрождения
-
-    def respawn(self):
-        """Возрождает врага в исходной точке."""
-        self.health = self.max_health
-        self.x, self.y = self.respawn_point
-
-        print('respawned!')
-        print('image_path = ' , self.image_path)
-        print('image      = ' , self.image)
-        print('x - ' , enemy.x)
-        print('y = ' , enemy.y)
-        print('resp = ' , enemy.respawn_point)
+            return None
 
 
+# Путь к изображению
+image_path = 'Objects/Characters/Enemies/Ghosts/1/idle/right/0.png'
 
-
-    def update_image(self, new_image_path):
-        """Обновляет изображение врага."""
-        self.image_path = new_image_path
-        self.load_image()
-
-    def set_inventory(self, items):
-        """Устанавливает инвентарь врага."""
-        self.inventory = items
-
-    def add_to_inventory(self, item):
-        """Добавляет предмет в инвентарь врага."""
-        self.inventory.append(item)
-
-    def clear_inventory(self, inventory):
-        """Добавляет предмет в инвентарь врага."""
-        self.inventory.clear()
-
-    def __repr__(self):
-        return (f"Enemy(x={self.x}, y={self.y}, health={self.health}, "
-                f"inventory={self.inventory}, image_path={self.image_path})")
-
-
-# Создание объекта врага
-enemy = Enemy(x = 0 , y = 500 , image_path = 'Objects/Characters/Enemies/Ghosts/1/idle/right/0.png')
+# Создание объекта врага после инициализации Pygame
+enemy = Enemy(x=100, y=1000, image_path=image_path)
 
 '''
 

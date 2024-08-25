@@ -108,6 +108,9 @@ def draw_mini_map():
                 for y in range(grid_size2):
                         pg.draw.rect(mini_map_surf , ( cell_color) , ( cell_size * x / map_scale * minimap_object_offset , cell_size * y / map_scale * minimap_object_offset1 , mini_map_grid_cell_size / map_scale , mini_map_grid_cell_size / map_scale) , 1 ) #drawing a inventory cells
 
+
+
+
 #def Animations():
 #        global Companion_image , player_image , Companion_animation,animation,hero_animations_dir,hero_image,hero_image1,Enemy_image,Enemy_animation
 #        for i in range(len(Companions_file1)) :    #Companion animation
@@ -418,6 +421,8 @@ def start():
 
     toggle_settings() ; toggle_main_menu() ; character_select() ; Trade_menu() ; game_mode_select() ; Open_backpack() ; mini_map_keyboard_controls() ; Difficulty_select() ; toggle_mods_menu()
 
+
+
     if game_state == 'Play':
         mouse_visible = False ; mouse_set_visible = pg.mouse.set_visible( mouse_visible )
 
@@ -521,7 +526,8 @@ def start():
         quests_surf.set_colorkey(( 0 , 0 , 0 ))
 
         screen.blit( hero_image , ( hero_x + hero_path_lenght * -math.cos(hero_path_angle) , hero_y + hero_path_lenght * -math.sin(-hero_path_angle) ) )
-        
+        screen.blit( enemy.image , ( -camera.rect[0] + enemy.x , -camera.rect[1] + enemy.y ))
+
 
         #fuel_bar(green color)
         pg.draw.line( screen , (0 , 255 , 0) , (400 , 400) , ( 400 + fuel_bar_width * -math.cos(fuel) , 400 + fuel_bar_width * -math.sin(-fuel)) , 1)
@@ -548,6 +554,8 @@ def start():
             
             screen.blit(interface_surf , ( interface_surf_x , interface_surf_y ))
             screen.blit(quests_surf   , ( int(screen_width) - quests_surf.get_width() , int(screen_height ) - quests_surf.get_height() ))
+
+            
             quests_surf.fill((quest_surf_color))
                 
             #drawing a road to the checkpoint
@@ -569,8 +577,11 @@ def start():
                 pg.draw.line( screen , (0 , 255 , 0) , (400 , 400) , ( 400 + fuel_bar_width * -math.cos(fuel) , 400 + fuel_bar_width * -math.sin(-fuel)) , 1)
                 screen.blit(  show_fuel , ( 0 , int(screen_height ) - 250))
                 fuel_values = pg.draw.circle(screen , (255 , 0 , 0)  , ( 100 , screen_height - 100 , checkpoint_size , 1 ))
+           
 
-                screen.blit( cancel_icon , ( cancel_icon_x , cancel_icon_y))
+
+
+            screen.blit( cancel_icon , ( cancel_icon_x , cancel_icon_y))
             
             screen.blit(show_health     , ( bigfont + 10 , int(screen_height ) - bigfont * 6)) , screen.blit(health_icon     , ( 10 , int(screen_height ) - bigfont * 6))
             screen.blit(show_hero_armor , ( bigfont + 10 , int(screen_height ) - bigfont * 5)) , screen.blit(armor_icon      , ( 10 , int(screen_height ) - bigfont * 5))
@@ -640,12 +651,6 @@ while run :
             #        enemy.respawn()
             #        enemy.update_image('Objects/Characters/Enemies/Ghosts/1/idle/right/0.png')
             
-            if event.button == 3 :
-                print(enemy.inventory)
-                enemy.inventory.append(items_categories[0])
-                print(enemy.inventory)
-
-
 
             for i in range(len(vihicles_file1)):
                 if event.button == 3 and  pos[0] >=  -camera.rect[0] + int(vihicles_file1[i].split(',')[0])  and pos[0] <=  -camera.rect[0] + int(vihicles_file1[i].split(',')[0]) + vihicles_images_list[i].get_width() and pos[1] >=  -camera.rect[1] + int(vihicles_file1[i].split(',')[1]) and pos[1] <=  -camera.rect[1] + int(vihicles_file1[i].split(',')[1]) + vihicles_images_list[i].get_height() and vihicle_sit == 0:
@@ -750,9 +755,7 @@ while run :
         #if keys [save_game_btn  ] : save_game() #save game
         if keys [pg.K_f] : fuel += 0.1 ; show_fuel = big_font.render('Fuel  : ' + str(fuel)    , False , small_font_color ) ; print('Fuel : ' , fuel)
         
-        if keys [pg.K_j] :
-            enemy.inventory.clear()
-            print(enemy.inventory)
+
 
 
         if keys [pg.K_g  ] and keys[pg.K_LCTRL]  : toggle_god_mode() ;  spawn_sound.play() #GOD MODE - no damage , no limit etc
@@ -762,6 +765,8 @@ while run :
     
     mini_map_surf.fill((minimapBGcolor))
     screen.fill( (BGcolor) )
+    
+
     start()
     
     mouse_visible = False ; cursor = pg.image.load( 'Interface/icons/Select/0.png' ) ; screen.blit( cursor , ( pos[ 0 ] - mouse_horizontal_offset , pos[ 1 ]  - mouse_vertical_offset )) ; calc_dist = math.sqrt( (( x_2_list - x_1_list   * hero_checkpoint_offset_x) ** 2 ) +  ( (  y_2_list - y_1_list * hero_checkpoint_offset_y) ** 2 ) /100) ; show_distance = small_font.render('Distance : ' + str(int(calc_dist) /100) + ' m' , False , small_font_color )
@@ -799,7 +804,9 @@ while run :
     for x in range(minimap_grid_width):
         for y in range(minimap_grid_height):
             pg.draw.rect(mini_map_surf , (cell_color) , ( cell_size * x , cell_size * y , cell_size , cell_size ) , 2 , 0 , button_border_radius , button_border_radius , button_border_radius , button_border_radius ) #drawing a inventory cells
-            
+
+
+
     pg.display.update()
 
 
