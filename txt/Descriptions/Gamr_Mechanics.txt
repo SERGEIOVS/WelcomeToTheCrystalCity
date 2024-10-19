@@ -25,14 +25,3 @@
 Если персонаж стоит рядом с объектом для изучения,он начнет самостоятельно изучать его.Это может быть ящик или шкаф
 Если персонажи стоят рядом,они могут говорить на случайные темы,включая то,что одному из них наддоело ждать игрока
 
-
-authenticator
-certificate
-certification
-ticket
-verification
-identity card
-driving license
-certificate of employment
-ID credential identity card
-identify

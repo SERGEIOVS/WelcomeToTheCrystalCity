@@ -1,16 +1,37 @@
 import sys , os
+
 mods_dir_path = 'mods'
 if mods_dir_path not in sys.path : sys.path.append(mods_dir_path)
 if mods_dir_path in sys.path : print() ; print() ; print('mods folder added ! ')
 print(os.listdir(mods_dir_path))
 
-import os
+mod1_dir_path = 'mods/New buildings mod'
+if mod1_dir_path not in sys.path : sys.path.append(mod1_dir_path)
+if mod1_dir_path in sys.path : print() ; print() ; print('mod folder added ! ')
+print(os.listdir(mod1_dir_path))
+
+print()
+
+
 import pygame as pg ; from Settings import * ; from PIL import Image ; from Units import * ; import logging ; from Vihicles import * ; import pyautogui ;
 from Background import * ; import math
 import time ; from Funcs import * ; from Settings import * ; from Items import *
 import pprint
 
+
 pg.init()
+MyShapes = [
+
+['circle' , 'circle' , 'circle' , 'circle' , 'circle' , 'circle' , 'circle' , 'circle' , 'circle' , 'circle'] ,
+
+['square'  ] ,
+
+['triangle'] 
+
+]
+
+cur_layer = 1
+
 
 pressed = pg.mouse.get_pressed() ; pos = pg.mouse.get_pos() ; clock = pg.time.Clock() ; FPS = 60 ; clock.tick(FPS)
 hide_nicknames = 0 ; ground = 1 ; floor = 0 ; keys = pg.key.get_pressed()
@@ -103,6 +124,19 @@ def draw_mini_map():
         
         pg.draw.rect(screen , (minimap_border_color) , ( 0 , 0 , int(screen_width) / map_size + minimap_border_offset , int(screen_height) / map_size + minimap_border_offset ) , minimap_border_offset , minimap_border_offset)
         
+
+        for i in range(len(MyShapes)):
+            if 'circle' in MyShapes[cur_layer]:
+                for i in range(len(MyShapes[cur_layer])):
+                    pg.draw.circle(screen , ( 255,255,255 ) , (  100  * i  + 400 , 400 ), 50  ) 
+
+            if 'square' in MyShapes[cur_layer]:
+                for i in range(len(MyShapes[cur_layer])):
+                    pg.draw.rect(  screen , ( 255,255,255 ) , ( 100 * i + 400 , 500 , 500 , 100 ),1 ) #drawing a inventory cells
+
+            
+
+
         if map_grid == 1:
             for x in range(grid_size1):
                 for y in range(grid_size2):
@@ -751,8 +785,11 @@ while run :
         if keys [pg.K_ESCAPE]   and open_backpack == 1: open_backpack  = 0
         if keys [reload_btn] and mags >= 1 : reloadsound = pg.mixer.Sound( 'Audio/sounds/firegun/reload.mp3' ) ; reloadsound.play() ; mags -= 1 ; hero_file_name = 'txt/hero.txt' ; hero_file_mode = 'w' ; hero_file = open (hero_file_name , hero_file_mode) ; hero_file.write(str(mags)) ; hero_file.write(str(health)) ; hero_file.write(str(health)) ; hero_file.write(str(health)) ; hero_file.write(str(mags)) ; hero_file.write(str(mags)) ; hero_file.close() ; ammo = max_ammo ; show_ammo  = big_font.render(str(ammo) + " / "  + str( ammo * mags ) , False , colors[2] ) ; show_armor = big_font.render(str(armor).strip() + " / "  + str( max_armor ).strip() , False , ( 250 , 0, 0 ) ) ; show_health    = big_font.render(str(health).strip()     + " / "  + str( max_health ).strip() , False , ( 255 , 0 , 0 ) ) ; show_radiation = big_font.render(str(radiation ).strip() + " / "  + str( max_radiation ).strip() , False , ( 255 , 0 , 0 ) ) ; cursor = pg.image.load( 'Interface/icons/refresh_icon.png' ) ; pg.display.update()
         if keys [screenshot_btn ] : make_screenshot() ; logging.info( msg = 'SCREENSHOT SAVED!') ; print('Screenshot saved ! ')
+        
         #if keys [load_game_btn  ] : load_game() #load game
+        
         #if keys [save_game_btn  ] : save_game() #save game
+        
         if keys [pg.K_f] : fuel += 0.1 ; show_fuel = big_font.render('Fuel  : ' + str(fuel)    , False , small_font_color ) ; print('Fuel : ' , fuel)
         
 
