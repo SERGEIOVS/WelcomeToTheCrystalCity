@@ -29,7 +29,6 @@ for i in custom_checkpoints_list:
     i = mini_map_font_size.render('Custom checkpoint' + int(i) , False , small_font_color ) 
 
 interface_images = []
-
 game_modes_file = open('txt/menus/Game_modes.txt','r') ; game_modes_file1 = game_modes_file.readlines() ; game_modes  = ['Survival' , 'God mode' , 'Hardcore'] ; game_modes1 = [] ; game_mode_num = 0 ; game_mode = game_modes_file1[game_mode_num]
 
 for i in range(len(game_modes)) : i = big_font.render(game_modes[i].split(',')[0].strip() , False , small_font_color ) ; game_modes1.append(i)     
