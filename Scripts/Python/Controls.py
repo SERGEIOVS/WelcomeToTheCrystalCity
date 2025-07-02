@@ -1,37 +1,23 @@
 import sys , os
 
+
 mods_dir_path = 'mods'
 if mods_dir_path not in sys.path : sys.path.append(mods_dir_path)
 if mods_dir_path in sys.path : print() ; print() ; print('mods folder added ! ')
 print(os.listdir(mods_dir_path))
 
-mod1_dir_path = 'mods/New buildings mod'
-if mod1_dir_path not in sys.path : sys.path.append(mod1_dir_path)
-if mod1_dir_path in sys.path : print() ; print() ; print('mod folder added ! ')
-print(os.listdir(mod1_dir_path))
-
-print()
-
-
+import os
 import pygame as pg ; from Settings import * ; from PIL import Image ; from Units import * ; import logging ; from Vihicles import * ; import pyautogui ;
 from Background import * ; import math
 import time ; from Funcs import * ; from Settings import * ; from Items import *
 import pprint
 
-
 pg.init()
-MyShapes = [
 
-['circle' , 'circle' , 'circle' , 'circle' , 'circle' , 'circle' , 'circle' , 'circle' , 'circle' , 'circle'] ,
+MyShapes = []
+for i in range(10) : MyShapes.append('circle') ; MyShapes.append('square') ; MyShapes.append('triangle') ; MyShapes.append('rectangle')    
 
-['square'  ] ,
-
-['triangle'] 
-
-]
-
-cur_layer = 1
-
+        
 
 pressed = pg.mouse.get_pressed() ; pos = pg.mouse.get_pos() ; clock = pg.time.Clock() ; FPS = 60 ; clock.tick(FPS)
 hide_nicknames = 0 ; ground = 1 ; floor = 0 ; keys = pg.key.get_pressed()
@@ -44,9 +30,7 @@ for i in custom_checkpoints_list:
 
 interface_images = []
 
-game_modes_file = open('txt/Game_modes.txt','r')
-game_modes_file1 = game_modes_file.readlines()
-game_modes  = ['Survival' , 'God mode' , 'Hardcore'] ; game_modes1 = [] ; game_mode_num = 0 ; game_mode = game_modes_file1[game_mode_num]
+game_modes_file = open('txt/menus/Game_modes.txt','r') ; game_modes_file1 = game_modes_file.readlines() ; game_modes  = ['Survival' , 'God mode' , 'Hardcore'] ; game_modes1 = [] ; game_mode_num = 0 ; game_mode = game_modes_file1[game_mode_num]
 
 for i in range(len(game_modes)) : i = big_font.render(game_modes[i].split(',')[0].strip() , False , small_font_color ) ; game_modes1.append(i)     
 
@@ -55,7 +39,7 @@ for i in range(len(menu_titles)) : i = small_font.render(menu_titles[i].split(',
 
 difficulties = ['Peaceful' , 'Easy' , 'Normal' , 'Hard'] ; difficulties1 = [] ; difficulty_num = 0 ; difficulty = difficulties[difficulty_num]
 for i in range(len(difficulties)) : i = big_font.render(difficulties[i].split(',')[0].strip() , False , small_font_color ) ; difficulties1.append(i)     
-difficulties_modes_file = open('txt/difficulties.txt','r')
+difficulties_modes_file = open('txt/menus/difficulties.txt','r')
 
 necessary_craft_items = [] ; prices_list  = [] ; prices_list1 = [] 
 
@@ -65,37 +49,33 @@ for i in range(len(prices_list))  : i = big_font.render('Price : ' + prices_file
 interface_surf_x   = 0   ; interface_surf_y    = int(screen_height ) - interface_surf.get_width() 
 minimap_grid_width = 100 ; minimap_grid_height = 100 ; min_map_size = 3 ; max_map_size = 1.2 ; mini_map_grid_cell_size = meter * map_scale
 
-cursor_types = ['Default' , 'Custom']
-cursor_num = 0
-cursor_type = cursor_types[cursor_num]
+cursor_types = ['Default' , 'Custom'] ; cursor_num = 0 ; cursor_type = cursor_types[cursor_num]
 
-hero_inventory_types = ['Grid' , 'Circle']
-hero_inventory_num = 0
-hero_inventory_type = hero_inventory_types[hero_inventory_num]
-hero_marker_color = (255 , int(255 / 2) , 0)
+hero_inventory_types = ['Grid' , 'Circle'] ; hero_inventory_num = 0 ; hero_inventory_type = hero_inventory_types[hero_inventory_num] ; hero_marker_color = (255 , int(255 / 2) , 0)
 
-room_height , room_width = 3 * meter  , 5 * meter
-room_size   = room_height * room_width
-walll_size  = 22
+room_height , room_width = 3 * meter  , 5 * meter ; room_size   = room_height * room_width ; walll_size  = 22
 
 sidewalk_width , sidewalk_height = 3 * meter , 3 * meter
 
-hero_path_lenght = 100
-hero_path_angle = 100
+hero_path_lenght  = 90 ; hero_path_angle  = 90 ; hero_path_lenght1 = 90 ; hero_path_angle1 = 90 ; unit_path_lenght = 90 ; unit_path_angle = 90
 
-unit_path_lenght = 100
-unit_path_angle = 100
-
-
-cameras_list = []
+cameras_list = [random.randint(0,100) for i in range(0,10)];print(f'Cameras list : {cameras_list}')
+ 
+islands_points = list(zip( [1000 + 1000 * math.cos(i) for i in range(36)], [1000 + 1000 * math.sin(i) for i in range(36)]))
 
 class Hero_cam :
-    def __init__( self , x , y ) : self.rect = pg.Rect( int(camera_x) + hero_path_lenght * -math.cos(hero_path_angle) , int(camera_y) + hero_path_lenght * -math.sin(-hero_path_angle) , int(screen_width) , int(screen_height))
-    def move( self , vector ) : self.rect[0] += vector[0] ; self.rect[1] += vector[1]
-camera  = Hero_cam( 0 , 0 )
+    def __init__( self , x , y ) :
+        self.rect = pg.Rect( hero_path_lenght * -math.cos(hero_path_angle) ,hero_path_lenght * -math.sin(-hero_path_angle) , int(screen_width) , int(screen_height))
+    
+    def move( self , vector ) :
+        self.rect[0] += hero_path_lenght * -math.cos(hero_path_angle) / 100
+        self.rect[1] += hero_path_lenght * -math.sin(hero_path_angle) / 100
 
-#vector = [ 0 , 0 ]
+camera  = Hero_cam(int(camera_x) + hero_path_lenght * -math.cos(hero_path_angle)  , int(camera_x) + hero_path_lenght * -math.sin(hero_path_angle))
+
 vector = [ 0 , 0]
+
+
 
 #hero_x and hero_y
 x_1_list =  -camera.rect[ 0 ] + int(camera_x) + int(screen_width) / 2 + hero_checkpoint_offset_x ; y_1_list =  -camera.rect[ 1 ] + int(camera_y) + int(screen_height) / 2 + 100 + hero_checkpoint_offset_y ; x_2_list =  -camera.rect[ 0 ] + int(checkpoints_file1[checkpoint_num ].split(',')[0]) ; y_2_list =  -camera.rect[ 1 ] + int(checkpoints_file1[checkpoint_num ].split(',')[1]) #checkpoint_x andd checkpoint_y
@@ -105,7 +85,6 @@ def draw_mini_map():
     if show_map == 1:
         for i in range( len ( islands_file1 ) ) :
             for y in range( len ( islands_file1 ) ) :
-                #pg.draw.rect(mini_map_surf  , (100 , 50 , 0) , (minimap_border_offset + int(islands_file1[i].split(',')[0]) / (meter * map_scale) + i * int(islands_file1[i].split(',')[2])  / (meter * map_scale) , minimap_border_offset + int(islands_file1[i].split(',')[1]) / (meter * map_scale) + y * int(islands_file1[i].split(',')[2])  / (100 * map_scale) ,  5 / map_scale ,  5 / map_scale ))
                 pg.draw.rect(mini_map_surf , (100 , 50 , 0) , ( meter * 30 / (meter * map_scale) , meter * 30  / (meter / map_scale) , km * 5 / (meter * map_scale) , km * 5 / (meter * map_scale) ))
 
         for i in range( len ( buildings_file1 ) ) :
@@ -126,88 +105,13 @@ def draw_mini_map():
         
 
         for i in range(len(MyShapes)):
-            if 'circle' in MyShapes[cur_layer]:
-                for i in range(len(MyShapes[cur_layer])):
-                    pg.draw.circle(screen , ( 255,255,255 ) , (  100  * i  + 400 , 400 ), 50  ) 
+            if 'circle'in MyShapes:pg.draw.circle(screen  , (255, 255,  255 ), (i * 100 , 500 ),50,1) 
 
-            if 'square' in MyShapes[cur_layer]:
-                for i in range(len(MyShapes[cur_layer])):
-                    pg.draw.rect(  screen , ( 255,255,255 ) , ( 100 * i + 400 , 500 , 500 , 100 ),1 ) #drawing a inventory cells
-
-            
-
-
+        map_grid = 1 
         if map_grid == 1:
             for x in range(grid_size1):
                 for y in range(grid_size2):
                         pg.draw.rect(mini_map_surf , ( cell_color) , ( cell_size * x / map_scale * minimap_object_offset , cell_size * y / map_scale * minimap_object_offset1 , mini_map_grid_cell_size / map_scale , mini_map_grid_cell_size / map_scale) , 1 ) #drawing a inventory cells
-
-
-
-
-#def Animations():
-#        global Companion_image , player_image , Companion_animation,animation,hero_animations_dir,hero_image,hero_image1,Enemy_image,Enemy_animation
-#        for i in range(len(Companions_file1)) :    #Companion animation
-#            if camera.rect[0] + int(screen_width) - fov >= int(Companions_file1[i].split(',')[0]) and camera.rect[1] + int(screen_height) - fov >= int(Companions_file1[i].split(',')[1]):
-#                if  Companion_animation  <= len(os.listdir(                        'Objects/Characters/Companions/' + str(Companion_types[i]) + '/' + str(i) + '/' + str(Companion_state) + '/' + str(Companion_turn) + '/')) - 1:
-#                    Companion_image = pg.image.load(                               'Objects/Characters/Companions/' + str(Companion_types[i]) + '/' + str(i) + '/' + str(Companion_state) + '/' + str(Companion_turn) + '/' + str(Companion_animation) + '.png')
-#                    Companion_animation += 1 ; Companion_image  = pg.image.load(   'Objects/Characters/Companions/' + str(Companion_types[i]) + '/' + str(i) + '/' + str(Companion_state) + '/' + str(Companion_turn) + '/' + str(Companion_animation) + '.png')
-#                if  Companion_animation >= len(os.listdir(                         'Objects/Characters/Companions/' + str(Companion_types[i]) + '/' + str(i) + '/' + str(Companion_state) + '/' + str(Companion_turn) + '/')) - 1 : 
-#                        Companion_animation =  0 ; Companion_image = pg.image.load('Objects/Characters/Companions/' + str(Companion_types[i]) + '/' + str(i) + '/' + str(Companion_state) + '/' + str(Companion_turn) + '/' + str(Companion_animation) + '.png')
-#                        Companion_animation += 1 ; Companion_image = pg.image.load('Objects/Characters/Companions/' + str(Companion_types[i]) + '/' + str(i) + '/' + str(Companion_state) + '/' + str(Companion_turn) + '/' + str(Companion_animation) + '.png')
-        
-#        if multiplayer == 1 : 
-#            for i in range(len(players_file1)) :    #Player animation
-#                if int(players_file1[i].split(',')[0]) >= camera.rect[0] + fov and  int(players_file1[i].split(',')[0]) <= camera.rect[0] + int(screen_width) - fov \
-#                    and int(players_file1[i].split(',')[1]) >= camera.rect[1] + fov and  int(players_file1[i].split(',')[1]) <= camera.rect[1] + int(screen_height) - fov :
-#                    if  player_animation <= len(os.listdir(                      'Objects/Characters/Players/' + str(player_types[i]) + '/' + str(player_state) + '/' + str(player_turn)  + '/')) - 1 :
-#                        player_image = pg.image.load(                            'Objects/Characters/Players/' + str(player_types[i]) + '/' + str(player_state) + '/' + str(player_turn)  + '/' + str(player_animation) + '.png') 
-#                        player_animation += 1 ; player_image  = pg.image.load(   'Objects/Characters/Players/' + str(player_types[i]) + '/' + str(player_state) + '/' + str(player_turn)  + '/' + str(player_animation) + '.png')
-#                    if player_animation  >= len(os.listdir(                      'Objects/Characters/Players/' + str(player_types[i]) + '/' + str(player_state) + '/' + str(player_turn)  + '/')) - 1 : 
-#                            player_animation = 0  ; player_image = pg.image.load('Objects/Characters/Players/' + str(player_types[i]) + '/' + str(player_state) + '/'  + str(player_turn) + '/' + str(player_animation) + '.png')
-#                            player_animation += 1 ; player_image = pg.image.load('Objects/Characters/Players/' + str(player_types[i]) + '/' + str(player_state) + '/'  + str(player_turn) + '/' + str(player_animation) + '.png')
-#   
-#        #Enemy animation
-#        if game_mode != 'Peaceful':
-#            for i in range(len(Enemies_file1)) :
-#                if int(Enemies_file1[i].split(',')[0]) >= camera.rect[0] + fov and  int(Enemies_file1[i].split(',')[0]) <= camera.rect[0] + int(screen_width) - fov \
-#                    and int(Enemies_file1[i].split(',')[1]) >= camera.rect[1] + fov and  int(Enemies_file1[i].split(',')[1]) <= camera.rect[1] + int(screen_height) - fov and Enemy_image not in killed_units :
-#                    if  Enemy_animation <= len(os.listdir(                     'Objects/Characters/Enemies/' + str(enemy_types[i]) + '/' + str(i) + '/' + str(enemy_state) + '/' + str(enemy_turn) + '/')) - 1:
-#                        Enemy_image = pg.image.load(                           'Objects/Characters/Enemies/' + str(enemy_types[i]) + '/' + str(i) + '/' + str(enemy_state) + '/' + str(enemy_turn) + '/' + str(Enemy_animation) + '.png')
-#                        Enemy_animation += 1 ; Enemy_image  = pg.image.load(   'Objects/Characters/Enemies/' + str(enemy_types[i]) + '/' + str(i) + '/' + str(enemy_state) + '/' + str(enemy_turn) + '/' + str(Enemy_animation) + '.png')
-#                    if  Enemy_animation >= len(os.listdir(                     'Objects/Characters/Enemies/' + str(enemy_types[i]) + '/' + str(i) + '/' + str(enemy_state) + '/' + str(enemy_turn) + '/')) - 1: 
-#                            Enemy_animation =  0 ; Enemy_image = pg.image.load('Objects/Characters/Enemies/' + str(enemy_types[i]) + '/' + str(i) + '/' + str(enemy_state) + '/' + str(enemy_turn) + '/' + str(Enemy_animation) + '.png')
-#                            Enemy_animation += 1 ; Enemy_image = pg.image.load('Objects/Characters/Enemies/' + str(enemy_types[i]) + '/' + str(i) + '/' + str(enemy_state) + '/' + str(enemy_turn) + '/' + str(Enemy_animation) + '.png')
-
-"""
-        #Hero animation
-        if vihicle_sit == 0:
-            if game_state == 'Play' and camera.rect[0] >= 0 and camera.rect[1] >= 0:
-                    hero_animations_dir = os.listdir('Objects/Characters/Hero/' + str(name) + '/' + str(state) + '/' + str(turn) + '/')
-                    if animation <= len(hero_animations_dir) - 1:
-                        clock.tick(FPS / fps_1)
-                        animation += 1
-                        hero_animations_dir = os.listdir('Objects/Characters/Hero/' + str(name) + '/' + str(state) + '/' + str(turn) + '/')
-                        hero       =                'Objects/Characters/Hero/' + str(name)      + '/' + str(state) + '/' + str(turn) + '/' + str(animation) + '.png'
-                        hero_image = pg.image.load( 'Objects/Characters/Hero/' + str(name)      + '/' + str(state) + '/' + str(turn) + '/' + str(animation) + '.png')
-                        heroimage  = Image.open(    'Objects/Characters/Hero/' + str(name)      + '/' + str(state) + '/' + str(turn) + '/' + str(animation) + '.png')
-                        hero_x , hero_y = int(screen_width) / 2  - heroimage.width / 2 , int(screen_height)  / 2 - heroimage.height /2
-
-                    if animation >= len(hero_animations_dir) - 1:
-                        animation = 0
-                        hero_animations_dir = os.listdir('Objects/Characters/Hero/' + str(name) + '/' + str(state) + '/' + str(turn) + '/')
-                        hero_speed = 4
-                        clock.tick(FPS / fps_1)
-                        animation  += 1
-                        hero       =                'Objects/Characters/Hero/' + str(name) + '/' + str(state) + '/' + str(turn) + '/' + str(animation) + '.png'
-                        hero_image = pg.image.load( 'Objects/Characters/Hero/' + str(name) + '/' + str(state) + '/' + str(turn) + '/' + str(animation) + '.png')
-                        heroimage  = Image.open(    'Objects/Characters/Hero/' + str(name) + '/' + str(state) + '/' + str(turn) + '/' + str(animation) + '.png')
-                        hero_x , hero_y = int(screen_width) / 2  - heroimage.width / 2 , int(screen_height)  / 2 - heroimage.height / 2
-
-
-
-"""
-
 
 
 
@@ -256,8 +160,7 @@ def mini_map_mouse_controls():
 
 changed_keybinds = []
 
-Random_events =[]
-
+Random_events = []
 
 def toggle_settings():
     if game_state == 'Settings':
@@ -309,6 +212,7 @@ def game_mode_select():
             screen.blit(game_modes1[i]    , ( int(screen_width) /  2 - button_width / 2  , int(screen_height) / 2 - int(screen_height) / 4 - bigfont + i * 40 + bigfont / 2 , button_width , bigfont ))
 
 
+
 def Difficulty_select():
     if game_state == 'Select a difficulty':
         draw_menu()
@@ -316,6 +220,8 @@ def Difficulty_select():
             Button = pg.draw.rect(screen , (Button_color) , ( int(screen_width) /  2 - button_width / 2 , int(screen_height) / 2 - int(screen_height) / 4 - bigfont + i * 40 + bigfont /2 , button_width , bigfont + 5 ) , 0 , 0 , button_border_radius , button_border_radius , button_border_radius , button_border_radius)            
             pg.draw.rect(screen , (Button_frame_color)    , ( int(screen_width) /  2 - button_width / 2 , int(screen_height) / 2 - int(screen_height) / 4 - bigfont + active_button * 40 + bigfont / 2 , button_width , bigfont + 5 ) , 2 , 0 , button_border_radius , button_border_radius , button_border_radius , button_border_radius)
             screen.blit(difficulties1[i]                  , ( int(screen_width) /  2 - button_width / 2 , int(screen_height) / 2 - int(screen_height) / 4 - bigfont + i * 40 + bigfont / 2 , button_width , bigfont ))
+
+
 
 def Open_backpack():
     if game_state == 'Backpack':
@@ -339,6 +245,8 @@ def Open_backpack():
                             pg.draw.rect(screen           , (Button_frame_color) , ( int(screen_width) / 2 + bigfont , int(screen_height) / 4 - bigfont + active_button1 * 40 + bigfont / 2 , button_width , bigfont) , 2 , 0 , button_border_radius , button_border_radius , button_border_radius , button_border_radius )
                             screen.blit(new_craft         , ( int(screen_width) / 2 + bigfont + button_width - cell_size , int(screen_height) / 10 + i * 40 , 100 , bigfont ))
 
+
+
 def Open_unit_inventory():
     if vihicle_sit == 1:
         for x in range(items_max):
@@ -347,14 +255,20 @@ def Open_unit_inventory():
                 pg.draw.rect(screen          , ( Button_frame_color  ) , ( int(screen_width)  / 4 + cell_size * 0 , int(screen_height) / 4 + cell_size * active_button1 , cell_size , cell_size ) , 2 , 0 , button_border_radius , button_border_radius , button_border_radius , button_border_radius) #drawing a inventory cell_frame for a selected item in inventory
             screen.blit(hero_inventory[item] , (int(screen_width ) / 2 ,   int(screen_height) - cell_size     * 2  )) #drawing a title of the item in inventory            
                 
+
+
 def Trade_menu():
+    obj_dir = os.listdir('Objects/')
     if game_state      == 'Trade menu':
-        menu_titles    = ['Ammo' , 'Tools' , 'Clothes' , 'Weapons']
+        menu_titles    = [obj_dir[i] for i in range(len(obj_dir))]
+        
         menu_titles1   = []
         menu_title_num = 0
         menu_title     = menu_titles[menu_title_num]
         for i in range(len(menu_titles)) : i = big_font.render(menu_titles[i].split(',')[0].strip() , False , small_font_color ) ; menu_titles1.append(i)   
+        
         draw_menu()
+        
         for i in range(len(menu_titles1)):            
             Button = pg.draw.rect(screen , (Button_color) , (int(screen_width) / 2 - button_width - bigfont , int(screen_height) / 4 + cell_size * i , button_width , cell_size) , 0 , 0 , button_border_radius , button_border_radius , button_border_radius , button_border_radius)
             pg.draw.rect(screen , ( Button_frame_color  ) , (int(screen_width) / 2 - button_width - bigfont , int(screen_height) / 4 + cell_size * active_button , button_width , cell_size ) , 2 , 0 , button_border_radius , button_border_radius , button_border_radius , button_border_radius) #drawing a inventory cell_frame for a selected item in inventory
@@ -364,6 +278,8 @@ def Trade_menu():
                         pg.draw.rect(screen           , (Button_frame_color) , ( int(screen_width) / 2 + bigfont , int(screen_height) / 4 - bigfont + active_button1 * 40 + bigfont / 2 , button_width , bigfont) , 2 , 0 , button_border_radius , button_border_radius , button_border_radius , button_border_radius )
                         screen.blit(new_craft         ,                        ( int(screen_width) / 2 + bigfont , int(screen_height) / 10 + i * 40 , 100 , bigfont ))
             for i in range(len(prices_list1)) : screen.blit(prices_list1[i] ,  ( int(screen_width) / 2 + bigfont + button_width / 2   , int(screen_height) / 2 - int(screen_height) / 4 - bigfont + i * 40 + bigfont / 2 , button_width , bigfont ))
+
+
 
 def toggle_main_menu():
     if game_state == 'Main menu':
@@ -375,6 +291,8 @@ def toggle_main_menu():
             len(os.listdir(mods_dir_path))
         screen.blit(show_mods_count                   , (int(screen_width) /  2 - button_width / 2 + 75 , int(screen_height) / 2 - int(screen_height) / 4 - bigfont + 3 * 40 + bigfont / 2 , button_width , bigfont ))
 
+
+
 def toggle_mods_menu():
     if game_state == 'Mods menu':
         draw_menu()
@@ -382,6 +300,8 @@ def toggle_mods_menu():
             Button = pg.draw.rect(screen , (Button_color) , (int(screen_width) /  2 - button_width / 2 , int(screen_height) / 2 - int(screen_height) / 4 - bigfont + i * 40 + bigfont / 2 , button_width , bigfont + 5 ) , 0 , 0 , button_border_radius , button_border_radius , button_border_radius , button_border_radius)            
             screen.blit(mods_dir_path[i]                      , (int(screen_width) /  2 - button_width / 2 , int(screen_height) / 2 - int(screen_height) / 4 - bigfont + i * 40 + bigfont / 2 , button_width , bigfont ))
             pg.draw.rect(screen , (Button_frame_color)    , (int(screen_width) /  2 - button_width / 2 , int(screen_height) / 2 - int(screen_height) / 4 - bigfont + active_button * 40 + bigfont / 2 , button_width , bigfont + 5 ) , 2 , 0 , button_border_radius , button_border_radius , button_border_radius , button_border_radius)
+
+
 
 def text_updating(): 
     global new_craft,new_quest,checkpoints_list,achievements_list,hero_inventory_nums,show_game_state,ok,apply,cancel,action_counter,checkpoints_file1,dialoge_started,achievements_file1,checkpoint_size,dialoge_num,action,checkpoint_num
@@ -412,26 +332,97 @@ def text_updating():
     new_craft = small_font.render('Uus' , False , small_font_color ) ; ok = small_font.render('OK' , False , small_font_color ) ; apply = small_font.render('Apply'  , False , small_font_color) ; cancel = small_font.render('Tagasi'  , False , small_font_color)
     show_game_state = big_font.render('Menüü' , False , small_font_color)
 
+
+
 def player_movement():
-        global calc_dist,show_distance,hero_checkpoint_offset_x,hero_checkpoint_offset_y,state,hero_x,hero_y,turn,hero_speed,minimap_object_offset,minimap_object_offset1,unit_path_lenght,unit_path_angle
+
+        global calc_dist,show_distance,hero_checkpoint_offset_x,hero_checkpoint_offset_y,state,hero_x,hero_y,turn,hero_speed,minimap_object_offset,minimap_object_offset1,hero_path_lenght,hero_path_angle,rot_hero,scaled_image
+        global original_hero_img_width,original_hero_img_height,new_hero_img_width,new_hero_img_height,scale_factor,rect,new_hero_img_width,new_hero_img_height
+
         keys = pg.key.get_pressed()
         if game_state == 'Play':
 
-            if keys[pg.K_a] and camera.rect[0] >= 0 and camera.rect[1] >= 0 : state = 'go' ; turn  = 'left'; hero_speed = 4 ; vector[0] -= hero_speed ; hero_checkpoint_offset_x -= hero_speed;calc_dist = math.sqrt( (( x_2_list - x_1_list - hero_checkpoint_offset_x) ** 2 ) +  ( (  y_2_list - y_1_list - hero_checkpoint_offset_y) ** 2 ));show_distance    = small_font.render('Distance : ' + str(int(calc_dist) /100) + ' m' , False , small_font_color ) ; minimap_object_offset += 1 / (map_scale * hero_speed * 10)
+            if keys[pg.K_a]:
+                state = 'go'
+                turn  = 'left'
+                hero_speed = 4
+                vector[0] -= hero_path_lenght * -math.cos(hero_path_angle) / 100
+                hero_checkpoint_offset_x -= hero_speed
+                calc_dist = math.sqrt( (( x_2_list - x_1_list - hero_checkpoint_offset_x) ** 2 ) +  ( (  y_2_list - y_1_list - hero_checkpoint_offset_y) ** 2 ))
+                show_distance = small_font.render(f'Distance : {calc_dist / 100} + m', False, small_font_color)
             
-            if keys[pg.K_d] and camera.rect[0] <= map_width and camera.rect[1] >= 0 : state = 'go' ; turn = 'right' ; hero_speed = 4 ;vector[ 0 ]  += hero_speed ; hero_checkpoint_offset_x += hero_speed ; calc_dist = math.sqrt( (( x_2_list - x_1_list - hero_checkpoint_offset_x) ** 2 ) +  ( (  y_2_list - y_1_list - hero_checkpoint_offset_y) ** 2 )) ; show_distance = small_font.render('Distance : ' + str(int(calc_dist) /100) + ' m' , False , small_font_color ) ; minimap_object_offset -= 1 / (map_scale * hero_speed * 10)  #hero_image =  pg.image.load(hero) ; heroimage = Image.open(hero) ; hero_x , hero_y = int(screen_width) / 2  - heroimage.width / 2 , int(screen_height)  / 2 - heroimage.height / 2
-            
-            if keys[pg.K_w] and camera.rect[0] >= 0 and camera.rect[1] >= 0 :vector[1] -= hero_speed ; hero_checkpoint_offset_y -= hero_speed ; calc_dist = math.sqrt( (( x_2_list - x_1_list - hero_checkpoint_offset_x) ** 2 ) +  ( (  y_2_list - y_1_list - hero_checkpoint_offset_y) ** 2 )) ; show_distance = small_font.render('Distance : ' + str(int(calc_dist) /100) + ' m' , False , small_font_color ) ; minimap_object_offset1 += 1 / (map_scale * hero_speed * 10)
-            if keys[pg.K_s] and camera.rect[0] >= 0 and camera.rect[1] >= 0 : vector[ 1 ]   += hero_speed ; hero_checkpoint_offset_y += hero_speed; hero_x , hero_y = int(screen_width) / 2  - heroimage.width / 2 , int(screen_height)  / 2 - heroimage.height / 2 ; calc_dist = math.sqrt( (( x_2_list - x_1_list - hero_checkpoint_offset_x) ** 2) + ((y_2_list - y_1_list - hero_checkpoint_offset_y) ** 2 )) ; show_distance = small_font.render('Distance : ' + str(int(calc_dist) /100) + ' m' , False , small_font_color ) ; minimap_object_offset -= 1 / (map_scale * hero_speed * 10)
-            
+            if keys[pg.K_d]:
+                state = 'go'
+                turn = 'right'
+                hero_speed = 4 
+                vector[0] += hero_path_lenght * -math.sin(hero_path_angle) / 100
 
-            if keys[pg.K_q] and camera.rect[0] >= 0 and camera.rect[1] >= 0 : unit_path_lenght += 10
-            if keys[pg.K_e] and camera.rect[0] >= 0 and camera.rect[1] >= 0 : unit_path_lenght -= 10
+                hero_checkpoint_offset_x += hero_speed
+                calc_dist = math.sqrt( (( x_2_list - x_1_list - hero_checkpoint_offset_x) ** 2 ) +  ( (  y_2_list - y_1_list - hero_checkpoint_offset_y) ** 2 ))
+                show_distance = small_font.render(f'Distance : {calc_dist / 100} + m', False, small_font_color)
+                minimap_object_offset -= 1 / (map_scale * hero_speed * 10)  #hero_image =  pg.image.load(hero) ; heroimage = Image.open(hero) ; hero_x , hero_y = int(screen_width) / 2  - heroimage.width / 2 , int(screen_height)  / 2 - heroimage.height / 2
             
-            if keys[pg.K_h] and camera.rect[0] >= 0 and camera.rect[1] >= 0 : unit_path_angle += 0.1
-            if keys[pg.K_b] and camera.rect[0] >= 0 and camera.rect[1] >= 0 : unit_path_angle -= 0.1
+            if keys[pg.K_w]:
+                #vector[1] -= hero_speed
+                hero_path_lenght += 10
+                hero_checkpoint_offset_y -= hero_speed
+                calc_dist = math.sqrt( (( x_2_list - x_1_list - hero_checkpoint_offset_x) ** 2 ) +  ( (  y_2_list - y_1_list - hero_checkpoint_offset_y) ** 2 ))
+                show_distance = small_font.render(f'Distance : {calc_dist / 100} + m', False, small_font_color)
+                minimap_object_offset1 += 1 / (map_scale * hero_speed * 10)
             
+            
+            if keys[pg.K_s]:
+                #vector[1] += hero_speed
+                hero_path_lenght -= 10
+                hero_checkpoint_offset_y += hero_speed
+                hero_x , hero_y = int(screen_width) / 2  - heroimage.width / 2 , int(screen_height)  / 2 - heroimage.height / 2
+                calc_dist = math.sqrt( (( x_2_list - x_1_list - hero_checkpoint_offset_x) ** 2) + ((y_2_list - y_1_list - hero_checkpoint_offset_y) ** 2 ))
+                show_distance = small_font.render(f'Distance : {calc_dist / 100} + m', False, small_font_color)
+                minimap_object_offset -= 1 / (map_scale * hero_speed * 10)
+            
+            if keys[pg.K_q]: hero_path_angle += 0.1
+            if keys[pg.K_e]: hero_path_angle -= 0.1
+            
+            rot_hero = pg.transform.rotate(hero_image,math.degrees(hero_path_angle))
+
+            rect = rot_hero.get_rect(center=(hero_image.get_width(),hero_image.get_width()))
+
+            scale_factor = 2
+            original_hero_img_width = hero_image.get_width() ; original_hero_img_height = hero_image.get_height()
+
+
+
+            scaled_image = pg.transform.scale(rot_hero, (hero_image.get_width() * scale_factor, hero_image.get_height() * scale_factor))
+                        
+            if keys[pg.K_k]:
+                scale_factor += 0.1
+                print(f'scale factor : {scale_factor}')
+
+                scaled_image = pg.transform.scale(rot_hero, (original_hero_img_width, original_hero_img_height))
+
+                new_hero_img_width  = int(hero_image.get_width()) ; new_hero_img_height = int(hero_image.get_height())
+
+
+            if keys[pg.K_l]:
+                scale_factor -= 0.1
+                print(scale_factor)
+
+                scaled_image = pg.transform.scale(rot_hero, (original_hero_img_width, original_hero_img_height))
+                
+                new_hero_img_width  = int(hero_image.get_width()) ; new_hero_img_height = int(hero_image.get_height())
+
+
+
         if vector != [ 0 , 0 ] : camera.move(vector) #Если игрок ходил
+
+        # Обновление расстояния до цели
+        calc_dist = math.sqrt(((x_2_list - x_1_list - hero_checkpoint_offset_x) ** 2) +((y_2_list - y_1_list - hero_checkpoint_offset_y) ** 2))
+        show_distance = small_font.render(f'Distance : {calc_dist / 100} + m', False, small_font_color)
+        
+        # Обновление смещения на мини-карте
+        minimap_object_offset  += 1 / (map_scale * hero_speed * 10) if vector[0] < 0 else -1 / (map_scale * hero_speed * 10) ; minimap_object_offset1 += 1 / (map_scale * hero_speed * 10) if vector[1] < 0 else -1 / (map_scale * hero_speed * 10)
+
+
 
 def start():
 
@@ -455,8 +446,6 @@ def start():
 
     toggle_settings() ; toggle_main_menu() ; character_select() ; Trade_menu() ; game_mode_select() ; Open_backpack() ; mini_map_keyboard_controls() ; Difficulty_select() ; toggle_mods_menu()
 
-
-
     if game_state == 'Play':
         mouse_visible = False ; mouse_set_visible = pg.mouse.set_visible( mouse_visible )
 
@@ -465,16 +454,7 @@ def start():
             world_border = pg.draw.rect(screen , (Button_frame_color) , ( -camera.rect[ 0 ] + 0 ,-camera.rect[ 1 ] + 0 , map_width , map_width) , 10 , 0  )
 
             #islands
-            pg.draw.polygon(screen , (100 , 50 , 0) , ( 
-                                                        
-                                                        [-camera.rect[0] + meter * 30      , -camera.rect[1] + meter * 30                 ] , 
-                                                        [-camera.rect[0] + meter * 30      , -camera.rect[1] + meter * 30 + km            ] ,
-                                                        [-camera.rect[0] + meter * 30 + km , -camera.rect[1] + meter * 30 + km            ] ,
-                                                        [-camera.rect[0] + meter * 30 + km , -camera.rect[1] + meter * 30                 ] , 
-
-
-                                                        
-                                                        ))
+            for i in range(len(islands_points)): pg.draw.polygon(screen , (100,25,0), islands_points)
 
 
 
@@ -483,9 +463,10 @@ def start():
                     screen.blit( vihicles_images_list[i] , ( -camera.rect[ 0 ] + int(vihicles_file1[i].split(',')[0]) , -camera.rect[ 1 ] + int(vihicles_file1[i].split(',')[1]) ) )
 
 
+
             #rooms
             for i in range(len(buildings_file1)) :
-                
+
                 #room_floor
                 pg.draw.polygon(screen , (colors[7]) , (       
                     
@@ -545,24 +526,24 @@ def start():
 
         for i in range(len(Furniture_file1)) :
             for y in range(int(Furniture_file1[i].split(',')[2])):
-                if camera.rect[0] + int(screen_width) - fov >= int(Furniture_file1[i].split(',')[0]) and camera.rect[1] + int(screen_height) - fov >= int(Furniture_file1[i].split(',')[1]):
-                    screen.blit( Furniture_images_list[ i ] , ( -camera.rect[ 0 ] + int(Furniture_file1[i].split(',')[0]) + int(Furniture_file1[i].split(',')[2]) * y * 10  , -camera.rect[ 1 ] + int(Furniture_file1[i].split(',')[1] ) ) )
+                if camera.rect[0] + int(screen_width) - fov >= int(Furniture_file1[i].split(',')[0]) and camera.rect[1] + int(screen_height) - fov >= int(Furniture_file1[i].split(',')[1]) : screen.blit( Furniture_images_list[ i ] , ( -camera.rect[ 0 ] + int(Furniture_file1[i].split(',')[0]) + int(Furniture_file1[i].split(',')[2]) * y * 10  , -camera.rect[ 1 ] + int(Furniture_file1[i].split(',')[1] ) ) )
                 
         for i in range(len(items_file1)) :
-                if camera.rect[0] + int(screen_width) - fov >= int(items_file1[i].split(',')[0]) and camera.rect[1] + int(screen_height) - fov >= int(items_file1[i].split(',')[1]):
-                    screen.blit( items_images[ i ] , ( -camera.rect[ 0 ] + int(items_file1[i].split(',')[0]) , -camera.rect[ 1 ] + int(items_file1[i].split(',')[1] ) ) )
+                if camera.rect[0] + int(screen_width) - fov >= int(items_file1[i].split(',')[0]) and camera.rect[1] + int(screen_height) - fov >= int(items_file1[i].split(',')[1]) : screen.blit( items_images[ i ] , ( -camera.rect[ 0 ] + int(items_file1[i].split(',')[0]) , -camera.rect[ 1 ] + int(items_file1[i].split(',')[1] ) ) )
         
         for i in range(len(Plants_file1)) :
-                if camera.rect[0] + int(screen_width) - fov >= int(Plants_file1[i].split(',')[0]) and camera.rect[1] + int(screen_height) - fov >= int(Plants_file1[i].split(',')[1]):
-                    screen.blit( Plants_file1[ i ] , ( -camera.rect[ 0 ] + int(Plants_file1[i].split(',')[0]) , -camera.rect[ 1 ] + int(Plants_file1[i].split(',')[1] ) ) )
+                if camera.rect[0] + int(screen_width) - fov >= int(Plants_file1[i].split(',')[0]) and camera.rect[1] + int(screen_height) - fov >= int(Plants_file1[i].split(',')[1]) : screen.blit( Plants_file1[ i ] , ( -camera.rect[ 0 ] + int(Plants_file1[i].split(',')[0]) , -camera.rect[ 1 ] + int(Plants_file1[i].split(',')[1] ) ) )
 
         interface_surf.set_alpha(50)
         quests_surf.set_colorkey(( 0 , 0 , 0 ))
 
-        screen.blit( hero_image , ( hero_x + hero_path_lenght * -math.cos(hero_path_angle) , hero_y + hero_path_lenght * -math.sin(-hero_path_angle) ) )
+        screen.blit( hero_image, (hero_x, hero_y ))
+        screen.blit(rot_hero, (500,200))
+
+        screen.blit(scaled_image, (550,200 ))
+
         screen.blit( enemy.image , ( -camera.rect[0] + enemy.x , -camera.rect[1] + enemy.y ))
-
-
+        
         #fuel_bar(green color)
         pg.draw.line( screen , (0 , 255 , 0) , (400 , 400) , ( 400 + fuel_bar_width * -math.cos(fuel) , 400 + fuel_bar_width * -math.sin(-fuel)) , 1)
 
@@ -572,11 +553,9 @@ def start():
                 pg.draw.rect(screen , ( cell_color)           , ( int(screen_width) / 2 - cell_size * i     + cell_size , int(screen_height) - cell_size , cell_size , cell_size ) , 2 , 0 , button_border_radius , button_border_radius , button_border_radius , button_border_radius ) #drawing a inventory cells
                 pg.draw.rect(screen , ( Button_frame_color  ) , ( int(screen_width) / 2 - cell_size * item  + cell_size , int(screen_height) - cell_size , cell_size , cell_size ) , 2 , 0 , button_border_radius , button_border_radius , button_border_radius , button_border_radius) #drawing a inventory cell_frame for a selected item in inventory
             
-            if len(hero_inventory)  != 0:
-                screen.blit(hero_inventory[item] , (int(screen_width ) / 2 , int(screen_height) - cell_size * 2  )) #drawing a title of the item in inventory
+            if len(hero_inventory)  != 0 : screen.blit(hero_inventory[item] , (int(screen_width ) / 2 , int(screen_height) - cell_size * 2  )) #drawing a title of the item in inventory
     
-            dark_surf.fill(dark_surf_color) ; dialoge_surf.fill((0 , 0 , 0 )) ; dark_surf.set_alpha(dark_level)
-            screen.blit(dark_surf     , ( 0 , 0 )) 
+            dark_surf.fill(dark_surf_color) ; dialoge_surf.fill((0 , 0 , 0 )) ; dark_surf.set_alpha(dark_level) ; screen.blit(dark_surf , ( 0 , 0 )) 
 
             screen.blit(hero_shadow_surf  , ( (hero_x) , (hero_y + hero_image1.get_height() ) ))
             
@@ -626,9 +605,8 @@ def start():
 
         
 
-            for x in range( int(map_width / km)) : 
-                for y in range( int(map_height / km)):
-                    pg.draw.rect(screen , (255,0,0) , (  -camera.rect[0] + meter * km * x  , -camera.rect[1] + meter * km * y , km, km),2,0)   
+            for x in range( int(map_width / km)) :
+                for y in range( int(map_height / km)) : pg.draw.rect(screen , (255,0,0) , (  -camera.rect[0] + meter * km * x  , -camera.rect[1] + meter * km * y , km, km),2,0)   
 
             if blit_distance == 1 and map_size == min_map_size : screen.blit(show_distance , ( hero_x , hero_y - bigfont ) )
 
@@ -642,8 +620,6 @@ while run :
 
     if dark_level <= max_dark_level : dark_level += 0.01 ; clock.tick(FPS / fps_1)
     
-    #Animations()
-    #vector = [ 0, 0]
     vector = [ 0 , 0]
 
     for event in pg.event.get() :
@@ -651,15 +627,23 @@ while run :
         pg.display.update()
 
         if event.type == pg.MOUSEBUTTONDOWN:
+
+            #shooting
             if event.button == 1 and int(ammo) > 0  and int(ammo) <= max_ammo and game_state == 'Play' and dialoge_started == 0 and map_size == min_map_size :
-                ammo -= 1 ; gun_shot = pg.mixer.Sound( 'Audio/sounds/firegun/single/0.mp3' ) ; gun_shot.play()
-                show_hero_armor = big_font.render('armor : ' + str(armor).strip() + " / " + str( max_armor).strip() , False , ( 250 , 0 , 0 ) ) ; show_ammo = big_font.render('ammo : ' + str(ammo).strip() + " / " + str(max_ammo * mags).strip() , False , ( 250 , 0 , 0 ) ) ; show_health = big_font.render('health : ' + str(health).strip() + " / " + str(max_health).strip() , False , ( 255 , 0 , 0 ) ) ; show_radiation  = big_font.render('radiation : ' + str(radiation).strip() + " / " + str(max_radiation).strip() , False , ( 255 , 0 , 0 ) )
-                hero            = 'Objects/Characters/Hero/'     + str(name) + '/' + str(state) + '/' + str(turn) + '/' + str(animation) + '.png' ; hero_x , hero_y = int(screen_width) / 2  - heroimage.width / 2 , int(screen_height)  / 2 - heroimage.height / 2
+                ammo -= 1
+                gun_shot = pg.mixer.Sound( 'Audio/sounds/firegun/single/0.mp3' )
+                gun_shot.play()
+                show_hero_armor = big_font.render('armor : ' + str(armor).strip() + " / " + str( max_armor).strip() , False , ( 250 , 0 , 0 ) )
+                show_ammo = big_font.render('ammo : ' + str(ammo).strip() + " / " + str(max_ammo * mags).strip() , False , ( 250 , 0 , 0 ) )
+                show_health = big_font.render('health : ' + str(health).strip() + " / " + str(max_health).strip() , False , ( 255 , 0 , 0 ) )
+                show_radiation  = big_font.render('radiation : ' + str(radiation).strip() + " / " + str(max_radiation).strip() , False , ( 255 , 0 , 0 ) )
+                hero            = 'Objects/Characters/Hero/'     + str(name) + '/' + str(state) + '/' + str(turn) + '/' + str(animation) + '.png'
+                hero_x , hero_y = int(screen_width) / 2  - heroimage.width / 2 , int(screen_height)  / 2 - heroimage.height / 2
 
             if event.button     == 1 and int(ammo) <= 1 and game_state == 'Play' and dialoge_started == 0 and map_size == min_map_size :
                 show_hero_armor = big_font.render('armor : ' + str(armor).strip() + " / " + str( max_armor).strip() , False , ( 250 , 0, 0  ) ) ; show_ammo = big_font.render('ammo : ' + str(ammo).strip() + " / " + str(max_ammo * mags).strip() , False , ( 250 , 0 , 0 ) ) ; show_health = big_font.render('health : ' + str(health).strip() + " / " + str(max_health).strip() , False , ( 255 , 0 , 0 ) ) ; show_radiation  = big_font.render('radiation : ' + str(radiation).strip() + " / " + str(max_radiation).strip() , False , ( 255 , 0 , 0 ) )
-                no_ammo         = pg.mixer.Sound( 'Audio/sounds/firegun/no ammo/0.mp3' ) ; no_ammo.play()
-        
+                ammo -= 1 ; gun_shot = pg.mixer.Sound( 'Audio/sounds/firegun/single/0.mp3' ) ; gun_shot.play()
+
             if event.button == 1 and pos[0] >= cancel_icon_x and pos[0] <= cancel_icon_x + cancel_icon.get_width() and pos[1] >= cancel_icon_y and pos[1] <= cancel_icon_y + cancel_icon.get_height() and game_state == 'Play' and vihicle_sit == 1:
                 vihicle_sit =  0
 
@@ -668,44 +652,43 @@ while run :
             
             for i in range(len(Companions_file1)):
                 if event.button == 3 and  pos[0] >=  -camera.rect[0] + int(Companions_file1[i].split(',')[0]) and pos[0] <=  -camera.rect[0] + int(Companions_file1[i].split(',')[0]) + Companions_images_list[i].get_width() and pos[1] >=  -camera.rect[1] + int(Companions_file1[i].split(',')[1])  and pos[1] <=  -camera.rect[1] + int(Companions_file1[i].split(',')[1]) + Companions_images_list[i].get_height():
+                        
                         game_state = 'Trade menu'
-                        if welcome_num  >= 0 and welcome_num <= len(welcome_speech_dir) - 1 : welcome_num += 0.5 ; welcome = pg.mixer.Sound('Audio/speech/langs/' + str(language) + '/welcome/' + str(int(welcome_num)) + '.mp3') ; welcome.play()
-                        if welcome_num  >= len(welcome_speech_dir) - 1 : welcome_num = 0 ; welcome_num += 0.5 ; welcome = pg.mixer.Sound('Audio/speech/langs/' + str(language) + '/welcome/' + str(int(welcome_num)) + '.mp3') ; welcome.play()
+                        if  0 <= len(welcome_speech_dir) - 1 : welcome_num += 0.5
+                        
+                        welcome = pg.mixer.Sound(f'Audio/speech/langs/{language}/welcome/{int(welcome_num)}.mp3')
+                        welcome.play()
+                        
+                        if welcome_num  >= len(welcome_speech_dir) - 1 : welcome_num = 0
+                        welcome_num += 0.5
+                        welcome = pg.mixer.Sound(f'Audio/speech/langs/{language}/welcome/{int(welcome_num)}.mp3')
+                        welcome.play()
 
-            #for i in range(len(Enemies_file1)):
-            #        if Enemy_image not in killed_units and  event.button == 1 and pos[0] >=  -camera.rect[0] + int(Enemies_file1[i].split(',')[0])  and pos[0] <=  -camera.rect[0] + int(Enemies_file1[i].split(',')[0]) + Enemy_image.get_width() and pos[1] >=  -camera.rect[1] + int(Enemies_file1[i].split(',')[1]) and pos[1] <=  -camera.rect[1] + int(Enemies_file1[i].split(',')[1]) + Enemy_image.get_height():
-            #            if enemy_sound_num <= len(enemy_sounds_dir) - 1:enemy_sound.play() ; enemy_sound_num += 0.5 ; enemy_sound = pg.mixer.Sound('Audio/sounds/roar/' + str(int(enemy_sound_num)) + '.mp3')
-            #            if enemy_sound_num >= len(enemy_sounds_dir) - 1:enemy_sound_num = 0 ; enemy_sound.play() ; enemy_sound_num += 0.5 ; enemy_sound = pg.mixer.Sound('Audio/sounds/roar/' + str(int(enemy_sound_num)) + '.mp3') ; killed_units.append(Enemy_image)
-        
-            #if event.button == 3 :
-            #    print(enemy.health)
-            #    enemy.take_damage(1)
-            #    print(enemy.health)
-            #    if enemy.health <= 0:
-            #        enemy.respawn()
-            #        enemy.update_image('Objects/Characters/Enemies/Ghosts/1/idle/right/0.png')
+
             
 
             for i in range(len(vihicles_file1)):
                 if event.button == 3 and  pos[0] >=  -camera.rect[0] + int(vihicles_file1[i].split(',')[0])  and pos[0] <=  -camera.rect[0] + int(vihicles_file1[i].split(',')[0]) + vihicles_images_list[i].get_width() and pos[1] >=  -camera.rect[1] + int(vihicles_file1[i].split(',')[1]) and pos[1] <=  -camera.rect[1] + int(vihicles_file1[i].split(',')[1]) + vihicles_images_list[i].get_height() and vihicle_sit == 0:
                     vihicle_sit = 1 ; camera.rect[0] = int(vihicles_file1[i].split(',')[0]) - int(screen_width) / 2 ; camera.rect[1] = int(vihicles_file1[i].split(',')[1]) - int(screen_height) / 2 ; hero_image = vihicles_images_list[i]
             
-
+            if map_size == min_map_size :  
+                if event.button == 4  and item >= 0: item -= 1 ; click_sound.play()
+                if event.button == 5  and item <= len(hero_inventory_file1) - 3 : item += 1 ; click_sound.play()
 
             #button 4 or 5 = mouse_wheel_scrolling button 1 = left mouse button button 3 = right mouse button 
-            if game_state == 'Main menu':   
-                if event.button == 1 and active_button == 0 : spawn_sound.play() ; game_state = 'Saves' 
-                if event.button == 1 and active_button == 1 : click_sound.play() ; game_state = 'character select menu'
-                if event.button == 1 and active_button == 2 : click_sound.play() ; game_state = 'Settings'
-                if event.button == 1 and active_button == 3 : click_sound.play() ; pg.quit()
+            if game_state == 'Main menu':
+                if event.button == 1:
+                    if active_button == 0 : spawn_sound.play() ; game_state = 'Saves' 
+                    if active_button == 1 : click_sound.play() ; game_state = 'character select menu'
+                    if active_button == 2 : click_sound.play() ; game_state = 'Settings'
+                    if active_button == 3 : click_sound.play() ; pg.quit()
+
+
 
             if game_state == 'Play' :
                 if dialoge_started  == 0:
                     if event.button == 2 : game_state = 'Trade menu' ; print('active buton ', active_button) ; click_sound.play()
 
-                    if map_size == min_map_size :  
-                        if event.button == 4  and item >= 0: item -= 1 ; click_sound.play()
-                        if event.button == 5  and item <= len(hero_inventory_file1) - 3 : item += 1 ; click_sound.play()
                     
                     if map_size == max_map_size :  
                         if event.button == 4 : map_scale -= 0.1 ; draw_mini_map()
@@ -718,14 +701,15 @@ while run :
                         mini_map_font_size = pg.font.SysFont(font_name , minimapfontsize) 
                         custom_checkpoint_title = mini_map_font_size.render('Custom checkpoint'    , False , small_font_color ) 
                 
-                if dialoge_started  == 1:
-                    if event.button == 1  and action_counter == 0 : spawn_sound.play()
-                    if event.button == 1  and action_counter == 2 : game_state = 'Trade menu' ;dialoge_started = 0 ; spawn_sound.play() 
-                    if event.button == 1  and action_counter == 3 : game_state = 'Crafting'   ; dialoge_stated = 0 ; spawn_sound.play() 
-                    if event.button == 1  and action_counter == 4 : dialoge_started = 0
+            if dialoge_started  == 1 and action_counter == 0 : spawn_sound.play()
+
+            if event.button == 1:
+                        if action_counter == 2 : game_state = 'Trade menu' ;dialoge_started = 0 ; spawn_sound.play() 
+                        if action_counter == 3 : game_state = 'Crafting'   ; dialoge_stated = 0 ; spawn_sound.play() 
+                        if action_counter == 4 : dialoge_started = 0
                     
-                    if event.button == 4  and action_counter >= 1 : action_counter -= 1 ; click_sound.play()
-                    if event.button == 5  and action_counter <= len(actions_list) - 2 : action_counter += 1 ; click_sound.play()
+            if event.button == 4  and action_counter >= 1 : action_counter -= 1 ; click_sound.play()
+            if event.button == 5  and action_counter <= len(actions_list)  - 2  : action_counter += 1 ; click_sound.play()
 
             if game_state == 'character select menu':
                 if event.button == 0 : game_state = 'Play' ; print('game state : ', game_state ) ; click_sound.play()
@@ -733,8 +717,8 @@ while run :
                 if event.button == 5  and active_button <= len(Hero_types) - 2 : active_button += 1 ; click_sound.play() ; print('active buton ' , active_button)
 
             if game_state == 'Trade menu':
-                if event.button == 4 and pos[0]<= int(screen_width) / 2 and active_button >= 1 : active_button -= 1 ; click_sound.play() ; print('active buton ', active_button) 
-                if event.button == 5 and pos[0]<= int(screen_width) / 2 and active_button <= len(menu_titles1) - 2 : active_button += 1 ; click_sound.play() ; print('active buton ' , active_button) 
+                if event.button == 4 and pos[0]<= int(screen_width) / 2 and active_button  >= 1 : active_button -= 1 ; click_sound.play() ; print('active buton ', active_button) 
+                if event.button == 5 and pos[0]<= int(screen_width) / 2 and active_button  <= len(menu_titles1) - 2 : active_button += 1 ; click_sound.play() ; print('active buton ' , active_button) 
             
                 if event.button == 4 and pos[0]>= int(screen_width) / 2 and active_button1 >= 1 : active_button1 -= 1 ; click_sound.play() ; print('active buton ', active_button) 
                 if event.button == 5 and pos[0]>= int(screen_width) / 2 and active_button1 <= len(menu_titles1) - 2 : active_button1 += 1 ; click_sound.play() ; print('active buton1 ' , active_button1) 
@@ -785,11 +769,8 @@ while run :
         if keys [pg.K_ESCAPE]   and open_backpack == 1: open_backpack  = 0
         if keys [reload_btn] and mags >= 1 : reloadsound = pg.mixer.Sound( 'Audio/sounds/firegun/reload.mp3' ) ; reloadsound.play() ; mags -= 1 ; hero_file_name = 'txt/hero.txt' ; hero_file_mode = 'w' ; hero_file = open (hero_file_name , hero_file_mode) ; hero_file.write(str(mags)) ; hero_file.write(str(health)) ; hero_file.write(str(health)) ; hero_file.write(str(health)) ; hero_file.write(str(mags)) ; hero_file.write(str(mags)) ; hero_file.close() ; ammo = max_ammo ; show_ammo  = big_font.render(str(ammo) + " / "  + str( ammo * mags ) , False , colors[2] ) ; show_armor = big_font.render(str(armor).strip() + " / "  + str( max_armor ).strip() , False , ( 250 , 0, 0 ) ) ; show_health    = big_font.render(str(health).strip()     + " / "  + str( max_health ).strip() , False , ( 255 , 0 , 0 ) ) ; show_radiation = big_font.render(str(radiation ).strip() + " / "  + str( max_radiation ).strip() , False , ( 255 , 0 , 0 ) ) ; cursor = pg.image.load( 'Interface/icons/refresh_icon.png' ) ; pg.display.update()
         if keys [screenshot_btn ] : make_screenshot() ; logging.info( msg = 'SCREENSHOT SAVED!') ; print('Screenshot saved ! ')
-        
         #if keys [load_game_btn  ] : load_game() #load game
-        
         #if keys [save_game_btn  ] : save_game() #save game
-        
         if keys [pg.K_f] : fuel += 0.1 ; show_fuel = big_font.render('Fuel  : ' + str(fuel)    , False , small_font_color ) ; print('Fuel : ' , fuel)
         
 
@@ -808,16 +789,6 @@ while run :
     
     mouse_visible = False ; cursor = pg.image.load( 'Interface/icons/Select/0.png' ) ; screen.blit( cursor , ( pos[ 0 ] - mouse_horizontal_offset , pos[ 1 ]  - mouse_vertical_offset )) ; calc_dist = math.sqrt( (( x_2_list - x_1_list   * hero_checkpoint_offset_x) ** 2 ) +  ( (  y_2_list - y_1_list * hero_checkpoint_offset_y) ** 2 ) /100) ; show_distance = small_font.render('Distance : ' + str(int(calc_dist) /100) + ' m' , False , small_font_color )
     
-    #for i in range(len(Companions_file1)) :  
-    #    if game_state == 'Play' and dialoge_started == 1 and pos[0] >=  -camera.rect[0] + int(Companions_file1[i].split(',')[0])  and \
-    #        pos[0] <= -camera.rect[0] + int(Companions_file1[i].split(',')[0]) + Companions_images_list[i].get_width() and\
-    #              pos[1] >=  -camera.rect[1] + int(Companions_file1[i].split(',')[1])  and pos[1] <=  -camera.rect[1] + int(Companions_file1[i].split(',')[1]) +  Companions_images_list[i].get_height():
-            
-    #for i in range(len(actions_file1)) :
-    #             dialoge_surf.blit(actions_list[i] , ( 10 , 10 + i * 20  ))
-    #             frame = pg.draw.rect(dialoge_surf , ( Button_frame_color ) , (10 , 10 + action_counter  * 20 , 90 , 20 ) , 2 , 2 )
-    #             screen.blit(dialoge_surf , (hero_x , hero_y - 150  ))
-
     if game_state != 'Play' : show_game_state = big_font.render(str(game_state) , False , small_font_color) ; screen.blit( show_game_state ,  (game_state_x , game_state_y))
     
     for i in range(len(main_menu_file1)):
@@ -845,6 +816,30 @@ while run :
 
 
     pg.display.update()
+        #for i in range(len(Companions_file1)) :  
+    #    if game_state == 'Play' and dialoge_started == 1 and pos[0] >=  -camera.rect[0] + int(Companions_file1[i].split(',')[0])  and \
+    #        pos[0] <= -camera.rect[0] + int(Companions_file1[i].split(',')[0]) + Companions_images_list[i].get_width() and\
+    #              pos[1] >=  -camera.rect[1] + int(Companions_file1[i].split(',')[1])  and pos[1] <=  -camera.rect[1] + int(Companions_file1[i].split(',')[1]) +  Companions_images_list[i].get_height():
+            
+    #for i in range(len(actions_file1)) :
+    #             dialoge_surf.blit(actions_list[i] , ( 10 , 10 + i * 20  ))
+    #             frame = pg.draw.rect(dialoge_surf , ( Button_frame_color ) , (10 , 10 + action_counter  * 20 , 90 , 20 ) , 2 , 2 )
+    #             screen.blit(dialoge_surf , (hero_x , hero_y - 150  ))
+
+
+
+                    #for i in range(len(Enemies_file1)):
+            #        if Enemy_image not in killed_units and  event.button == 1 and pos[0] >=  -camera.rect[0] + int(Enemies_file1[i].split(',')[0])  and pos[0] <=  -camera.rect[0] + int(Enemies_file1[i].split(',')[0]) + Enemy_image.get_width() and pos[1] >=  -camera.rect[1] + int(Enemies_file1[i].split(',')[1]) and pos[1] <=  -camera.rect[1] + int(Enemies_file1[i].split(',')[1]) + Enemy_image.get_height():
+            #            if enemy_sound_num <= len(enemy_sounds_dir) - 1:enemy_sound.play() ; enemy_sound_num += 0.5 ; enemy_sound = pg.mixer.Sound('Audio/sounds/roar/' + str(int(enemy_sound_num)) + '.mp3')
+            #            if enemy_sound_num >= len(enemy_sounds_dir) - 1:enemy_sound_num = 0 ; enemy_sound.play() ; enemy_sound_num += 0.5 ; enemy_sound = pg.mixer.Sound('Audio/sounds/roar/' + str(int(enemy_sound_num)) + '.mp3') ; killed_units.append(Enemy_image)
+        
+            #if event.button == 3 :
+            #    print(enemy.health)
+            #    enemy.take_damage(1)
+            #    print(enemy.health)
+            #    if enemy.health <= 0:
+            #        enemy.respawn()
+            #        enemy.update_image('Objects/Characters/Enemies/Ghosts/1/idle/right/0.png')
 
 
         #screen.blit( hero_image , ( hero_x , hero_y ) )

@@ -7,7 +7,7 @@ saving_type = 'Default' ; game_state = 'Main menu'
 item = 0 ; items = 0 ; items_max = 6 ; items_stack = 100
 
 screen_file_name = 'txt/screen.txt' ; screen_file_mode = 'r' ; screen_file = open (screen_file_name , screen_file_mode) ; screen_file1 = screen_file.readlines()
-hero_file_name = 'txt/Objects/' + str(saving_type) + '/Hero.txt'   ; hero_file_mode = 'r' ; hero_file = open (hero_file_name , hero_file_mode) ; hero_file1 = hero_file.readlines() ; hero_file.close()
+hero_file_name = 'txt/Objects/' + str(saving_type) + '/characters/Hero.txt'   ; hero_file_mode = 'r' ; hero_file = open (hero_file_name , hero_file_mode) ; hero_file1 = hero_file.readlines() ; hero_file.close()
 hero_belt_inventory_images = []
 hero_backpack_inventory_images = []
 
@@ -25,7 +25,7 @@ pistol_mags , max_pistol_mags = 3 , 3 ; pistol_ammo , pistol_max_ammo  = int(her
 hero_night_vision   = 0
 hero_skills         = [ 'fast run' , 'night vision']
 hero_animations_dir = os.listdir('Objects/Characters/Hero/' + str(name) + '/' + str(state) + '/' + str(turn) + '/')
-hero                = 'Objects/Characters/Hero/' + str(name) + '/' + str(state) + '/' + str(turn) + '/' + str(animation) + '.png'
+hero                = 'Objects/Characters/characters/Hero/' + str(name) + '/' + str(state) + '/' + str(turn) + '/' + str(animation) + '.png'
 hero_image          = pg.image.load( 'Objects/Characters/Hero/' + str(name) + '/' + str(state) + '/' + str(turn) + '/' + str(animation) + '.png') ; heroimage = Image.open('Objects/Characters/Hero/' + str(name) + '/' + str(state) + '/' + str(turn) + '/' + str(animation) + '.png')
 hero_x , hero_y     = int(screen_width) / 2  - heroimage.width / 2 , int(screen_height)  / 2 - heroimage.height / 2
 hero_money_used = 0 
@@ -45,7 +45,7 @@ class Companions:
         self.y         = y    
         self.image     = image
 
-Companions_file_name = 'txt/Objects/' + str(saving_type) + '/Companions.txt' ; 
+Companions_file_name = 'txt/Objects/' + str(saving_type) + '/characters/Companions.txt' ; 
 Companions_file_mode = 'r' ; 
 Companions_file = open (Companions_file_name , Companions_file_mode) ; 
 Companions_file1 = Companions_file.readlines() ; 
@@ -74,7 +74,7 @@ class Players:
         self.y         = y    
         self.image     = image
 
-players_file_name    = 'txt/Objects/' + str(saving_type) + '/Players.txt'
+players_file_name    = 'txt/Objects/' + str(saving_type) + '/characters/Players.txt'
 players_file_mode    = 'r' ; 
 players_file         = open (players_file_name , players_file_mode) ; 
 players_file1        = players_file.readlines() ; 
@@ -96,7 +96,7 @@ for i in range(len(players_file1 )) :
     i = Players( players_file1[i].split(',')[0] , players_file1[i].split(',')[1] , players_images_list[player_animation])
     players_list.append(i)
 
-Enemies_file_name  = 'txt/Objects/' + str(saving_type) + '/Enemies.txt'
+Enemies_file_name  = 'txt/Objects/' + str(saving_type) + '/characters/Enemies.txt'
 Enemies_file_mode  = 'r' ; Enemies_file    = open (Enemies_file_name    , Enemies_file_mode)
 Enemies_file1      =  Enemies_file.readlines()
 enemy_state        = 'idle' ; enemy_turn     = 'left'
@@ -111,11 +111,13 @@ Enemies_inventory  = []
 from PIL import Image
 
 class Enemy:
-    def __init__(self, x, y, image_path):
+    def __init__(self, x, y, angle, image_path):
         self.x = x
         self.y = y
+        self.angle = angle
         self.image_path = image_path
         self.image = self.load_image()
+        self.inventory = []
 
     def load_image(self):
         """Загружает изображение врага из файла и конвертирует его для Pygame."""
@@ -125,13 +127,19 @@ class Enemy:
         except FileNotFoundError:
             print(f"Image file not found: {self.image_path}")
             return None
+    
+    #def move(self.angle):
+    #    """Загружает изображение врага из файла и конвертирует его для Pygame."""
+
+    
+    #def take_dmg(30):
+    #    """Загружает изображение врага из файла и конвертирует его для Pygame."""
 
 
 # Путь к изображению
-image_path = 'Objects/Characters/Enemies/Ghosts/1/idle/right/0.png'
 
 # Создание объекта врага после инициализации Pygame
-enemy = Enemy(x=100, y=1000, image_path=image_path)
+enemy = Enemy(x = 100 , y = 1000, angle = 45, image_path = 'Objects/Characters/Enemies/Ghosts/1/idle/right/0.png' )
 
 '''
 
