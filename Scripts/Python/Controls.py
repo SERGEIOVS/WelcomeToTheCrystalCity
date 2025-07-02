@@ -1,9 +1,16 @@
 import sys , os
 
-
+#directories/folders
 mods_dir_path = 'mods'
+menus_dir = 'txt/menus/'
+obj_dir   = 'Objects/'
+MyShapes = []
+
+vector = [ 0 , 0]#cam vectors
+
 if mods_dir_path not in sys.path : sys.path.append(mods_dir_path)
 if mods_dir_path in sys.path : print() ; print() ; print('mods folder added ! ')
+
 print(os.listdir(mods_dir_path))
 
 import os
@@ -14,7 +21,7 @@ import pprint
 
 pg.init()
 
-MyShapes = []
+
 for i in range(10) : MyShapes.append('circle') ; MyShapes.append('square') ; MyShapes.append('triangle') ; MyShapes.append('rectangle')    
 
         
@@ -22,8 +29,7 @@ for i in range(10) : MyShapes.append('circle') ; MyShapes.append('square') ; MyS
 pressed = pg.mouse.get_pressed() ; pos = pg.mouse.get_pos() ; clock = pg.time.Clock() ; FPS = 60 ; clock.tick(FPS)
 hide_nicknames = 0 ; ground = 1 ; floor = 0 ; keys = pg.key.get_pressed()
 fuel_bar_width = 100
-minimapfontsize = int( 30 / map_scale)
-mini_map_font_size = pg.font.SysFont(font_name , minimapfontsize)
+minimapfontsize = int( 30 / map_scale) ; mini_map_font_size = pg.font.SysFont(font_name , minimapfontsize)
 
 for i in custom_checkpoints_list:
     i = mini_map_font_size.render('Custom checkpoint' + int(i) , False , small_font_color ) 
@@ -58,7 +64,7 @@ sidewalk_width , sidewalk_height = 3 * meter , 3 * meter
 
 hero_path_lenght  = 90 ; hero_path_angle  = 90 ; hero_path_lenght1 = 90 ; hero_path_angle1 = 90 ; unit_path_lenght = 90 ; unit_path_angle = 90
 
-cameras_list = [random.randint(0,100) for i in range(0,10)];print(f'Cameras list : {cameras_list}')
+cam_list = [random.randint(0,100) for i in range(0,10)];print(f'Cam list : {cam_list}')
  
 islands_points = list(zip( [1000 + 1000 * math.cos(i) for i in range(36)], [1000 + 1000 * math.sin(i) for i in range(36)]))
 
@@ -66,14 +72,36 @@ class Hero_cam :
     def __init__( self , x , y ) :
         self.rect = pg.Rect( hero_path_lenght * -math.cos(hero_path_angle) ,hero_path_lenght * -math.sin(-hero_path_angle) , int(screen_width) , int(screen_height))
     
-    def move( self , vector ) :
-        self.rect[0] += hero_path_lenght * -math.cos(hero_path_angle) / 100
-        self.rect[1] += hero_path_lenght * -math.sin(hero_path_angle) / 100
+    def move( self , vector ) : self.rect[0] += hero_path_lenght * -math.cos(hero_path_angle) / 100 ; self.rect[1] += hero_path_lenght * -math.sin(hero_path_angle) / 100
 
 camera  = Hero_cam(int(camera_x) + hero_path_lenght * -math.cos(hero_path_angle)  , int(camera_x) + hero_path_lenght * -math.sin(hero_path_angle))
 
-vector = [ 0 , 0]
 
+print()
+print()
+print()
+
+print(f'menus dir files: {os.listdir(menus_dir)}')
+
+print()
+print()
+print()
+
+print(f'obj dir files : {os.listdir(obj_dir)  }')
+
+print()
+
+for i in os.listdir(menus_dir) : print(f'menus_dir file: {i}')
+
+print()
+print()
+print()
+
+for i in os.listdir(obj_dir) : print(f'obj_dir : {i}')
+
+print()
+print()
+print()
 
 
 #hero_x and hero_y
@@ -109,8 +137,7 @@ def draw_mini_map():
         map_grid = 1 
         if map_grid == 1:
             for x in range(grid_size1):
-                for y in range(grid_size2):
-                        pg.draw.rect(mini_map_surf , ( cell_color) , ( cell_size * x / map_scale * minimap_object_offset , cell_size * y / map_scale * minimap_object_offset1 , mini_map_grid_cell_size / map_scale , mini_map_grid_cell_size / map_scale) , 1 ) #drawing a inventory cells
+                for y in range(grid_size2):pg.draw.rect(mini_map_surf , ( cell_color) , ( cell_size * x / map_scale * minimap_object_offset , cell_size * y / map_scale * minimap_object_offset1 , mini_map_grid_cell_size / map_scale , mini_map_grid_cell_size / map_scale) , 1 ) #drawing a inventory cells
 
 
 
@@ -126,36 +153,34 @@ def mini_map_keyboard_controls():
         if keys [pg.K_RIGHT] : minimap_object_offset  += 1
 
         if keys [pg.K_UP   ] : minimap_object_offset1 -= 1
-        if keys [pg.K_DOWN ] : minimap_object_offset1 += 1 
+        if keys [pg.K_DOWN ] : minimap_object_offset1 += 1
+
+        if keys [pg.K_KP_PLUS ] : mini_map_surf.fill((minimapBGcolor)) ; map_scale -= 0.01 ; draw_mini_map()
+        if keys [pg.K_KP_MINUS] : mini_map_surf.fill((minimapBGcolor)) ; map_scale += 0.01 ; draw_mini_map()
+
+        if map_size == max_map_size : screen.blit( cancel_icon , ( cancel_icon_x , cancel_icon_y))
 
 
+    
+        if keys [pg.K_KP_0] : map_size = min_map_size ; mini_map_surf = pg.Surface(( int(screen_width) / map_size , int(screen_height) / map_size ))
         if keys [pg.K_KP_1] : minimap_x = 0 ; minimap_y = int(screen_height) - int(screen_height) / map_size
         if keys [pg.K_KP_2] : minimap_x = 0 ; minimap_y = int(screen_height) - int(screen_height) / map_size
         if keys [pg.K_KP_3] : minimap_x = int(screen_width) - int(screen_width) / map_size ; minimap_y = int(screen_height) - int(screen_height) / map_size
         if keys [pg.K_KP_4] : minimap_x = int(screen_width) - int(screen_width) / map_size ; minimap_y = int(screen_height) - int(screen_height) / map_size
-
         if keys [pg.K_KP_5] : map_size = max_map_size ; mini_map_surf = pg.Surface(( int(screen_width) / map_size , int(screen_height) / map_size ))
-        if map_size == max_map_size : screen.blit( cancel_icon , ( cancel_icon_x , cancel_icon_y))
-
-        if keys [pg.K_KP_0] : map_size = min_map_size ; mini_map_surf = pg.Surface(( int(screen_width) / map_size , int(screen_height) / map_size ))
-
         if keys [pg.K_KP_6] : minimap_x = int(screen_width) - int(screen_width) / map_size ; minimap_y = 0     
         if keys [pg.K_KP_7] : minimap_x = 0 ; minimap_y = 0
         if keys [pg.K_KP_8] : minimap_x = 0 ; minimap_y = 0
         if keys [pg.K_KP_9] : minimap_x = int(screen_width) - int(screen_width) / map_size ; minimap_y = 0
 
-        if keys [pg.K_KP_PLUS ] : mini_map_surf.fill((minimapBGcolor)) ; map_scale -= 0.01 ; draw_mini_map()
-        if keys [pg.K_KP_MINUS] : mini_map_surf.fill((minimapBGcolor)) ; map_scale += 0.01 ; draw_mini_map()
 
 
 def mini_map_mouse_controls():
     global cancel_icon
     if game_state == 'Play' : 
-        if event.button == 1 and pos[0] >= cancel_icon_x and pos[0] <= cancel_icon_x + cancel_icon.get_width() and \
-            pos[1] >= cancel_icon_y and pos[1] <= cancel_icon_y + cancel_icon.get_height() and map_size == max_map_size : map_size = min_map_size
+        if event.button == 1 and pos[0] >= cancel_icon_x and pos[0] <= cancel_icon_x + cancel_icon.get_width() and pos[1] >= cancel_icon_y and pos[1] <= cancel_icon_y + cancel_icon.get_height() and map_size == max_map_size : map_size = min_map_size
 
-        if event.button == 3 and map_size == max_map_size : 
-            spawn_sound.play() ; custom_checkpoints_list_x.append(camera.rect[0] + pos[0]) ; custom_checkpoints_list_y.append(camera.rect[1] + pos[1])
+        if event.button == 3 and map_size == max_map_size : spawn_sound.play() ; custom_checkpoints_list_x.append(camera.rect[0] + pos[0]) ; custom_checkpoints_list_y.append(camera.rect[1] + pos[1])
 
 changed_keybinds = []
 
@@ -264,8 +289,9 @@ def Trade_menu():
         menu_titles1   = []
         menu_title_num = 0
         menu_title     = menu_titles[menu_title_num]
-        for i in range(len(menu_titles)) : i = big_font.render(menu_titles[i].split(',')[0].strip() , False , small_font_color ) ; menu_titles1.append(i)   
-        
+        #for i in range(len(menu_titles)) : i = big_font.render(menu_titles[i].split(',')[0].strip() , False , small_font_color ) ; menu_titles1.append(i)   
+        for i in menu_titles: i = big_font.render(menu_titles[i].split(',')[0].strip() , False , small_font_color ) ; menu_titles1.append(i)   
+
         draw_menu()
         
         for i in range(len(menu_titles1)):            
@@ -305,18 +331,25 @@ def toggle_mods_menu():
 def text_updating(): 
     global new_craft,new_quest,checkpoints_list,achievements_list,hero_inventory_nums,show_game_state,ok,apply,cancel,action_counter,checkpoints_file1,dialoge_started,achievements_file1,checkpoint_size,dialoge_num,action,checkpoint_num
 
-    lang_num = active_button1 ; language = languages[lang_num]
-    crafts_list = [] ; crafts_file_name   = 'txt/langs/' + str(language) + '/Crafts.txt' ; crafts_file_mode = 'r' ; crafts_file = open (crafts_file_name , crafts_file_mode , encoding = "utf-8") ; crafts_file1 = crafts_file.readlines()
-    langs_file_name = 'txt/Languages.txt' ; langs_file_mode = 'r' ; langs_file = open (langs_file_name  , langs_file_mode , encoding= "utf-8") ; langs_file1 = langs_file.readlines() ; langs_list = []
-    dialoges_list = [] ; dialoges_file_name = 'txt/Dialoges.txt' ; dialoges_file_mode = 'r' ; dialoges_file = open (dialoges_file_name , dialoges_file_mode , encoding= "utf-8") ; dialoges_file1 = dialoges_file.readlines() ; dialoge_num = 0 ; dialoge_started = 0
-    checkpoints_list  = [] ; checkpoints_file_name  = 'txt/Checkpoints.txt' ; checkpoints_file_mode = 'r' ; checkpoints_file = open (checkpoints_file_name , checkpoints_file_mode) ; checkpoints_file1 = checkpoints_file.readlines() ; checkpoint_size = 100 ; checkpoint_num = 0
-    achievements_list = [] ; achievements_file_name = 'txt/Achievements.txt' ; achievements_file_mode = 'r' ; achievements_file = open (achievements_file_name , achievements_file_mode , encoding = "utf-8") ; achievements_file1 = achievements_file.readlines()
-    actions_list = [] ; actions_file_name = 'txt/Actions.txt' ; actions_file_mode = 'r' ; actions_file = open (actions_file_name , actions_file_mode) ; actions_file1 = actions_file.readlines() ; actions_list.append(i) ; action_num = 0 ; action_counter = 0 ; action = actions_list[action_num]
-    quests_list = [] ; quests_states_list = [] ; quests_file_name = 'txt/langs/' + str(language) + '/Quests.txt' ; quests_file_mode = 'r' ; quests_file = open (quests_file_name , quests_file_mode , encoding = "utf-8") ; quests_file1 = quests_file.readlines()
-    main_menu = [] ; main_menu_file_name = 'txt/langs/' + str(language) + '/Main menu.txt' ; main_menu_file_mode = 'r' ; main_menu_file = open (main_menu_file_name , main_menu_file_mode , encoding = "utf-8") ; main_menu_file1 = main_menu_file.readlines()
-    settings = [] ; settings_file_name = 'txt/langs/' + str(language) + '/Settings.txt' ; settings_file_mode = 'r' ; settings_file = open (settings_file_name , settings_file_mode , encoding = "utf-8") ; settings_file1 = settings_file.readlines()
+    #lang_num = active_button1 ; language = languages[lang_num]
+    #crafts_list = [] ; crafts_file_name   = 'txt/langs/' + str(language) + '/Crafts.txt' ; crafts_file_mode = 'r' ; crafts_file = open (crafts_file_name , crafts_file_mode , encoding = "utf-8") ; crafts_file1 = crafts_file.readlines()
+    #langs_file_name = 'txt/Languages.txt' ; langs_file_mode = 'r' ; langs_file = open (langs_file_name  , langs_file_mode , encoding= "utf-8") ; langs_file1 = langs_file.readlines() ; langs_list = []
+    #dialoges_list = [] ; dialoges_file_name = 'txt/Dialoges.txt' ; dialoges_file_mode = 'r' ; dialoges_file = open (dialoges_file_name , dialoges_file_mode , encoding= "utf-8") ; dialoges_file1 = dialoges_file.readlines() ; dialoge_num = 0 ; dialoge_started = 0
+    #checkpoints_list  = [] ; checkpoints_file_name  = 'txt/Checkpoints.txt' ; checkpoints_file_mode = 'r' ; checkpoints_file = open (checkpoints_file_name , checkpoints_file_mode) ; checkpoints_file1 = checkpoints_file.readlines() ; checkpoint_size = 100 ; checkpoint_num = 0
+    #achievements_list = [] ; achievements_file_name = 'txt/Achievements.txt' ; achievements_file_mode = 'r' ; achievements_file = open (achievements_file_name , achievements_file_mode , encoding = "utf-8") ; achievements_file1 = achievements_file.readlines()
+    #actions_list = [] ; actions_file_name = 'txt/Actions.txt' ; actions_file_mode = 'r' ; actions_file = open (actions_file_name , actions_file_mode) ; actions_file1 = actions_file.readlines() ; actions_list.append(i) ; action_num = 0 ; action_counter = 0 ; action = actions_list[action_num]
+    #quests_list = [] ; quests_states_list = [] ; quests_file_name = 'txt/langs/' + str(language) + '/Quests.txt' ; quests_file_mode = 'r' ; quests_file = open (quests_file_name , quests_file_mode , encoding = "utf-8") ; quests_file1 = quests_file.readlines()
+    #main_menu = [] ; main_menu_file_name = 'txt/langs/' + str(language) + '/Main menu.txt' ; main_menu_file_mode = 'r' ; main_menu_file = open (main_menu_file_name , main_menu_file_mode , encoding = "utf-8") ; main_menu_file1 = main_menu_file.readlines()
+    #settings = [] ; settings_file_name = 'txt/langs/' + str(language) + '/Settings.txt' ; settings_file_mode = 'r' ; settings_file = open (settings_file_name , settings_file_mode , encoding = "utf-8") ; settings_file1 = settings_file.readlines()
     hero_inventory = [] ; hero_inventory_nums = [] ; hero_inventory_file_name = 'txt/langs/' + str(language) + '/Hero inventory.txt' ; hero_inventory_file_mode = 'r' ; hero_inventory_file = open (hero_inventory_file_name , hero_inventory_file_mode , encoding= "utf-8") ; hero_inventory_file1 = hero_inventory_file.readlines()
+    
+    
+    titles_list = []
+    for i in os.listdir(menus_dir) :
+            i = big_font.render(str(i)  , False , small_font_color ) ; titles_list.append(i)
 
+
+    """
     for i in range(len(langs_file1))     : i = big_font.render(langs_file1[i].strip()  , False , small_font_color ) ; langs_list.append(i)
     for i in range(len(dialoges_file1))  : i = small_font.render(dialoges_file1[i].strip() , False , small_font_color ) ; dialoges_list.append(i) 
     for i in range(len(actions_file1))   : i = small_font.render(str(actions_file1[i]).strip()  , False , small_font_color ) ; actions_list.append(i)
@@ -327,7 +360,9 @@ def text_updating():
     for i in range(len(main_menu_file1)) : i = big_font.render(main_menu_file1[i].strip()  , False , small_font_color ) ; main_menu.append(i)
     for i in range(len(settings_file1))  : i = big_font.render(settings_file1[i].strip() , False , small_font_color ) ; settings.append(i)
     for i in range(len(hero_inventory_file1)) : i = big_font.render(hero_inventory_file1[i].split(',')[0].strip()          , False , small_font_color ) ; hero_inventory.append(i)     
-                    
+
+    """           
+
     new_craft = small_font.render('Uus' , False , small_font_color ) ; ok = small_font.render('OK' , False , small_font_color ) ; apply = small_font.render('Apply'  , False , small_font_color) ; cancel = small_font.render('Tagasi'  , False , small_font_color)
     show_game_state = big_font.render('Menüü' , False , small_font_color)
 
@@ -416,7 +451,7 @@ def player_movement():
 
         # Обновление расстояния до цели
         calc_dist = math.sqrt(((x_2_list - x_1_list - hero_checkpoint_offset_x) ** 2) +((y_2_list - y_1_list - hero_checkpoint_offset_y) ** 2))
-        show_distance = small_font.render(f'Distance : {calc_dist / 100} + m', False, small_font_color)
+        show_distance = small_font.render(f'Distance : {calc_dist / 100} m', False, small_font_color)
         
         # Обновление смещения на мини-карте
         minimap_object_offset  += 1 / (map_scale * hero_speed * 10) if vector[0] < 0 else -1 / (map_scale * hero_speed * 10) ; minimap_object_offset1 += 1 / (map_scale * hero_speed * 10) if vector[1] < 0 else -1 / (map_scale * hero_speed * 10)
