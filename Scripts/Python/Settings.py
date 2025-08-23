@@ -1,6 +1,5 @@
 import pygame as pg , datetime ; from Units import * ; from Items import * ; import os , math , logging ;import sys ; import sqlite3 
 import  getpass ;
-
 pg.init() ; pg.font.init()
 
 #Game directory
@@ -21,7 +20,6 @@ colors = [ ( 0 , 0 , 255 ) , ( 0 , 0 , 0 ) , (250 , 0 , 0)  , (255 , 255 , 255) 
 
 mags       = 3
 map_scale  = 1 ; map_size = 3 ; show_map = 1 ; show_units = 1 ; show_buildings = 1 ; show_items = 1 ; show_interface = 1 ; open_backpack = 0 ; show_hero_stats = 1 ; unit_moving = 1 ; unit_speed = 0 ; unit_speed1 = 0 ; max_unit_speed = 4
-bg_num     = 1 ; wallpapers_dir = os.listdir('Wallpapers/' + str(screen_width) + '_' + str(screen_height) + '/') ; wallpaper  = wallpapers_dir[bg_num]
 dark_level = 0 ; max_dark_level  = 100 ; volume_levels = 10 ; settings_values = 5
 fuel       = 50
 gas        = 0
@@ -39,14 +37,9 @@ roads_file_name   = 'txt/Objects/' + str(saving_type) + '/Roads.txt' ; roads_fil
 Colors_list       = [] ; Colors_file_name = 'txt/Colors.txt' ; Colors_file_mode = 'r' ; Colors_file = open (Colors_file_name , Colors_file_mode) ; Colors_file1 = Colors_file.readlines()
 resolutions_list  = [] ; resolutions_file_name = 'txt/menus/Resolutions.txt' ; resolutions_file_mode = 'r' ; resolutions_file = open (resolutions_file_name , resolutions_file_mode) ; resolutions_file1 = resolutions_file.readlines()
 saves_list        = [] ; saves_file_name = 'txt/saves/' + str(saving_type) + '/2023 - 8 - 10/0.txt' ; saves_file_mode = 'r' ; saves_file = open (saves_file_name , saves_file_mode) ; saves_file1 = saves_file.readlines()
-langs_file_name   = 'txt/menus/Languages.txt' ; langs_file_mode = 'r' ; langs_file = open (langs_file_name  , langs_file_mode , encoding= "utf-8") ; langs_file1 = langs_file.readlines() ; langs_list = []
-dialoges_list     = [] ; dialoges_file_name     = 'txt//langs/' + str(language) + '/Dialoges.txt' ; dialoges_file_mode = 'r' ; dialoges_file = open (dialoges_file_name , dialoges_file_mode , encoding = "utf-8") ; dialoges_file1 = dialoges_file.readlines() ; dialoge_num = 0 ; dialoge_started = 0
-checkpoints_list  = [] ; checkpoints_file_name  = 'txt/Objects/' + str(saving_type) + '/Checkpoints.txt' ; checkpoints_file_mode = 'r' ; checkpoints_file = open (checkpoints_file_name , checkpoints_file_mode , encoding = "utf-8") ; checkpoints_file1 = checkpoints_file.readlines() ; checkpoint_size = 100 ; checkpoint_num = 0
 custom_checkpoints_list = [] ; custom_checkpoints_list_x = [] ; custom_checkpoints_list_y = [] ; custom_checkpoint_size = 100 ; custom_checkpoint_num = 0
 
-achievements_list = [] ; achievements_file_name = 'txt/langs/' + str(language) + '/Achievements.txt' ; achievements_file_mode = 'r' ; achievements_file = open (achievements_file_name , achievements_file_mode , encoding = "utf-8") ; achievements_file1 = achievements_file.readlines()
 actions_list      = [] ; actions_file_name      = 'txt/langs/' + str(language) + '/Actions.txt' ; actions_file_mode = 'r' ; actions_file = open (actions_file_name , actions_file_mode , encoding= "utf-8") ; actions_file1 = actions_file.readlines() ; actions_list.append(i) ; action_num = 0 ; action_counter = 0 ; action = actions_list[action_num]
-crafts_list       = [] ; crafts_file_name       = 'txt/langs/' + str(language) + '/Crafts.txt' ; crafts_file_mode = 'r' ; crafts_file = open (crafts_file_name , crafts_file_mode) ; crafts_file1 = crafts_file.readlines()
 quests_list       = [] ; quests_states_list = [] ; quests_file_name = 'txt/langs/' + str(language) + '/Quests.txt' ; quests_file_mode = 'r' ; quests_file = open (quests_file_name , quests_file_mode , encoding = "utf-8") ; quests_file1 = quests_file.readlines()
 main_menu         = [] ; main_menu_file_name = 'txt/langs/' + str(language) + '/Main menu.txt' ; main_menu_file_mode = 'r' ; main_menu_file = open (main_menu_file_name , main_menu_file_mode , encoding = "utf-8") ; main_menu_file1 = main_menu_file.readlines()
 settings          = [] ; settings_file_name = 'txt/langs/' + str(language) + '/Settings.txt' ; settings_file_mode = 'r' ; settings_file = open (settings_file_name , settings_file_mode , encoding = "utf-8") ; settings_file1 = settings_file.readlines()
@@ -54,24 +47,22 @@ hero_file_name    = 'txt/Objects/'+ str(saving_type) +'/characters/Hero.txt' ; h
 hero_inventory    = [] ; hero_inventory_nums = [] ; hero_inventory_file_name = 'txt/langs/' + str(language) + '/Hero inventory.txt' ; hero_inventory_file_mode = 'r' ; hero_inventory_file = open (hero_inventory_file_name , hero_inventory_file_mode , encoding= "utf-8") ; hero_inventory_file1 = hero_inventory_file.readlines()
 prices_file_name = 'txt/Prices.txt' ; prices_file_mode = 'r' ; prices_file = open(prices_file_name , prices_file_mode , encoding= "utf-8") ; prices_file1 = prices_file.readlines()
 
+
+
 for i in range(len(resolutions_file1)) : i = big_font.render(resolutions_file1[i].strip() , False , small_font_color ) ; resolutions_list.append(i)
 
 for i in saves_file1 : screen_width , screen_height , camera_x , camera_y = i.split(',')[0] , i.split(',')[1] , i.split(',')[2] , i.split(',')[3]
         
-for i in range(len(saves_file1))           : i = big_font.render(saves_file1[0].split(',')[0]                           , False , small_font_color ) ; saves_list.append(i)
-for i in range(len(langs_file1))           : i = big_font.render(langs_file1[i].strip()                                 , False , small_font_color ) ; langs_list.append(i)
-for i in range(len(dialoges_file1))        : i = small_font.render(dialoges_file1[i].strip()                            , False , small_font_color ) ; dialoges_list.append(i) 
-for i in range(len(actions_file1))         : i = small_font.render(str(actions_file1[i]).strip()                        , False , small_font_color ) ; actions_list.append(i)
-for i in range(len(actions_list))          : i = small_font.render(str(actions_list[i] ).strip()                        , False , small_font_color ) ; actions_list.append(i)
-for i in range(len(crafts_file1))          : i = big_font.render(crafts_file1[i].split(',')[0].strip()                  , False , small_font_color ) ; crafts_list.append(i)
-for i in range(len(quests_file1))          : i = small_font.render(quests_file1[i].split(',')[0].strip()                , False , small_font_color ) ; quests_list.append(i)
-for i in range(len(main_menu_file1))       : i = big_font.render(main_menu_file1[i].strip()                             , False , small_font_color ) ; main_menu.append(i)
-for i in range(len(settings_file1 ))       : i = big_font.render(settings_file1[i].strip()                              , False , small_font_color ) ; settings.append(i)
-#for i in range(len(Hero_types     ))       : i = big_font.render(Hero_types[i].strip()                                  , False , small_font_color ) ; Hero_types_list.append(i)
-#for i in range(len(nicknames_file1))       : i = small_font.render(players_file1[i].split(',')[2].strip()               , False , small_font_color ) ; nicknameslist.append(i)
-for i in range(len(hero_inventory_file1))  : i = big_font.render(hero_inventory_file1[i].split(',')[0].strip()          , False , small_font_color ) ; hero_inventory.append(i)     
+scrensurfs = 4
+screen_surfs_list = [ pg.Surface(( int(screen_width) / 2 , int(screen_height) / 2 )) for screensurf in range(scrensurfs)]
 
-screen = pg.display.set_mode((int( screen_width) , int(screen_height))) ; game_icon = pg.display.set_icon(pg.image.load("Interface/icons/Game icons/Game_icon.png"))
+screen  = pg.display.set_mode((int( screen_width) , int(screen_height)),pg.FULLSCREEN)
+
+
+
+
+game_icon = pg.display.set_icon(pg.image.load("Interface/icons/Game icons/Game_icon.png"))
+
 new_quest  = big_font.render('!'   , False , small_font_color ) ; add = big_font.render('+' , False , small_font_color ) ; remove = big_font.render('-' , False , small_font_color ) ; new_craft = small_font.render('Create' , False , small_font_color ) ; ok = small_font.render('OK' , False , small_font_color ) ; apply = small_font.render('Apply' , False , small_font_color) ; cancel = small_font.render('Cancel' , False , small_font_color)
 buy        = big_font.render('Buy' , False , small_font_color ) ; add = big_font.render('+' , False , small_font_color ) ; remove = big_font.render('-' , False , small_font_color ) ; new_craft = small_font.render('Create' , False , small_font_color ) ; ok = small_font.render('OK' , False , small_font_color ) ; apply = small_font.render('Apply' , False , small_font_color) ; cancel = small_font.render('Cancel' , False , small_font_color)
 x          = big_font.render('x'   , False , small_font_color ) ; add = big_font.render('+' , False , small_font_color ) ; remove = big_font.render('-' , False , small_font_color ) ; new_craft = small_font.render('Create' , False , small_font_color ) ; ok = small_font.render('OK' , False , small_font_color ) ; apply = small_font.render('Apply' , False , small_font_color) ; cancel = small_font.render('Cancel' , False , small_font_color)

@@ -11,7 +11,7 @@ hero_file_name = 'txt/Objects/' + str(saving_type) + '/characters/Hero.txt'   ; 
 hero_belt_inventory_images = []
 hero_backpack_inventory_images = []
 
-for i in screen_file1 : screen_width , screen_height , camera_x , camera_y = i.split(',')[0] , i.split(',')[1] , i.split(',')[2] , i.split(',')[3]
+
 
 name = 2 ; state = 'idle' ; turn = 'left' ; animation = 0 ; hero_speed = 0.1
 ammo_used = 0
@@ -27,7 +27,6 @@ hero_skills         = [ 'fast run' , 'night vision']
 hero_animations_dir = os.listdir('Objects/Characters/Hero/' + str(name) + '/' + str(state) + '/' + str(turn) + '/')
 hero                = 'Objects/Characters/characters/Hero/' + str(name) + '/' + str(state) + '/' + str(turn) + '/' + str(animation) + '.png'
 hero_image          = pg.image.load( 'Objects/Characters/Hero/' + str(name) + '/' + str(state) + '/' + str(turn) + '/' + str(animation) + '.png') ; heroimage = Image.open('Objects/Characters/Hero/' + str(name) + '/' + str(state) + '/' + str(turn) + '/' + str(animation) + '.png')
-hero_x , hero_y     = int(screen_width) / 2  - heroimage.width / 2 , int(screen_height)  / 2 - heroimage.height / 2
 hero_money_used = 0 
 hero_money = 1000 - hero_money_used ; currency = 'Coins'
 
