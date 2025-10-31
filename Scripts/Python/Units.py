@@ -13,7 +13,7 @@ hero_backpack_inventory_images = []
 
 
 
-name = 2 ; state = 'idle' ; turn = 'left' ; animation = 0 ; hero_speed = 0.1
+name = 2 ; state = 'idle' ; turn = 'left' ; animation = 0 ; hero_speed = 4
 ammo_used = 0
 health , max_health         = int(hero_file1[0].split(',')[0]) , int(hero_file1[0].split(',')[0])
 armor  , max_armor          = int(hero_file1[0].split(',')[1]) , int(hero_file1[0].split(',')[1])
@@ -127,18 +127,17 @@ class Enemy:
             print(f"Image file not found: {self.image_path}")
             return None
     
-    #def move(self.angle):
-    #    """Загружает изображение врага из файла и конвертирует его для Pygame."""
+    def unit_move(self):
+        self.angle +=10
 
     
     #def take_dmg(30):
-    #    """Загружает изображение врага из файла и конвертирует его для Pygame."""
 
 
 # Путь к изображению
 
 # Создание объекта врага после инициализации Pygame
-enemy = Enemy(x = 100 , y = 1000, angle = 45, image_path = 'Objects/Characters/Enemies/Ghosts/1/idle/right/0.png' )
+enemy = Enemy(x = 100 , y = 1000, angle = 45, image_path = (f"Objects/Characters/Enemies/Ghosts/1/idle/right/0.png") )
 
 '''
 

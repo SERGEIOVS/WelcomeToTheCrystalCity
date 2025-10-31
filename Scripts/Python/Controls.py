@@ -20,6 +20,57 @@ from pygame.locals import *
 #    info = p.get_device_info_by_index(i)
 #    print(i, info["name"])
 
+"""
+
+
+angle = 60
+dots_num = 10
+dots = []
+rocks = []
+rock_size = 70
+rock_scale = 2
+
+sea_scale = 2
+sea_size =200
+
+for x in range(36):
+            dots.append(
+
+(
+
+[300 + sea_size * math.cos(math.radians(x*10)) + random.randint(0,10) , 300 + sea_size// sea_scale * math.sin(math.radians(x*10)) + random.randint(0,10)]
+
+)
+
+)
+
+
+for x in range(36):
+            rocks.append(
+
+(
+
+[300 + rock_size * math.cos(math.radians(x*10)) + random.randint(0,10) , 300 + rock_size//rock_scale * math.sin(math.radians(x*10)) + random.randint(0,10)]
+
+)
+
+)
+
+
+    screen.fill(BG_COLOR)
+    pygame.draw.polygon(screen, BLUE , dots)
+    pygame.draw.polygon(screen, (10,60,0) , rocks)
+
+    
+    pygame.draw.circle(screen, (10,100,0), (300 ,300), 4)
+    
+    for x in range(36):
+        pygame.draw.circle(screen, (255,0,0), (300 + sea_size * math.cos(math.radians(x*10)) ,300 + sea_size  // 2 * math.sin(math.radians(x*10))), 3)
+
+
+"""
+
+
 
 #directories/folders
 mods_dir_path = 'mods'
@@ -34,16 +85,10 @@ if mods_dir_path in sys.path : print() ; print() ; print('mods folder added ! ')
 
 print(os.listdir(mods_dir_path))
 
-
-
-
-
-
 for i in range(10) : MyShapes.append('circle') ; MyShapes.append('square') ; MyShapes.append('triangle') ; MyShapes.append('rectangle')    
 
         
-multiplayer = 0
-
+multiplayer = 1
 pressed = pg.mouse.get_pressed() ; pos = pg.mouse.get_pos() ; clock = pg.time.Clock() ; FPS = 60 ; clock.tick(FPS)
 hide_nicknames = 0 ; ground = 1 ; floor = 0 ; keys = pg.key.get_pressed()
 fuel_bar_width = 100
@@ -84,8 +129,15 @@ hero_path_lenght  = 90 ; hero_path_angle  = 90 ; hero_path_lenght1 = 90 ; hero_p
 
 cam_list = [random.randint(0,100) for i in range(0,10)];print(f'Cam list : {cam_list}')
  
-islands_points = list(zip( [1000 + 1000 * math.cos(i) for i in range(36)], [1000 + 1000 * math.sin(i) for i in range(36)]))
+islands_points =list(zip(
 
+[
+
+[int(1000 + int(random.randint(100,1000)) * math.cos(math.radians(i*10))) for i in range(36)],
+[int(1000 + int(random.randint(100,1000)) * math.sin(math.radians(i*10))) for i in range(36)]
+
+]
+))
 
 #CHARATER_CAMERAS
 class cameras:
@@ -98,10 +150,10 @@ class cameras:
 
     def move( self , vector ) : self.rect[0] += hero_path_lenght * -math.cos(hero_path_angle) / 100 ; self.rect[1] += hero_path_lenght * -math.sin(hero_path_angle) / 100
 
-camera1  = cameras(int(camera_x) + hero_path_lenght * -math.cos(hero_path_angle)  , int(camera_x) + hero_path_lenght * -math.sin(hero_path_angle))
-camera2  = cameras(int(camera_x) + hero_path_lenght * -math.cos(hero_path_angle)  , int(camera_x) + hero_path_lenght * -math.sin(hero_path_angle))
-camera3  = cameras(int(camera_x) + hero_path_lenght * -math.cos(hero_path_angle)  , int(camera_x) + hero_path_lenght * -math.sin(hero_path_angle))
-camera4  = cameras(int(camera_x) + hero_path_lenght * -math.cos(hero_path_angle)  , int(camera_x) + hero_path_lenght * -math.sin(hero_path_angle))
+camera1  = cameras(int(camera_x) + hero_path_lenght * -math.cos(hero_path_angle)                                         , int(camera_x) + hero_path_lenght * -math.sin(hero_path_angle)                                         )
+camera2  = cameras(int(camera_x) + hero_path_lenght * -math.cos(hero_path_angle) +int(screen_file1[0].split(',')[0]) /2  , int(camera_x) + hero_path_lenght * -math.sin(hero_path_angle) + int(screen_file1[0].split(',')[1]) /2 )
+camera3  = cameras(int(camera_x) + hero_path_lenght * -math.cos(hero_path_angle) +int(screen_file1[0].split(',')[0]) /2  , int(camera_x) + hero_path_lenght * -math.sin(hero_path_angle) + int(screen_file1[0].split(',')[1]) /2 )
+camera4  = cameras(int(camera_x) + hero_path_lenght * -math.cos(hero_path_angle) +int(screen_file1[0].split(',')[0]) /2  , int(camera_x) + hero_path_lenght * -math.sin(hero_path_angle) + int(screen_file1[0].split(',')[1]) /2 )
 
 
 print()
@@ -386,15 +438,17 @@ def player_movement():
                 state = 'go'
                 turn  = 'left'
                 hero_speed = 4
-                vector[0] -= hero_path_lenght * -math.cos(hero_path_angle) / 100
-                hero_checkpoint_offset_x -= hero_speed
+                vector[0] -= hero_path_lenght * math.cos(hero_path_angle) / 100
+                vector[1] -= hero_path_lenght * math.sin(hero_path_angle) / 100
+
                 #show_distance = small_font.render(f'Distance : {calc_dist / 100} + m', False, small_font_color)
             
             if keys[pg.K_d]:
                 state = 'go'
                 turn = 'right'
                 hero_speed = 4 
-                vector[0] += hero_path_lenght * -math.sin(hero_path_angle) / 100
+                vector[0] += hero_path_lenght * math.cos(hero_path_angle) / 100
+                vector[1] += hero_path_lenght * math.sin(hero_path_angle) / 100
 
                 hero_checkpoint_offset_x += hero_speed
 
@@ -539,57 +593,47 @@ def start():
     toggle_settings() ; toggle_main_menu() ; character_select() ; Trade_menu() ; game_mode_select() ; Open_backpack() ; mini_map_keyboard_controls() ; Difficulty_select() ; toggle_mods_menu()
 
     if game_state == 'Play':
-        cam_num1 =0
+                
+        """        cam_num1 =0
 
-        cap1 = cv2.VideoCapture(cam_num1)
-        ret1 ,frame= cap1.read()
-        # Считываем кадр с камеры\
-        if cap1.isOpened():
-                print("удалось открыть камеру!")
-        else:
-            print("камера не  работает!")
-        ret1, frame = cap1.read()
+                cap1 = cv2.VideoCapture(cam_num1)
+                ret1 ,frame= cap1.read()
+                # Считываем кадр с камеры\
+                if cap1.isOpened():
+                        print("удалось открыть камеру!")
+                else:
+                    print("камера не  работает!")
 
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        frame = cv2.transpose(frame)
-        frame = cv2.flip(frame, 0)
-        frame_size = 180,180
-        frame_location = 0,400    
-        frame_surface = pg.surfarray.make_surface(frame)
-        frame_surface = pg.transform.scale(frame_surface, (frame_size[0],frame_size[1]))
-        screen.blit(frame_surface, (frame_location[0],frame_location[1]))
-
-
+                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                frame = cv2.transpose(frame)
+                frame = cv2.flip(frame, 0)
+                frame_size = 180,180
+                frame_location = 0,400    
+                frame_surface = pg.surfarray.make_surface(frame)
+                frame_surface = pg.transform.scale(frame_surface, (frame_size[0],frame_size[1]))
+                screen.blit(frame_surface, (frame_location[0],frame_location[1]))
 
 
-        cam_num2 =2
+                cam_num2 =2
 
-        cap2 = cv2.VideoCapture(cam_num2)
-        ret2 ,frame2= cap2.read()
-        # Считываем кадр с камеры\
-        if cap2.isOpened():
-                print("удалось открыть камеру!")
-        else:
-            print("камера не  работает!")
-        ret2, frame2 = cap2.read()
+                cap2 = cv2.VideoCapture(cam_num2)
+                ret2 ,frame2= cap2.read()
+                # Считываем кадр с камеры\
+                if cap2.isOpened():
+                        print("удалось открыть камеру!")
+                else:
+                    print("камера не  работает!")
 
-        frame2 = cv2.cvtColor(frame2, cv2.COLOR_BGR2RGB)
-        frame2 = cv2.transpose(frame2)
-        frame2 = cv2.flip(frame2, 0)
-        frame2_size = 180,180
-        frame2_location = 0,600    
-        frame2_surface = pg.surfarray.make_surface(frame2)
-        frame2_surface = pg.transform.scale(frame2_surface, (frame2_size[0],frame2_size[1]))
-        screen.blit(frame2_surface, (frame2_location[0],frame2_location[1]))
+                frame2 = cv2.cvtColor(frame2, cv2.COLOR_BGR2RGB)
+                frame2 = cv2.transpose(frame2)
+                frame2 = cv2.flip(frame2, 0)
+                frame2_size = 180,180
+                frame2_location = 0,600    
+                frame2_surface = pg.surfarray.make_surface(frame2)
+                frame2_surface = pg.transform.scale(frame2_surface, (frame2_size[0],frame2_size[1]))
+                screen.blit(frame2_surface, (frame2_location[0],frame2_location[1]))
 
-
-
-
-
-
-
-
-
+        """
 
         mouse_visible = False ; mouse_set_visible = pg.mouse.set_visible( mouse_visible )
 
@@ -598,7 +642,8 @@ def start():
             world_border = pg.draw.rect(screen , (Button_frame_color) , ( -camera1.rect[ 0 ] + 0 ,-camera1.rect[ 1 ] + 0 , map_width , map_width) , 10 , 0  )
 
             #islands
-            for i in range(len(islands_points)): pg.draw.polygon(screen , (100,25,0), islands_points)
+            for i in range(len(islands_points)):
+                pg.draw.polygon(screen , (100,25,0),islands_points)
 
 
 
@@ -755,10 +800,6 @@ def start():
             for x in range( int(map_width / km)) :
                 for y in range( int(map_height / km)) : pg.draw.rect(screen , (255,0,0) , (  -camera1.rect[0] + meter * km * x  , -camera1.rect[1] + meter * km * y , km, km),2,0)   
 
-
-
-
-
 run = True ; logging.info( msg = 'GAME STARTED!' )
 
 
@@ -770,44 +811,6 @@ hero_x , hero_y     = int(screen_width) / 2  - heroimage.width / 2 , int(screen_
 
 
 while run :
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     for i in enumerate(screen_surfs_list):
         print(f"screen surf : {i}")
@@ -832,18 +835,18 @@ while run :
 
 
 
+        """
+                #список доступных джойстиков
+                joystick_count = pg.joystick.get_count()
+                print(f"Найдено джойстиков: {joystick_count}")
 
-        # список доступных джойстиков
-        #joystick_count = pg.joystick.get_count()
-        #print(f"Найдено джойстиков: {joystick_count}")
-
-        #if joystick_count > 0:
-        #    joystick = pg.joystick.Joystick(0)
-        #    joystick.init()
-        #    print(f"Использую: {joystick.get_name()}")
+                if joystick_count > 0:
+                    joystick = pg.joystick.Joystick(0)
+                    joystick.init()
+                print(f"Использую: {joystick.get_name()}")
 
 
-
+        """
         # кнопки
 
         if event.type == pg.JOYBUTTONDOWN:
