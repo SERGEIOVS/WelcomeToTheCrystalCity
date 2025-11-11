@@ -15,7 +15,6 @@ input=user_input,
 store = user_store
 
 )
-
 print(response.output_text)
 if user_store ==1:
   print("Ответ сохранен!")
