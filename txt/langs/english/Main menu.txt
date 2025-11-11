@@ -1,0 +1,4 @@
+New game
+Settings
+Quit game
+Mods
