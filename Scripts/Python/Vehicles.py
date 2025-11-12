@@ -1,7 +1,6 @@
 import pygame as pg , os
 from PIL import Image
-saving_type = 'Default' ; game_state = 'Main menu'
-
+from Settings import *
 Land_vihicles_types = os.listdir('Objects/Vihicles/')
 Land_vihicles_file_name = 'txt/Objects/' + str(saving_type) + '/Land_Vihicles.txt'
 Land_vihicles_file_mode = 'r'
