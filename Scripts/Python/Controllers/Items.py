@@ -9,6 +9,7 @@ items_file = open (items_file_name , items_file_mode)
 items_file1 = items_file.readlines()
 items_images = []
 items_categories = os.listdir('Objects/Items/')
+item = 0 ; items = 0 ; items_max = 6 ; items_stack = 100
 
 class Items:
     def __init__( self , x , y , image) :

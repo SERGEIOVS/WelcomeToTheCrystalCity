@@ -1,7 +1,7 @@
 import sys , os
 import pygame as pg ; from PIL import Image ; from Units import * ; from logging import *; 
 from Vehicles import * ; import pyautogui ;
-from Background import * ; import math;import numpy as np
+from Scripts.Python.Controllers.Background import * ; import math;import numpy as np
 import time ; from Items import *
 import pprint
 import cv2
@@ -10,7 +10,6 @@ from pygame.locals import *
 import pyaudio
 from Settings import *
 
-os.environ["SDL_VIDEODRIVER"] = '1'
 pg.init()
 pg.joystick.init()
 p = pyaudio.PyAudio()
@@ -43,7 +42,8 @@ for x in range(dots_num):
 
 )
 
-
+for event in pg.event.get():
+        if event.type == pg.QUIT:running = False
 
 
 for x in range(rocks_num):
@@ -316,23 +316,16 @@ def player_movement():
         if keys[pg.K_e]: hero_path_angle -= 0.1
             
         rot_hero = pg.transform.rotate(hero_image,math.degrees(hero_path_angle))
-
         rect = rot_hero.get_rect(center=(hero_image.get_width(),hero_image.get_width()))
 
         scale_factor = 2
         original_hero_img_width = hero_image.get_width() ; original_hero_img_height = hero_image.get_height()
 
-
-
-                        
         if keys[pg.K_k]:
                 scale_factor += 0.1
                 print(f'scale factor : {scale_factor}')
-
                 scaled_image = pg.transform.scale(rot_hero, (original_hero_img_width, original_hero_img_height))
-
                 new_hero_img_width  = int(hero_image.get_width()) ; new_hero_img_height = int(hero_image.get_height())
-
 
         if keys[pg.K_l]:
                 scale_factor -= 0.1
@@ -342,12 +335,8 @@ def player_movement():
                 
                 new_hero_img_width  = int(hero_image.get_width()) ; new_hero_img_height = int(hero_image.get_height())
 
-
-
         if vector != [ 0 , 0 ] : camera1.move(vector) #Если игрок ходил
 
-
-        
         # Обновление смещения на мини-карте
         minimap_object_offset  += 1 / (map_scale * hero_speed * 10) if vector[0] < 0 else -1 / (map_scale * hero_speed * 10) ; minimap_object_offset1 += 1 / (map_scale * hero_speed * 10) if vector[1] < 0 else -1 / (map_scale * hero_speed * 10)
 

@@ -1,17 +1,15 @@
 import pygame as pg ; from PIL import Image ; import random ; import os ; import sys;import sqlite3
-pg.font.init() 
-
+from PIL import Image
 from Settings import *
 
 
+pg.font.init() 
 
-item = 0 ; items = 0 ; items_max = 6 ; items_stack = 100
+
 
 hero_file_name = 'txt/Objects/' + str(saving_type) + '/characters/Hero.txt'   ; hero_file_mode = 'r' ; hero_file = open (hero_file_name , hero_file_mode) ; hero_file1 = hero_file.readlines() ; hero_file.close()
 hero_belt_inventory_images = []
 hero_backpack_inventory_images = []
-
-
 
 name = 2 ; state = 'idle' ; turn = 'left' ; animation = 0 ; hero_speed = 4
 ammo_used = 0
@@ -26,7 +24,6 @@ hero_x , hero_y = int(screen_width) / 2 - heroimage.width / 2 , int(screen_heigh
 herojump , herojumpcounter = False , 10 ; jump_height = 6 # you can not jump , jump height
 scaled_image = pg.transform.scale(rot_hero, (hero_image.get_width() * scale_factor, hero_image.get_height() * scale_factor))
 
-
 hero_night_vision   = 0
 hero_skills         = [ 'fast run' , 'night vision']
 hero_animations_dir = os.listdir('Objects/Characters/Hero/' + str(name) + '/' + str(state) + '/' + str(turn) + '/')
@@ -40,15 +37,7 @@ hero_x , hero_y     = int(screen_width) / 2  - heroimage.width / 2 , int(screen_
 Hero_types = os.listdir('Objects/Characters/Hero/')
 Hero_types_list = []
 show_speed  = big_font.render('Speed : ' + str(hero_speed)     , False , small_font_color ) ; add = big_font.render('+', False , small_font_color ) ; remove = big_font.render('-' , False , small_font_color ) ; new_craft = small_font.render('Create' , False , small_font_color ) ; ok = small_font.render('OK' , False , small_font_color ) ; apply = small_font.render('Apply' , False , small_font_color) ; cancel = small_font.render('Cancel' , False , small_font_color)
-
-
-
-
-
-
-
-
-
+hero_path_lenght  = 90 ; hero_path_angle  = 90 ; hero_path_lenght1 = 90 ; hero_path_angle1 = 90 ; unit_path_lenght = 90 ; unit_path_angle = 90
 
 show_hero_armor = big_font.render( str( armor     ).strip() + " / " + str( max_armor       ).strip() , False , ( 250 , 0 , 0 ) ) ; show_ammo    = big_font.render( str( ammo  ).strip()     + " / " + str( max_ammo * mags ).strip() , False , ( 250 , 0 , 0 ) ) ; show_health = big_font.render( str( health ).strip()    + " / " + str( max_health).strip() , False , ( 255 , 0 , 0 ) )
 show_radiation  = big_font.render( str( radiation ).strip() + " / " + str( max_radiation   ).strip() , False , ( 255 , 0 , 0 ) ) ; show_energy  = big_font.render( str( energy).strip()     + ' / ' + str( max_energy      ).strip() , False , ( 255 , 0 , 0 ) )
@@ -122,9 +111,6 @@ Enemies_list       = []
 Enemies_inventory  = []
 
 
-
-from PIL import Image
-
 class Enemy:
     def __init__(self, x, y, angle, image_path):
         self.x = x
@@ -142,7 +128,7 @@ class Enemy:
         except FileNotFoundError:
             print(f"Image file not found: {self.image_path}")
             return None
-    
+
     def unit_move(self):
         self.angle +=10
 
@@ -154,6 +140,9 @@ class Enemy:
 
 # Создание объекта врага после инициализации Pygame
 enemy = Enemy(x = 100 , y = 1000, angle = 45, image_path = (f"Objects/Characters/Enemies/Ghosts/1/idle/right/0.png") )
+killed_units        = []
+selected_units      = []
+units_with_a_quests = [Companions_images_list[0]]    
 
 '''
 
@@ -204,6 +193,4 @@ for i in range(len(Enemies_file1)) :
 
     
 '''
-killed_units        = []
-selected_units      = []
-units_with_a_quests = [Companions_images_list[0]]    
+

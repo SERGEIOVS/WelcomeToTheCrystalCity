@@ -5,7 +5,7 @@ from time import *
 import logging
 from Units import *
 from Vehicles import *
-from Background import *
+from Scripts.Python.Controllers.Background import *
 from Controls import room_height,scaled_image,rot_hero,fuel_bar_width,interface_surf_x,interface_surf_y,min_map_size,checkpoint_size,max_map_size,game_modes1,menus_dir,camera1,vihicles_file1,player_movement,menu_titles1,text_updating,Open_unit_inventory,minimap_grid_width,minimap_grid_height,hero_marker_color,mini_map_grid_cell_size,difficulties1,prices_file1,prices_list1,vector
 pg.init()
 
@@ -223,11 +223,11 @@ def start():
 
             #for i in range(len(checkpoints_file1)) : pg.draw.circle(screen , (255 , 0 , 0 ) , (-camera.rect[0] + int(checkpoints_file1[i].split(',')[0]) + 50 , -camera.rect[1] + int(checkpoints_file1[i].split(',')[1]) + 180) , 50 , 1 )
 
-        for i in range(len(custom_checkpoints_list_x)):
-            if len(custom_checkpoints_list) != 0:
-                pg.draw.circle(screen , (255 , 0 , 0)      , ( -camera1.rect[ 0 ] + int(custom_checkpoints_list_x[i]) , -camera1.rect[ 1 ] + int(custom_checkpoints_list_y[i])      ) , 20  , 5 )
-                screen.blit(custom_checkpoint_title        , ( -camera1.rect[ 0 ] + int(custom_checkpoints_list_x[i]) , -camera1.rect[ 1 ] + int(custom_checkpoints_list_y[i]) - 50 ))
-                mini_map_surf.blit(custom_checkpoint_title , ( -camera1.rect[ 0 ] + int(custom_checkpoints_list_x[i]) , -camera1.rect[ 1 ] + int(custom_checkpoints_list_y[i]) - 50 ))
+        #for i in range(len(custom_checkpoints_list_x)):
+        #    if len(custom_checkpoints_list) != 0:
+        #        pg.draw.circle(screen , (255 , 0 , 0)      , ( -camera1.rect[ 0 ] + int(custom_checkpoints_list_x[i]) , -camera1.rect[ 1 ] + int(custom_checkpoints_list_y[i])      ) , 20  , 5 )
+        #        screen.blit(custom_checkpoint_title        , ( -camera1.rect[ 0 ] + int(custom_checkpoints_list_x[i]) , -camera1.rect[ 1 ] + int(custom_checkpoints_list_y[i]) - 50 ))
+        #        mini_map_surf.blit(custom_checkpoint_title , ( -camera1.rect[ 0 ] + int(custom_checkpoints_list_x[i]) , -camera1.rect[ 1 ] + int(custom_checkpoints_list_y[i]) - 50 ))
 
 
         #drawing a text for a quests menu
@@ -590,10 +590,6 @@ def text_updating():
 
     new_craft = small_font.render('Uus' , False , small_font_color ) ; ok = small_font.render('OK' , False , small_font_color ) ; apply = small_font.render('Apply'  , False , small_font_color) ; cancel = small_font.render('Tagasi'  , False , small_font_color)
     show_game_state = big_font.render('Menüü' , False , small_font_color)
-
-
-
-
 
 
 """
