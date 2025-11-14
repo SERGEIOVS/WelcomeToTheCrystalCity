@@ -8,7 +8,7 @@ import cv2
 import mido
 from pygame.locals import *
 import pyaudio
-from Settings import *
+from Scripts.Python.Controllers.Funcs import welcome_speech_dir,cancel_icon,click_sound,spawn_sound,active_button,active_button1,text_updating,Open_unit_inventory,make_screenshot,toggle_god_mode,bg_images,screenshot_btn,back_btn,reload_btn,player_movement
 
 pg.init()
 pg.joystick.init()
@@ -107,8 +107,8 @@ if event.type == pg.MOUSEBUTTONDOWN:
                 show_hero_armor = big_font.render('armor : ' + str(armor).strip() + " / " + str( max_armor).strip() , False , ( 250 , 0, 0  ) ) ; show_ammo = big_font.render('ammo : ' + str(ammo).strip() + " / " + str(max_ammo * mags).strip() , False , ( 250 , 0 , 0 ) ) ; show_health = big_font.render('health : ' + str(health).strip() + " / " + str(max_health).strip() , False , ( 255 , 0 , 0 ) ) ; show_radiation  = big_font.render('radiation : ' + str(radiation).strip() + " / " + str(max_radiation).strip() , False , ( 255 , 0 , 0 ) )
                 ammo -= 1 ; gun_shot = pg.mixer.Sound( 'Audio/sounds/firegun/single/0.mp3' ) ; gun_shot.play()
 
-            if event.button == 1 and pos[0] >= cancel_icon_x and pos[0] <= cancel_icon_x + cancel_icon.get_width() and pos[1] >= cancel_icon_y and pos[1] <= cancel_icon_y + cancel_icon.get_height() and game_state == 'Play' and vihicle_sit == 1:
-                vihicle_sit =  0
+            #if event.button == 1 and pos[0] >= cancel_icon_x and pos[0] <= cancel_icon_x + cancel_icon.get_width() and pos[1] >= cancel_icon_y and pos[1] <= cancel_icon_y + cancel_icon.get_height() and game_state == 'Play' and vihicle_sit == 1:
+            #    vihicle_sit =  0
 
             if event.button == 3 and pos[0] >= hero_x and pos[0] <= hero_x + hero_image.get_width() and pos[1] >=  hero_y and pos[1] <= hero_y + hero_image.get_height() and open_backpack == 0 and game_state == 'Play':                
                 game_state = 'Backpack'
@@ -399,8 +399,6 @@ for x in range(36):
 
 
 """
-
-
 
 
 

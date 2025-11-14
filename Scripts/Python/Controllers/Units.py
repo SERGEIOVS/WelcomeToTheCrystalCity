@@ -110,6 +110,117 @@ Enemies_routes     = [] ; Enemy_speech = []
 Enemies_list       = []
 Enemies_inventory  = []
 
+units_dict = {
+
+    "Hero":{
+
+        "Stats":{
+
+        },
+
+        "Inventory":{
+
+        },
+        
+        "states":{
+
+        },
+
+        "Abilites":{
+
+        }
+
+
+    },
+
+
+
+    "Companions":{
+
+            "Stats":{
+
+            },
+
+            "Inventory":{
+
+            },
+            
+            "states":{
+
+            },
+
+            "Abilites":{
+
+            }
+
+    },
+
+
+
+    "Enemies"   :{
+
+            "Stats":{
+
+        },
+        "Inventory":{
+
+        },
+        
+        "states":{
+
+        },
+
+        "Abilites":{
+
+        }
+    },
+
+
+
+    "Animals":{
+
+        "Stats":{
+
+        },
+        
+        "Inventory":{
+
+        },
+        
+        "states":{
+
+        },
+
+        "Abilites":{
+
+        }
+    },
+
+
+
+    "Birds":{
+
+            "Stats":{
+
+        },
+        
+        "Inventory":{
+
+        },
+        
+        "states":{
+
+        },
+
+        "Abilites":{
+
+        }
+
+    }
+
+}
+
+
 
 class Enemy:
     def __init__(self, x, y, angle, image_path):
@@ -122,6 +233,7 @@ class Enemy:
 
     def load_image(self):
         """Загружает изображение врага из файла и конвертирует его для Pygame."""
+        
         try:
             image = pg.image.load(self.image_path)
             return image

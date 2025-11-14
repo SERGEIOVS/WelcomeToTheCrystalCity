@@ -22,7 +22,6 @@ show_vars = {
 }
 
 
-
 cam_list = [random.randint(0,100) for i in range(0,10)];print(f'Cam list : {cam_list}')
 
 bigfont = 30 ; smallfont = 15 ; font_name = 'arial' ; big_font_color = ( 250 , 0 , 0 ) ; small_font_color  = ( 250 , 0 , 0 ) ; change_font_color = ( 0 , 250 , 0 ) ; big_font = pg.font.SysFont(font_name , bigfont) ; small_font = pg.font.SysFont(font_name , smallfont)
@@ -59,8 +58,8 @@ hero_file_name    = 'txt/Objects/'+ str(saving_type) +'/characters/Hero.txt' ; h
 hero_inventory    = [] ; hero_inventory_nums = [] ; hero_inventory_file_name = 'txt/langs/' + str(language) + '/Hero inventory.txt' ; hero_inventory_file_mode = 'r' ; hero_inventory_file = open (hero_inventory_file_name , hero_inventory_file_mode , encoding= "utf-8") ; hero_inventory_file1 = hero_inventory_file.readlines()
 
 prices_file_name = 'txt/Prices.txt' ; prices_file_mode = 'r' ; prices_file = open(prices_file_name , prices_file_mode , encoding= "utf-8") ; prices_file1 = prices_file.readlines()
-for i in range(len(prices_list))  : i = big_font.render('Price : ' + prices_file1[i].strip() , False , small_font_color ) ; prices_list1.append(i)     
-for i in range(len(prices_file1)) : prices_list.append(prices_file1[i])
+#for i in range(len(prices_list))  : i = big_font.render('Price : ' + prices_file1[i].strip() , False , small_font_color ) ; prices_list1.append(i)     
+#for i in range(len(prices_file1)) : prices_list.append(prices_file1[i])
 
 
 
@@ -74,7 +73,7 @@ show_created_date = small_font.render('Created : 25 oktober 2019' , False , smal
 show_action       = big_font.render(str(action) , False , ( 250 , 0 , 0 ) )
 show_action1      = big_font.render('Trade' , False , ( 250 , 0 , 0 ) )
 show_action2      = big_font.render('Repair' , False , ( 250 , 0 , 0 ))
-show_gas    = big_font.render('Gas   : ' + str(gas)            , False , small_font_color )
+#show_gas    = big_font.render('Gas   : ' + str(gas)            , False , small_font_color )
 custom_checkpoint_title1 = big_font.render('Custom checkpoint' , False , small_font_color ) 
 show_mods_count = big_font.render("(" + str(len(os.listdir(mods_dir_path))) + ")" , False , small_font_color ) 
 
