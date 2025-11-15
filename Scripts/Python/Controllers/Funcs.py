@@ -104,9 +104,54 @@ icons_dict = {
 
 }
 
+"""
+
+
+simple chat controller
+
+
+chat_triggers= {
+
+"bad_words":      ["нахер","придурок", "жопа","дебил","даун","сука","кретин","наркотик"],
+"spam" : ["переходи", "ссылка:", "подпишись","подпишись на канал и поставь лайк"],
+"threats":        ["умри!","чтоб ты сдох,сука!", "Убью нахер!","умри,блядь!"]
+
+}
 
 
 
+msgs={
+
+"player1": ["пошел нахер","иди в жопу!", "привет всем!","подпишись на канал и поставь лайк", "умри,блядь!"],
+"player2": ["пошел нахер","иди в жопу!", "привет всем!","подпишись на канал и поставь лайк", "умри,блядь!"], 
+"player3": ["пошел нахер","иди в жопу!", "привет всем!","подпишись на канал и поставь лайк", "умри,блядь!"],
+
+}
+
+
+
+
+for player,player_msg in msgs.items():
+
+    for msg in player_msg:
+        for word in chat_triggers["bad_words"]:
+            if word in msg:
+                print(f"{player} : зафиксировано ругательство!'{word}'")
+    
+    for msg in player_msg:
+        for spam in chat_triggers["spam"]:
+            if spam in msg:
+                print(f"{player} : зафиксирован спам!'{spam}'")
+
+                        
+    for msg in player_msg:
+        for threat in chat_triggers["threats"]:
+            if threat in msg:
+                print(f"{player} : зафиксирована угроза!'{threat}'")
+
+
+
+"""
 
 item_offset = 0 ; active_button = 0 ; active_button1 = 0 ; crafts_on_page = 10 ; characters_on_page = 10 ; players_on_page = 10 ; button_width = 250 ; button_height = bigfont ; button_border_radius = 5
 
