@@ -14,22 +14,7 @@ pg.init()
 pg.joystick.init()
 p = pyaudio.PyAudio()
 
-keys = pg.key.get_pressed()
 
-# Цвета
-land_color = (162, 101, 62)
-
-BG_COLOR = (0, 0, 200)
-
-dots_num   = 36
-rocks_num  = 36
-dots       = []
-rocks      = []
-rock_size  = 70
-rock_scale = 2
-
-sea_scale = 2
-sea_size  = 200
 
 for x in range(dots_num):
             dots.append(

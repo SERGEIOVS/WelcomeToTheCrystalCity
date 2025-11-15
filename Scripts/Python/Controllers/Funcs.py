@@ -89,7 +89,8 @@ icons_dict = {
 "radiation_icon" : pg.image.load('Interface/Icons/Radiation/'       + str(vars1["radiation_icon_num"]) + '.png'),
 "energy_icon"    : pg.image.load('Interface/Icons/Energy/'          + str(vars1["energy_icon_num"])    + '.png'),
 "sound_icon"     : pg.image.load('Interface/Icons/Music/'           + str(vars1["sound_icon_num"])     + '.png'),
-"cancel_icon"    : pg.image.load('Interface/buttons/cancel/'        + str(vars1["cancel_icon_num"])    + '.png')
+"cancel_icon"    : pg.image.load('Interface/buttons/cancel/'        + str(vars1["cancel_icon_num"])    + '.png'),
+"cursor"         : pg.image.load( 'Interface/icons/Select/0.png')
 
 },
 
@@ -153,24 +154,15 @@ for player,player_msg in msgs.items():
 
 """
 
-item_offset = 0 ; active_button = 0 ; active_button1 = 0 ; crafts_on_page = 10 ; characters_on_page = 10 ; players_on_page = 10 ; button_width = 250 ; button_height = bigfont ; button_border_radius = 5
 
 
-minimap_horizontal_offset = 0 ; minimap_vertical_offset = 0 ; fov = 100 ; minimap_opacity = 0 ; interface_opacity = 0 
 
 Button_color = (45 , 45 , 45) ; minimap_border_color = (45 , 45 , 45) ; Button_frame_color = (255 , 0 , 0) ; cell_color = ( 45  , 45 , 45 )
 
-game_state_x   = int(screen_width) / 2 - int(len(game_state) * bigfont / 3) ; game_state_y = 100
-game_title_x   = 100      ; game_title_y        = 100
-Game_version_x = 10       ; Game_version_y      = int(screen_height) - bigfont
-Game_Author_x  = 10       ; Game_Author_y       = int(screen_height) - bigfont 
-Game_created_date_x  = 10 ; Game_created_date_y = 10 
-Game_update_x  = 10       ; Game_update_y       = 10 
 
 back_btn = pg.K_ESCAPE ; save_game_btn = pg.K_F5 ; backpack_btn1 = pg.K_b ; backpack_btn2 = pg.K_b ; load_game_btn = pg.K_F3 ; screenshot_btn = pg.K_F1
 reload_btn = pg.K_r
 
-change_settings_value = 0 ; fps_1 = 4 ; 
 
 def make_screenshot() :
     screenshots = 1  ; screenshot = pyautogui.screenshot() 
