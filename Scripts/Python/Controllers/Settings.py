@@ -22,12 +22,18 @@ show_vars = {
                 "show_map"          : 1 ,
                 "show_buildings"    : 1, 
                 "show_items"        : 1,
-                "show_islands"      : 0
+                "show_islands"      : 0,
 
 
 
             },
 
+            "bg_num" : 1,
+            #map options
+
+            #"meter" * km,
+            "map_scale" : 1,
+            "map_size" : 3 ,
             "keys" : pg.key.get_pressed(),
 
             # Цвета
@@ -73,8 +79,10 @@ show_vars = {
 
                 "cell_size"         : 50,
                 "cells"             : 5,
+                "grid_size1"        : [int(100 / map_scale),int(100 / map_scale)],
+
+
                 "font_name"         :'arial',
-                "grid_size1"        : [int(100 / "map_scale"),int(100 / "map_scale")],
 
                 "scrensurfs"        : 4
 
@@ -95,6 +103,8 @@ show_vars = {
 
             },
 
+            "map_width" : "show_vars"["measure_units"]["meter"] * "show_vars"["measure_units"]["km"],
+            "map_height" : "show_vars"["measure_units"]["meter"] * "show_vars"["measure_units"]["km"],
 
 "lang_num"         : 2 ,
 "language"         :"languages"["lang_num"],
@@ -108,9 +118,7 @@ show_vars = {
 
 
 #measure units . linear measure . inch = 25,4 mm (2,54 cm) foot = 0,3048 m (or 12 inches) ; 
-"bg_num" : 1,
-#map options
-'map_width ,"map_height" :"meter" * "km" , "meter" * "km ;"map_scale" : 1 ; "map_size" : 3 ,
+
 
 "custom_checkpoint_size" : 100,
 "custom_checkpoint_num"  : 0,
@@ -153,49 +161,63 @@ show_vars = {
 "max_map_size"       : 1.2, 
 "mini_map_grid_cell_size" : "meter" * "map_scale",
 
-cursor_types = ['Default' , 'Custom'] ; cursor_num = 0 ; cursor_type = cursor_types[cursor_num],
+"cursor_types" : ['Default' , 'Custom'], 
+"cursor_num" : 0 ,
+"cursor_type" : "cursor_types"[cursor_num],
 
-hero_inventory_types = ['Grid' , 'Circle'] ; hero_inventory_num = 0 ; hero_inventory_type = hero_inventory_types[hero_inventory_num] ; hero_marker_color = (255 , int(255 / 2) , 0),
+"hero_inventory_types" : ['Grid' , 'Circle'] , 
+"hero_inventory_num" : 0 , 
+"hero_inventory_type" : "hero_inventory_types"[hero_inventory_num] ,
+"hero_marker_color" :(255 , int(255 / 2) , 0),
 
-"room_height" , "room_width" : 3 *"" meter"  , 5 * "meter" ; "room_size" : "room_height" * "room_width" ; "walll_size"  : 22,
+"room_height" : 3 *" meter",
+"room_width" : 3 *" meter"  , 
+"room_size" : "room_height" * "room_width" ,
+"walll_size"  : 22,
 
-"sidewalk_width" , "sidewalk_height" : 3 * :"meter" , 3 * "meter",
+"sidewalk_width" : 3 * 100, 
+"sidewalk_height": 3 * "show_vars"["measure_units"]["meter"],
 
 
 "font_name" : 'arial' ,
-bigfont : 30 ; big_font_color : ( 250 , 0 , 0 ) ; change_font_color : ( 0 , 250 , 0 ) ;big_font :pg.font.SysFont(font_name , bigfont)
+"bigfont" : 30,
+"big_font_color" : ( 250 , 0 , 0 ) , "change_font_color" : ( 0 , 250 , 0 ) ,"big_font" :pg.font.SysFont("font_name" , "bigfont"),
 
-smallfont : 15 ; small_font_color  : ( 250 , 0 , 0 ) ; small_font : pg.font.SysFont(font_name , smallfont)
+"smallfont" : 15,
+"small_font_color"  : ( 250 , 0 , 0 ) , "small_font" : pg.font.SysFont("font_name" , "smallfont"),
 
-cursor_x = pos[0],
-cursor_y = pos[1],
+"cursor_x"             : pos[0],
+"cursor_y"             : pos[1],
 
-
-
-
-item_offset          = 0
-active_button        = 0
-active_button1       = 0
-crafts_on_page       = 10
-characters_on_page   = 10
-players_on_page      = 10
-button_width         = 250
-button_height        = bigfont
-button_border_radius = 5
+"item_offset"          : 0,
+"active_button"        : 0,
+"active_button1"       : 0,
+"crafts_on_page"       : 10,
+"characters_on_page"   : 10,
+"players_on_page"      : 10,
+"button_width"         : 250,
+"button_height"        : "bigfont",
+"button_border_radius" : 5,
 
 
-minimap_horizontal_offset = 0
-minimap_vertical_offset   = 0
-fov                       = 100
-minimap_opacity           = 0
-interface_opacity         = 0 
+"minimap_horizontal_offset" : 0,
+"minimap_vertical_offset"   : 0,
+"fov"                       : 100,
+"minimap_opacity"           : 0,
+"interface_opacity"         : 0,
 
-game_state_x   = int(screen_width) / 2 - int(len(game_state) * bigfont / 3) ; game_state_y = 100
-game_title_x   = 100      ; game_title_y        = 100
-Game_version_x = 10       ; Game_version_y      = int(screen_height) - bigfont
-Game_Author_x  = 10       ; Game_Author_y       = int(screen_height) - bigfont 
-Game_created_date_x  = 10 ; Game_created_date_y = 10 
-Game_update_x  = 10       ; Game_update_y       = 10 
+"game_state_x"        : int("screen_width") / 2 - int(len("game_state") * "bigfont" / 3),
+"game_state_y"        : 100,
+"game_title_x"        : 100 ,
+"game_title_y"        : 100,
+"Game_version_x"      : 10,
+ "Game_version_y"     : int("screen_height") - "bigfont",
+"Game_Author_x"       : 10,
+"Game_Author_y"       : int("screen_height") - "bigfont", 
+"Game_created_date_x" : 10,
+"Game_created_date_y" : 10 ,
+"Game_update_x"       : 10,
+"Game_update_y"       : 10 ,
 
 
 
@@ -203,20 +225,20 @@ Game_update_x  = 10       ; Game_update_y       = 10
 
 
 
-if mods_dir_path not in sys.path : sys.path.append(mods_dir_path)
-if mods_dir_path in sys.path : print() ; print() ; print('mods folder added ! ')
+if "mods_dir_path" not in sys.path : sys.path.append("mods_dir_path")
+if "mods_dir_path" in sys.path : print() ; print() ; print('mods folder added ! ')
 
 
 
 
 
-big_font   = pg.font.SysFont(font_name , bigfont)
-small_font = pg.font.SysFont(font_name , smallfont)
+big_font   = pg.font.SysFont("font_name" , "bigfont")
+small_font = pg.font.SysFont("font_name" , "smallfont")
 big_font   = pg.font.Font( None , 30)
 small_font = pg.font.Font( None , 15)
 
-interface_surf_x   = 0   ; interface_surf_y    = int(screen_height ) - interface_surf.get_width() 
-interface_surf_x   = 0   ; interface_surf_y    = int(screen_height ) - interface_surf.get_width()
+interface_surf_x   = 0   ; interface_surf_y    = int("screen_height" ) - "interface_surf".get_width() 
+interface_surf_x   = 0   ; interface_surf_y    = int("screen_height" ) - "interface_surf".get_width()
 
 hero_checkpoint_offset_x = 0 ; hero_checkpoint_offset_y = 0 ; toggle_checkpoints = 1
 
@@ -249,23 +271,24 @@ lists = {
 "roads_list"                : [],
 "saves_list"                : [],
 
-quests_list                 : [],
-quests_states_list          : []
+"quests_list"                 : [],
+"quests_states_list"          : [],
 
-fuel_values_list  = []
-fuel_values_list1 = []
+"fuel_values_list"  : [],
+"fuel_values_list1" : [],
 
-interface_images = []
+"interface_images" : [],
 
-necessary_craft_items = []
+"necessary_craft_items" : [],
 
-prices_list  = []
-prices_list1 = [] 
+"prices_list"  : [],
+"prices_list1" : [] ,
 
 
-hero_inventory    = [] ; hero_inventory_nums = [] ;
+"hero_inventory"    : [] ,
+"hero_inventory_nums" :[] ,
 
-game_modes = ['Survival' , 'God mode' , 'Hardcore'] ; game_modes1 = [] ;
+"game_modes" : ['Survival' , 'God mode' , 'Hardcore'] ; game_modes1 = [] ;
 
 }
 
