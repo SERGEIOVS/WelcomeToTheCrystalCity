@@ -149,11 +149,7 @@ def menu():
     if action == "техподдержка" : support()
 
 
-run = True
-while run:
-     menu()
 
-quit()
 
 
 #функция вызывается при проверке чата на запрещенку
