@@ -36,14 +36,14 @@ while running:
 
 
 
-    if game_state == 'Main_menu':toggle_main_menu()
+    if variables["game_state"] == 'Main_menu':toggle_main_menu()
 
-    if game_state == 'Play' : 
+    if variables["game_state"]  == 'Play' : 
         mini_map_mouse_controls()
         mini_map_keyboard_controls()
         player_movement()
     
-    if game_state == 'Trade_menu' : Trade_menu()
+    if variables["game_state"] == 'Trade_menu' : Trade_menu()
 
     pg.display.update()
 

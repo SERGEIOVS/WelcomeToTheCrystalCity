@@ -1,6 +1,5 @@
-import pygame as pg
+#Background.py imports
 from PIL import Image
-import os
 import math
 import pygame as pg , os
 import sys
@@ -9,8 +8,10 @@ from pathlib import Path
 # путь к Scripts/Python
 sys.path.append(str(Path(__file__).resolve().parent))
 
-
 from Controllers.Settings import *
+
+
+
 
 class Background:
     def __init__(self , x , y , image) :
@@ -73,12 +74,9 @@ for i in range( len ( Plants_file1 ) ) :
     Plants_list.append(i)
 
 
-
-saving_type = 'Default' ; game_state = 'Main menu'
-
 Furniture_types = os.listdir('Objects/Background/Furniture/')
 
-Furniture_file_name = 'txt/Objects/' + str(saving_type) + '/Furniture.txt'
+Furniture_file_name = 'txt/Objects/' + str(variables["saving_type"]) + '/Furniture.txt'
 Furniture_file_mode = 'r'
 Furniture_file  = open (Furniture_file_name , Furniture_file_mode)
 Furniture_file1 = Furniture_file.readlines()

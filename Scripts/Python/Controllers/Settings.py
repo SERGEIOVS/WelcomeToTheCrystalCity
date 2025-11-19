@@ -1,18 +1,36 @@
+#Settings.py imports
 import pygame as pg , datetime ; import os , math , logging ;import sys ; import sqlite3 
-import  getpass ;import random;import LogsManager
-from Funcs import custom_checkpoints_list,small_font
-
+import  getpass ;import random
 from pathlib import Path
+#custom modules import
+import LogsManager
 
-# путь к Scripts/Python
+# path to Scripts/Python
 sys.path.append(str(Path(__file__).resolve().parent))
-
 
 pg.init() ; pg.font.init()
 
-#Game directory
-cwd = os.getcwd()
-d1 =  datetime.datetime.today() ; d1 += datetime.timedelta( hours = 0 ) ; pos = pg.mouse.get_pos()
+
+
+
+
+pos = pg.mouse.get_pos()
+
+dirs_dict= {
+
+"mods_dir_path" : 'mods',
+
+"menus_dir" : 'txt/menus/',
+
+"obj_dir"   : 'Objects/',
+
+"MyShapes" : [],
+
+#"Wallpapers_dir" : os.listdir('Wallpapers/' + str("screen_width") + '_' + str("screen_height") + '/'),
+
+"languages"      : os.listdir('txt/langs/'),
+
+}
 
 
 
@@ -26,13 +44,12 @@ measure_units = {
                 "feet" : 30.48,
                 "mile_in_km" : 1000 * 1.60934
 
-
                 }
 
 
 variables = {
 
-            "switchers":{
+"switchers":{
 
                 "show_interface"    : 1,
                 "open_backpack"     : 0,
@@ -69,16 +86,15 @@ variables = {
 
                 "cell_size"         : 50,
                 "cells"             : 5,
-                #"grid_size1"        : [int(100 / map_scale),int(100 / map_scale)],
 
 
                 "font_name"         :'arial',
 
                 "scrensurfs"        : 4
 
-            },
+},
 
-            "nums":{
+"nums":{
 
             "health_icon_num"    : 0,
             "cancel_icon_num"    : 0,
@@ -88,64 +104,49 @@ variables = {
             "radiation_icon_num" : 0,
             "energy_icon_num"    : 0,    
 
-            },
+},
+
+"bg_num" : 1,
+
+"land_color" : (162, 101, 62),
+
+"BG_COLOR" : (0, 0, 200),
+
+"dots_num"   : 36,
+"rocks_num"  : 36,
 
 
-            "bg_num" : 1,
-            #map options
+"rock_size"  : 70,
 
-            #"meter" * km,
-            "map_scale" : 1,
-            "map_size" : 3 ,
-            "keys" : pg.key.get_pressed(),
+"rock_scale" : 2,
 
-            # Цвета
-            "land_color" : (162, 101, 62),
+"sea_scale" : 2,
+"sea_size"  : 200,
 
-            "BG_COLOR" : (0, 0, 200),
+"map_width" :  measure_units["meter"] * measure_units["km"],
+"map_height" : measure_units["meter"] * measure_units["km"],
 
-            "dots_num"   : 36,
-            "rocks_num"  : 36,
-
-            "rock_size"  : 70,
-            "rock_scale" : 2,
-
-            "sea_scale" : 2,
-            "sea_size"  : 200,
-
-
-            
-
-
-
-
-
-            "map_width" :  ["measure_units"]["meter"] * ["measure_units"]["km"],
-            "map_height" : ["measure_units"]["meter"] * ["measure_units"]["km"],
 
 "lang_num"         : 2 ,
-"language"         :"languages"["lang_num"],
 
 "dark_surf_color"  : "colors"[1] ,
 "quest_surf_color" : "colors"[1],
-"colors"           : [ ( 0 , 0 , 255 ) , ( 0 , 0 , 0 ) , (250 , 0 , 0)  , (255 , 255 , 255) , (45 , 45 , 45 ) , (133 , 133 , 133) , (100 , 100 , 100) , (75 , 75 , 75) ],
 
-"bigfont"          : "30",
+"bigfont"          : 30,
 "smallfont"        : 15,
-
-
-
 
 "custom_checkpoint_size" : 100,
 "custom_checkpoint_num"  : 0,
 
 "vector" : [ 0 , 0],#cam vectors
+
 "multiplayer"  : 1,
 "hide_nicknames" : 0,
+
 "ground" : 1,
 "floor" : 0 ,
-"fuel_bar_width" : 100,
 
+"fuel_bar_width" : 100,
 
 "mouse_horizontal_offset" :5,
 "mouse_vertical_offset" : 5 ,
@@ -156,19 +157,22 @@ variables = {
 "game_state" : 'Main_menu',
 
 "lang_num" : 2,
-"language": "languages"["lang_num"],
+#"language": dirs_dict["languages"]["lang_num"],
 "update_name"  : 'Fear in the dark',
 "author" : 'Thunderman98',
 "subtitles" : 0,
 
-
-
+"map_scale" : 1,
+"map_size" : 3 ,
+"keys" : pg.key.get_pressed(),
 
 "minimap_grid_width"  : 100,
 "minimap_grid_height" : 100,
 "min_map_size"       : 3 ,
 "max_map_size"       : 1.2, 
-"mini_map_grid_cell_size" : "meter" * "map_scale",
+"map_scale" : 1,
+
+"mini_map_grid_cell_size" : measure_units["meter"] *" map_scale",
 
 "cursor_types" : ['Default' , 'Custom'], 
 "cursor_num" : 0 ,
@@ -179,9 +183,9 @@ variables = {
 #"hero_inventory_type" : "hero_inventory_types"[hero_inventory_num] ,
 "hero_marker_color" :(255 , int(255 / 2) , 0),
 
-"room_height" : 3 *" meter",
-"room_width" : 3 *" meter"  , 
-"room_size" : "room_height" * "room_width" ,
+"room_height" : 3 * measure_units["meter"],
+"room_width" : 3 *measure_units["meter"]  , 
+"room_size" : room_height * "room_width" ,
 "walll_size"  : 22,
 
 "sidewalk_width" : 3 * 100, 
@@ -227,29 +231,25 @@ variables = {
 "Game_created_date_y" : 10 ,
 "Game_update_x"       : 10,
 "Game_update_y"       : 10 ,
-
-
-
-}
-
-dirs_dict= {
-
-#directories/folders
-"mods_dir_path" : 'mods',
-"menus_dir" : 'txt/menus/',
-"obj_dir"   : 'Objects/',
-"MyShapes" : [],
-
-
-"wallpapers_dir" : os.listdir('wallpapers/' + str("screen_width") + '_' + str("screen_height") + '/'),
-"wallpaper"      : "wallpapers_dir"["bg_num"],   
-"languages"      : os.listdir('txt/langs/'),
+"wallpaper"      : dirs_dict["wallpapers_dir"]["bg_num"],   
 
 }
 
 
 
 lists = {
+"colors" : [ 
+                       
+                       (0, 0, 255), 
+                       (0, 0, 0 ),
+                       (250, 0, 0), 
+                       (255, 255, 255), 
+                       (45, 45, 45), 
+                       (133, 133, 133), 
+                       (100, 100, 100), 
+                       (75, 75, 75) 
+                       
+],
 
 "Colors_list"         : [],
 "Colors_Coords_x_1"   : [],
@@ -290,6 +290,7 @@ lists = {
 "prices_list"  : [],
 "prices_list1" : [] ,
 
+"screen_surfs_list" :[ pg.Surface(( int(screen_width) / 2 , int(screen_height) / 2 )) for screensurf in range("scrensurfs")],
 
 "hero_inventory"    : [] ,
 "hero_inventory_nums" :[] ,
@@ -298,6 +299,32 @@ lists = {
 "game_modes1" : [] 
 
 }
+
+back_btn       = pg.K_ESCAPE
+save_game_btn  = pg.K_F5
+backpack_btn   = pg.K_b
+load_game_btn  = pg.K_F3
+screenshot_btn = pg.K_F1
+reload_btn     = pg.K_r
+
+bindings_list = {
+
+"custom": {},
+
+"default": {
+
+back_btn       : pg.K_ESCAPE,
+save_game_btn  : pg.K_F5,
+backpack_btn   : pg.K_b,
+load_game_btn  : pg.K_F3,
+screenshot_btn : pg.K_F1,
+reload_btn     : pg.K_r    
+
+}
+
+}
+
+
 
 
 
@@ -373,6 +400,34 @@ files_dict = {
 
 fonts={"defalt":{},"custom":{}}
 
+for i in files_dict["screen_file1"]: screen_width , screen_height , camera_x , camera_y = i.split(',')[0],i.split(',')[1],i.split(',')[2],i.split(',')[3]
+for i in files_dict["saves_file1"]:  screen_width , screen_height , camera_x , camera_y = i.split(',')[0],i.split(',')[1],i.split(',')[2],i.split(',')[3]
+
+surfs_dict={
+
+"checkpoints_surf" : pg.Surface(( int(screen_width) / "map_size" , int(screen_height) / "map_size" )),
+"hero_shadow_surf" : pg.Surface(( 100 , 100 )),
+"mini_map_surf"    : pg.Surface(( int(screen_width) / "map_size" , int(screen_height) / "map_size" )), 
+"quests_surf"      : pg.Surface(( 200 , 200 )),
+"dark_surf"        : pg.Surface(( int(screen_width) , int(screen_height) )), 
+"interface_surf"   : pg.Surface(( 200 , 200 )),
+"dialoge_surf"     : pg.Surface((  100 , "bigfont" * len("actions_list") - "bigfont"))
+
+}
+
+
+screen  = pg.display.set_mode((int( screen_width) , int(screen_height)),pg.RESIZABLE)
+
+#Game directory
+cwd = os.getcwd()
+game_icon = pg.display.set_icon(pg.image.load("Interface/icons/Game icons/Game_icon.png"))
+d1 =  datetime.datetime.today()
+d1 += datetime.timedelta( hours = 0 )
+
+Game_title = os.path.basename(cwd)
+Game_version = d1.date()
+pg.display.set_caption(Game_title)
+
 
 if "mods_dir_path" not in sys.path : sys.path.append("mods_dir_path")
 if "mods_dir_path" in sys.path : print() ; print() ; print('mods folder added ! ')
@@ -389,27 +444,7 @@ interface_surf_x   = 0   ; interface_surf_y    = int("screen_height" ) - "interf
 
 hero_checkpoint_offset_x = 0 ; hero_checkpoint_offset_y = 0 ; toggle_checkpoints = 1
 
-
-
-
-
-
-
 big_font_color = ( 250 , 0 , 0 ) ; small_font_color  = ( 250 , 0 , 0 ) ; change_font_color = ( 0 , 250 , 0 )
-
-
-for i in "screen_file1": screen_width , screen_height , camera_x , camera_y = i.split(',')[0:4]
-for i in "saves_file1" : screen_width , screen_height , camera_x , camera_y = i.split(',')[0:4]
-
-
-screen  = pg.display.set_mode((int( screen_width) , int(screen_height)),pg.RESIZABLE)
-game_icon = pg.display.set_icon(pg.image.load("Interface/icons/Game icons/Game_icon.png"))
-Game_title = os.path.basename(cwd)
-Game_version = d1.date()
-
-
-pg.display.set_caption(Game_title)
-
 
 #actions_list.append(i)
 
@@ -454,7 +489,7 @@ for i in range(variables["switchers"]) :
     for i in range(1000):"fuel_values_list".append(i)
     for i in range(len("fuel_values_list")) : 
         i = big_font.render(str("fuel_values_list[i]") , False , small_font_color )
-        "fuel_values_list1".append(i)
+        lists["fuel_values_list1"].append(i)
 
 
 #for i in range(len(prices_list))  : i = big_font.render('Price : ' + prices_file1[i].strip() , False , small_font_color ) ; prices_list1.append(i)     
@@ -463,44 +498,17 @@ for i in range(variables["switchers"]) :
 
 screen.blit("cursor" , ( "pos[ 0 ]" - "mouse_horizontal_offset" , "pos[ 1 ]"  - "mouse_vertical_offset" )) ; #calc_dist = math.sqrt( (( x_2_list - x_1_list   * hero_checkpoint_offset_x) ** 2 ) +  ( (  y_2_list - y_1_list * hero_checkpoint_offset_y) ** 2 ) /100) ; show_distance = small_font.render('Distance : ' + str(int(calc_dist) /100) + ' m' , False , small_font_color )
 
-
-
-
-
-
-
 #surfs
-screen_surfs_list = [ pg.Surface(( int(screen_width) / 2 , int(screen_height) / 2 )) for screensurf in range("scrensurfs")]
 
 
-surfs_dict={
-
-"checkpoints_surf" : pg.Surface(( int(screen_width) / "map_size" , int(screen_height) / "map_size" )),
-"hero_shadow_surf" : pg.Surface(( 100 , 100 )),
-"mini_map_surf"    : pg.Surface(( int(screen_width) / "map_size" , int(screen_height) / "map_size" )), 
-"quests_surf"      : pg.Surface(( 200 , 200 )),
-"dark_surf"        : pg.Surface(( int(screen_width) , int(screen_height) )), 
-"interface_surf"   : pg.Surface(( 200 , 200 )),
-"dialoge_surf"     : pg.Surface((  100 , "bigfont" * len("actions_list") - "bigfont"))
-
-}
-
-
-
-
-
-for i in range(10) : "MyShapes".append('circle') ; "MyShapes".append('square') ; "MyShapes".append('triangle') ; "MyShapes".append('rectangle')    
+#for i in range(10) : "MyShapes".append('circle') ; "MyShapes".append('square') ; "MyShapes".append('triangle') ; "MyShapes".append('rectangle')    
 
 clock = pg.time.Clock() ; FPS = 60 ; clock.tick(FPS)
 
 minimapfontsize = int( 30 / "map_scale") ; mini_map_font_size = pg.font.SysFont("font_name" , minimapfontsize)
 
-for i in custom_checkpoints_list:
-    i = mini_map_font_size.render('Custom checkpoint' + int(i) , False , small_font_color ) 
-
-
-
-
+#for i in custom_checkpoints_list:
+#    i = mini_map_font_size.render('Custom checkpoint' + int(i) , False , small_font_color ) 
 
 screen.blit("interface_surf" , ( interface_surf_x , interface_surf_y ))
 screen.blit("quests_surf"   , ( int(screen_width) - "quests_surf".get_width() , int(screen_height ) - "quests_surf".get_height()))
@@ -519,8 +527,7 @@ cam_list = [random.randint(0,100) for i in range(0,10)];print(f'Cam list : {cam_
 
 
 
-print(os.listdir("mods_dir_path"))
-
+#print(os.listdir("mods_dir_path"))
 
 minimap_location    =  'right_up'  ; minimap_x = 15 / 2 ; minimap_y = 15 / 2
 if minimap_location == 'left_up'   : minimap_x = 0      ; minimap_y = 0

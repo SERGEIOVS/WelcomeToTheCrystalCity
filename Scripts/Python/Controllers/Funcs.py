@@ -1,12 +1,13 @@
+#Funcs.py imports
 from pathlib import Path
-
+import sys
 # путь к Scripts/Python
 sys.path.append(str(Path(__file__).resolve().parent))
 
 
 import pygame as pg
 import pyautogui
-from time import *
+import time 
 import logging
 import mido
 import cv2
@@ -15,7 +16,6 @@ import numpy as np
 
 from Controllers.Settings import variables
 from Controllers.Units import *
-from Controllers.Vehicles import *
 from Controllers.Background import *
 from Controllers.Controls import *
 from Controllers.Items import items_max,item
@@ -96,13 +96,8 @@ icons_dict = {
 
 }
 
-
-
 Button_color = (45 , 45 , 45) ; minimap_border_color = (45 , 45 , 45) ; Button_frame_color = (255 , 0 , 0) ; cell_color = ( 45  , 45 , 45 )
 
-
-back_btn = pg.K_ESCAPE ; save_game_btn = pg.K_F5 ; backpack_btn1 = pg.K_b ; backpack_btn2 = pg.K_b ; load_game_btn = pg.K_F3 ; screenshot_btn = pg.K_F1
-reload_btn = pg.K_r
 
 
 def make_screenshot() :
@@ -112,8 +107,8 @@ def make_screenshot() :
 #def save_game_and_quit() :saves_file_mode = 'w' ; saves_file = open (saves_file_name , saves_file_mode) ; saves_file.write( str(screen_width) + ',' + str(screen_height) + ',' + str(camera.rect[0]) + ',' + str(camera.rect[1])) ; saves_file.close() ; logging.info(msg = 'GAME SAVED!' ) ; pg.quit() ; logging.info(msg = 'QUIT GAME!' )
 def toggle_god_mode() : global print_god_mode , god_mode ; god_mode = 0 ; print_god_mode = print('GOD MODE ACTIVATED!')
 
-#def load_game() : saves_file_mode = 'r' ; saves_file = open (saves_file_name , saves_file_mode) ; saves_file.close() ; logging.info(msg = 'GAME LOADED!' ) ; print('Game loaded!')
-#def save_game() : saves_file_mode = 'w' ; saves_file = open (saves_file_name , saves_file_mode) ; saves_file.write( str(screen_width) + ',' + str(screen_height) + ',' + str(camera.rect[0]) + ',' + str(camera.rect[1])  );saves_file.close() ; logging.info(msg = 'GAME SAVED!' ) ; print('GAME SAVED!')
+def load_game() : saves_file_mode = 'r' ; saves_file = open (files_dict["saves_file_name"] , saves_file_mode) ; saves_file.close() ; logging.info(msg = 'GAME LOADED!' ) ; print('Game loaded!')
+def save_game() : saves_file_mode = 'w' ; saves_file = open (files_dict["saves_file_name"] , saves_file_mode) ; saves_file.write( str(screen_width) + ',' + str(screen_height) + ',' + str(variables["camera"].rect[0]) + ',' + str(variables["camera"].rect[1])  );saves_file.close() ; logging.info(msg = 'GAME SAVED!' ) ; print('GAME SAVED!')
 
 
 def draw_menu():
@@ -129,8 +124,7 @@ def draw_menu():
 
 
 def start():
-    global variables["menus_dir"],variables["ground"],variables["land_color"],variables["dots"],variables["rocks"]
-
+    global variables
 
     if game_state == 'Saves':
         for i in range(len(files_dict["saves_file1"])):
@@ -173,14 +167,25 @@ def start():
 
                 #room_floor
                 pg.draw.polygon(screen , (lists["colors"][7]) , (       
-                    
+
+
+
+
 [-variables["camera1"].rect[0] + 1000 + int(buildings_file1[i].split(',')[0])                               , -variables["camera1"].rect[1] + 1000 + int(buildings_file1[i].split(',')[1])  ] ,
 [-variables["camera1"].rect[0] + 1000 + int(buildings_file1[i].split(',')[0]) +variables["measure_units"]["meter"] * 3  * math.cos(variables["fuel"]) , -variables["camera1"].rect[1] + 1000 + int(buildings_file1[i].split(',')[1]) +variables["measure_units"]["meter"] * 3  * math.sin(variables["fuel"]) ] , 
 [-variables["camera1"].rect[0] + 1000 + int(buildings_file1[i].split(',')[0]) +variables["measure_units"]["meter"] * 15 * math.cos(variables["fuel"]) , -variables["camera1"].rect[1] + 1000 + int(buildings_file1[i].split(',')[1]) +variables["measure_units"]["meter"] * 3  * math.sin(variables["fuel"]) ] ,
 [-variables["camera1"].rect[0] + 1000 + int(buildings_file1[i].split(',')[0]) +variables["measure_units"]["meter"] * 7  * math.cos(variables["fuel"]) , -variables["camera1"].rect[1] + 1000 + int(buildings_file1[i].split(',')[1])  ] , 
                                                                   
 ))
+                funcs_dir = {
+                     
+                make_screenshot : make_screenshot,
+                start           : start,
+                toggle_god_mode :  toggle_god_mode,
+                save_game       : save_game,
+                load_game       : load_game
 
+                }
 
 
                 #room_celling
@@ -211,7 +216,6 @@ def start():
 [-variables["camera1"].rect[0] + 1000 + int(buildings_file1[i].split(',')[0]) + variables["measure_units"]["meter"] * 7  * math.cos(variables["fuel"]) , -variables["camera1"].rect[1] + 1000 + int(buildings_file1[i].split(',')[1]) ]
 
 ))
-                
                 
 
         #drawing a text for a quests menu
@@ -277,7 +281,13 @@ if variables["show_interface"] == 1:
                 
 
 
-            screen.blit(variables["show_hero_armor"] , ( variables["big_font"] + 10 , int(screen_height ) - variables["big_font"] * 5))     , ( 10 , int(screen_height ) -(variables["bigfont"] * 5)
+            screen.blit(variables["show_hero_armor"], ( variables["big_font"] + 10 , int(screen_height ) - variables["big_font"] * 5))
+            
+            
+            
+            
+            
+            
             screen.blit(variables["show_ammo"]       , ( variables["big_font"] + 10 , int(screen_height ) - variables["big_font"] * 4))
             screen.blit(variables["show_health"]     , ( variables["big_font"] + 10 , int(screen_height ) - variables["big_font"] * 6))
             screen.blit(variables["show_radiation"]  , ( variables["big_font"] + 10 , int(screen_height ) - variables["big_font"] * 3))
@@ -296,33 +306,23 @@ if variables["show_interface"] == 1:
             
 
             for x in range( int(variables["map_width"] / variables["km"])) :
-                for y in range( int(variables["map_height"] / variables["measure_units"]["km"])) : pg.draw.rect(screen , (255,0,0) , (  -variables["camera1"].rect[0] +variables["measure_units"]["meter"] * km * x  , -variables["camera1"].rect[1] +variables["measure_units"]["meter"] * km * y , km, km),2,0)   
-
-#run = True ; logging.info( msg = 'GAME STARTED!' )
+                for y in range( int(variables["map_height"] / variables["measure_units"]["km"])) : pg.draw.rect(screen , (255,0,0) , (  -variables["camera1"].rect[0] +variables["measure_units"]["meter"] * measure_units["km"] * x  , -variables["camera1"].rect[1] +variables["measure_units"]["meter"] * measure_units["km"] * y , measure_units["km"], measure_units["km"]),2,0)   
 
 
 
-bg_num     = 1 ; wallpapers_dir = os.listdir('Wallpapers/' + str(screen_width) + '_' + str(screen_height) + '/') ; wallpaper  = wallpapers_dir[bg_num]
+bg_num = 1 ; wallpapers_dir = os.listdir('Wallpapers/' + str(screen_width) + '_' + str(screen_height) + '/') ; wallpaper  = wallpapers_dir[bg_num]
 
-
-#while run :
-
-for i in enumerate(screen_surfs_list):
+for i in enumerate(surfs_dict["screen_surfs_list"]):
         print(f"screen surf : {i}")
 
-
-if dark_level <= max_dark_level : dark_level += 0.01
+if variables["dark_level"] <= variables["max_dark_level"] : variables["dark_level"] += 0.01
     
-
 for event in pg.event.get() :
-
-show_vars["variables"]["mini_map_surf"].fill((minimapBGcolor))
+    variables["mini_map_surf"].fill((minimapBGcolor))
 screen.fill( (BGcolor) )
     
-
 #start()
 
-    
 """
 if game_state != 'Play' : show_game_state = big_font.render(str(game_state) , False , small_font_color) ; screen.blit( show_game_state ,  (game_state_x , game_state_y))
     
@@ -351,10 +351,10 @@ for x in range(minimap_grid_width):
 """
 
 def draw_mini_map():
-    if show_map == 1:
-        for i in range( len ( islands_file1 ) ) :
-            for y in range( len ( islands_file1 ) ) :
-                pg.draw.rect(variables["mini_map_surf"] , (100 , 50 , 0) , (variables["measure_units"]["meter"] * 30 / (meter * map_scale) ,variables["measure_units"]["meter"] * 30  / (meter / map_scale) , km * 5 / (meter * map_scale) , km * 5 / (meter * map_scale) ))
+    if variables["show_map"] == 1:
+        for i in range( len ( files_dict["islands_file1"] ) ) :
+            for y in range( len (files_dict["islands_file1"] ) ) :
+                pg.draw.rect(variables["mini_map_surf"] , (100 , 50 , 0) , (["measure_units"]["meter"] * 30 / (measure_units["meter"] * map_scale) ,variables["measure_units"]["meter"] * 30  / (measure_units["meter"] / variables["map_scale"]) , measure_units["km"] * 5 / (measure_units["meter"] * variables["map_scale"]) , measure_units["km"] * 5 / (measure_units["meter"] * variables["map_scale"]) ))
 
         for i in range( len ( buildings_file1 ) ) :
              if variables["show_buildings"]== 1 : pg.draw.rect(variables["mini_map_surf"] , (133 , 133 , 133)  , ( int(buildings_file1[ i ].split(',')[0]) / (100 * map_scale) + minimap_border_offset * 2 , int(buildings_file1[ i ].split(',')[1]) / (100 * map_scale) + minimap_object_offset1 * 2 ,  10 / map_scale, 10 / map_scale ))
@@ -364,7 +364,7 @@ def draw_mini_map():
 
         hero_marker = pg.draw.circle(variables["mini_map_surf"] , ( hero_marker_color )        , ( minimap_border_offset + variables["camera1"].rect[0] / (100 * map_scale) + minimap_border_offset * minimap_object_offset ,  variables["camera1"].rect[1] / (100 * map_scale) + minimap_border_offset * minimap_object_offset1  ) , 1 / map_scale )        
         
-        for i in range(len(custom_checkpoints_list_x)) : pg.draw.circle(variables["mini_map_surf"] , (255 , 0 , 0) , ( int(custom_checkpoints_list_x[i]) / (100 * map_scale ) , int(custom_checkpoints_list_y[i]) / (100 * map_scale)) , int(1 / map_scale)  , int(1 / map_scale) )
+        for i in range(len(lists["custom_checkpoints_list_x"])) : pg.draw.circle(variables["mini_map_surf"] , (255 , 0 , 0) , ( int(lists["custom_checkpoints_list_x"[i]]) / (100 * map_scale ) , int(lists["custom_checkpoints_list_y"][i]) / (100 * map_scale)) , int(1 / map_scale)  , int(1 / map_scale) )
 
         screen.blit(variables["mini_map_surf"] , ( minimap_x , minimap_y ) )
         
@@ -375,8 +375,8 @@ def draw_mini_map():
 
         map_grid = 0
         if map_grid == 1:
-            for x in range(grid_size1):
-                for y in range(grid_size2):pg.draw.rect(variables["mini_map_surf"] , ( cell_color) , ((variables["cell_size"] * x / map_scale * minimap_object_offset ,(variables["cell_size"] * y / map_scale * minimap_object_offset1 , mini_map_grid_cell_size / map_scale , mini_map_grid_cell_size / map_scale) , 1 ) #drawing a inventory cells
+            for x in range(variables["grid_size1"]):
+                for y in range(variables["grid_size2"]):pg.draw.rect(variables["mini_map_surf"] , ( cell_color) , ((variables["cell_size"] * x / map_scale * minimap_object_offset ,(variables["cell_size"] * y / map_scale * minimap_object_offset1 , mini_map_grid_cell_size / map_scale , mini_map_grid_cell_size / map_scale) , 1 ))) #drawing a inventory cells
 
 
 
@@ -387,130 +387,123 @@ def mini_map_mouse_controls():
     global cancel_icon
     if event.button == 1 and pos[0] >= cancel_icon_x and pos[0] <= cancel_icon_x + cancel_icon.get_width() and pos[1] >= cancel_icon_y and pos[1] <= cancel_icon_y + cancel_icon.get_height() and map_size == max_map_size : map_size = min_map_size
 
-    if event.button == 3 and map_size == max_map_size : spawn_sound.play() ; custom_checkpoints_list_x.append(variables["camera1"].rect[0] + pos[0]) ; custom_checkpoints_list_y.append(variables["camera1"].rect[1] + pos[1])
+    if event.button == 3 and map_size == max_map_size : spawn_sound.play() ; lists["custom_checkpoints_list_x"].append(variables["camera1"].rect[0] + pos[0]) ; lists["custom_checkpoints_list_y"].append(variables["camera1"].rect[1] + pos[1])
 
 changed_keybinds = []
 
 Random_events = []
 
 def toggle_settings():
-    Button_color,button_width
+    Button_color,variables["button_width"]
     if game_state == 'Settings':
-        for i in range(len(settings_file1)):
-            pg.draw.rect(screen , (Button_color) , ( int(variables["screen_width"] ) / 2 -variables["button_width"]       , int(screen_height) / 2 - int(screen_height) / 4 -(variables["bigfont"] + i * 40 +(variables["bigfont"] / 2 ,variables["button_width"],(variables["bigfont"] + 5 ), 0 , 0 ,(variables["button_border_radius"] ,(variables["button_border_radius"] ,(variables["button_border_radius"] , button_border_radius)))))))))
-            pg.draw.rect(screen , (Button_frame_color)  , ( int(variables["screen_width"] ) / 2 -variables["button_width"], int(screen_height) / 2 - int(screen_height) / 4 -(variables["bigfont"] +variables["screen_width"] * 40 +(variables["bigfont"] / 2 ,variables["button_width"],(variables["bigfont"] + 5 ) , 2 , 0 ,(variables["button_border_radius"] ,(variables["button_border_radius"] ,(variables["button_border_radius"] ,(variables["button_border_radius"] )  ))))))))) 
+        for i in range(len(files_dict["settings_file1"])):
+            pg.draw.rect(screen , (Button_color) , ( int(variables["screen_width"] ) / 2 -variables["button_width"]       , int(screen_height) / 2 - int(screen_height) / 4 -(variables["bigfont"] + i * 40 +(variables["bigfont"] / 2 ,variables["button_width"],(variables["bigfont"] + 5 ), 0 , 0 ,(variables["button_border_radius"] ,(variables["button_border_radius"] ,(variables["button_border_radius"] , variables["button_border_radius"])))))))
+            pg.draw.rect(screen , (Button_frame_color)  , ( int(variables["screen_width"] ) / 2 -variables["button_width"], int(screen_height) / 2 - int(screen_height) / 4 -(variables["bigfont"] +variables["screen_width"] * 40 +(variables["bigfont"] / 2 ,variables["button_width"],(variables["bigfont"] + 5 ) , 2 , 0 ,(variables["button_border_radius"] ,(variables["button_border_radius"] ,(variables["button_border_radius"] ,(variables["button_border_radius"] )  )))))))
 
             screen.blit(variables["settings"][i] , ( int(variables["screen_width"] ) / 2 -(variables["bigfont"] * 10 / 2                 , int(screen_height) / 2 - int(screen_height) / 4 -(variables["bigfont"] + i             * 40 +(variables["bigfont"] / 2 ,variables["button_width"],(variables["bigfont"] + 5 ))))))
             
-
-
-
-
-
-
-
             if variables["screen_width"] == 0:
                 for i in range(len(files_dict["resolutions_file1"])):
-                    Button = pg.draw.rect(screen,Button_color, (
-                                                            int(variables["screen_width"]) / 2 + variables["bigfont"],
-                                                            int(screen_height) / 2 - int(screen_height) / 4 - (variables["bigfont"] + i * 40 + variables["bigfont"] / 2),
-                                                            variables["button_width"],
-                                                            variables["bigfont"]
-                                                        ),
-                                                        variables["button_border_radius"]
-                                                    )                   
+                    Button = pg.draw.rect(screen, (Button_color), (int(variables["screen_width"]) / 2 + variables["bigfont"], int(screen_height) / 2 - int(screen_height) / 4 - (variables["bigfont"] + i * 40 + variables["bigfont"] / 2), variables["button_width"], variables["bigfont"]), variables["button_border_radius"])                   
                                 
-            pg.draw.rect(
-                screen,
-                Button_frame_color,
-                (
-                    int(variables["screen_width"]) / 2 + variables["bigfont"],
-                    int(screen_height) / 2 - int(screen_height) / 4 - (variables["bigfont"] + active_button1 * 40 + variables["bigfont"] / 2),
-                    variables["button_width"],
-                    variables["bigfont"]
-                ),
-                variables["button_border_radius"]
-            )
+            pg.draw.rect(screen, Button_frame_color, (int(variables["screen_width"]) / 2 + variables["bigfont"], int(screen_height) / 2 - int(screen_height) / 4 - (variables["bigfont"] + active_button1 * 40 + variables["bigfont"] / 2), variables["button_width"], variables["bigfont"]), variables["button_border_radius"])
 
         
-            screen.blit(
-                lists["resolutions_list"][i],
-                (
-                    int(variables["screen_width"]) / 2 + variables["bigfont"],
-                    int(screen_height) / 2 - int(screen_height) / 4 - (variables["bigfont"] + i * 40 + variables["bigfont"] / 2)
-                )
-            )
+            screen.blit(lists["resolutions_list"][i], (int(variables["screen_width"]) / 2 + variables["bigfont"], int(screen_height) / 2 - int(screen_height) / 4 - (variables["bigfont"] + i * 40 + variables["bigfont"] / 2)))
 
 
 
 
             if variables["screen_width"] == 1 or variables["screen_width"] == 2:
-                pg.draw.line(screen   , (0   , 0  , 0 ) , [ int(variables["screen_width"] ) / 2 + variables["bigfont"]        , int(screen_height) / 2 - int(screen_height) / 4 -(variables["bigfont"] + 0 * 40) +variables["bigfont"] ] , [ int(variables["screen_width"] ) / 2 +variables["bigfont"] + 100 , int(screen_height /2) - int(screen_height) /4 -variables["bigfont"] + 0 * 40 +variables["bigfont"]  ], 1 )
+                pg.draw.line(screen   , (0   , 0  , 0 ) , [ int(variables["screen_width"] ) / 2 + variables["bigfont"]        , int(screen_height) / 2 - int(screen_height) / 4 -(variables["bigfont"] + 0 * 40) +variables["bigfont"] ] , [ int(variables["screen_width"] ) / 2 +variables["bigfont"] + 100 , int(screen_height /2) - int(screen_height) /4 - variables["bigfont"] + 0 * 40 + variables["bigfont"]  ], 1 )
                 
                 
                 
-                pg.draw.circle(screen , (255 , 0  , 0 ) , ( int(variables["screen_width"] ) / 2 +(variables["bigfont"]        , int(screen_height) / 2 - int(screen_height) / 4 -(variables["bigfont"] + 0 * 40 +(variables["bigfont"] /2)  , 1)
-                pg.draw.circle(screen , (255 , 0  , 0 ) , ( int(variables["screen_width"] ) / 2 +(variables["bigfont"]  + 100 , int(screen_height) / 2 - int(screen_height) / 4 -(variables["bigfont"] + 0 * 40 +(variables["bigfont"] /2)  , 1)
+                pg.draw.circle(screen , (255 , 0  , 0 ) , ( int(variables["screen_width"] ) / 2 + variables["bigfont"], int(screen_height) / 2 - int(screen_height) / 4 -(variables["bigfont"] + 0 * 40 + variables["bigfont"] /2)  , 1))
                 
-                pg.draw.rect(screen   , (Button_frame_color ) , ( int(variables["screen_width"] ) / 2 +(variables["bigfont"]  , int(screen_height) / 2 - int(screen_height) / 4 -(variables["bigfont"] + active_button1 * 40 +(variables["bigfont"] / 2 ,variables["button_width"], bigfont) , 2 , 0 ,(variables["button_border_radius"] ,(variables["button_border_radius"] ,(variables["button_border_radius"] , button_border_radius)
-                screen.blit(ok          , ( int(variables["screen_width"] ) / 2 -(variables["bigfont"] * 10 / 2  + 300        , int(screen_height) / 2 - int(screen_height) / 4 -(variables["bigfont"] + i              * 40 +(variables["bigfont"] / 2 ,variables["button_width"],(variables["bigfont"] ))
-                screen.blit(add         , ( int(variables["screen_width"] ) / 2 + 500     / 4  + 10              , int(screen_height) / 2 - int(screen_height) / 4 -(variables["bigfont"] + i              * 40 +(variables["bigfont"] / 2 , 100 ,(variables["bigfont"] ))
-                screen.blit(remove      , ( int(variables["screen_width"] ) / 2 + 5                              , int(screen_height) / 2 - int(screen_height) / 4 -(variables["bigfont"] + i              * 40 +(variables["bigfont"] / 2 , 100 ,(variables["bigfont"] ))
+                pg.draw.circle(screen , (255 , 0  , 0 ) ,( int(variables["screen_width"] ) / 2 + variables["bigfont"]  + 100, int(screen_height) / 2 - int(screen_height) / 4 -(variables["bigfont"] + 0 * 40 +(variables["bigfont"] /2)  , 1)))
+                
+                pg.draw.rect(screen   , (Button_frame_color ), (int(variables["screen_width"] ) / 2 +(variables["bigfont"], int(screen_height) / 2 - int(screen_height) / 4 -(variables["bigfont"] + active_button1 * 40 +(variables["bigfont"] / 2 ,variables["button_width"], variables["bigfont"]) , 2 , 0 ,(variables["button_border_radius"] ,(variables["button_border_radius"], (variables["button_border_radius"] , variables["button_border_radius"])))))))
+                
+                
+                
+                screen.blit(ok, (int(variables["screen_width"] ) / 2 -(variables["bigfont"] * 10 / 2  + 300, int(screen_height) / 2 - int(screen_height) / 4 -(variables["bigfont"] + i * 40 +(variables["bigfont"] / 2 ,variables["button_width"],(variables["bigfont"] ))))))
+                
+                screen.blit(add, (int(variables["screen_width"] ) / 2 + 500 / 4  + 10, int(screen_height) / 2 - int(screen_height) / 4 -(variables["bigfont"] + i * 40 +(variables["bigfont"] / 2 , 100 ,(variables["bigfont"] )))))
+                
+                screen.blit(remove, ( int(variables["screen_width"] ) / 2 + 5                              , int(screen_height) / 2 - int(screen_height) / 4 -(variables["bigfont"] + i              * 40 +(variables["bigfont"] / 2 , 100 ,(variables["bigfont"] )))))
             
-            ifvariables["screen_width"] == 3:
+            if variables["screen_width"] == 3:
                 for i in range(len(variables["menus_dir"])):
-                    Button = pg.draw.rect(screen , (Button_color)        , ( int(variables["screen_width"] ) / 2 +(variables["bigfont"] , int(screen_height) / 2 - int(screen_height) / 4 -(variables["bigfont"] + i * 40 +(variables["bigfont"] / 2 ,variables["button_width"], bigfont), 0 , 0 ,(variables["button_border_radius"] ,(variables["button_border_radius"] ,(variables["button_border_radius"] , button_border_radius)
-                    pg.draw.rect(screen          , (Button_frame_color)  , ( int(variables["screen_width"] ) / 2 +(variables["bigfont"] , int(screen_height) / 2 - int(screen_height) / 4 -(variables["bigfont"] + active_button1 * 40 +(variables["bigfont"] / 2 ,variables["button_width"], bigfont),2 , 0 ,(variables["button_border_radius"] ,(variables["button_border_radius"] ,(variables["button_border_radius"] , button_border_radius)
-                    screen.blit(variables["menus_dir"][i]                            , ( int(variables["screen_width"] ) / 2 +(variables["bigfont"] , int(screen_height) / 2 - int(screen_height) / 4 -(variables["bigfont"] + i              * 40 +(variables["bigfont"] / 2))
+                    Button = pg.draw.rect(screen , (Button_color)        , ( int(variables["screen_width"] ) / 2 +(variables["bigfont"] , int(screen_height) / 2 - int(screen_height) / 4 -(variables["bigfont"] + i * 40 +(variables["bigfont"] / 2 ,variables["button_width"], variables["bigfont"]), 0 , 0 ,(variables["button_border_radius"] ,(variables["button_border_radius"], (variables["button_border_radius"], variables["button_border_radius"])))))))
+                    pg.draw.rect(screen,(Button_frame_color), ( int(variables["screen_width"] ) / 2 +(variables["bigfont"] , int(screen_height) / 2 - int(screen_height) / 4 -(variables["bigfont"] + active_button1 * 40 +(variables["bigfont"] / 2 ,variables["button_width"], variables["bigfont"]),2 , 0  ,(variables["button_border_radius"] ,(variables["button_border_radius"], (variables["button_border_radius"], variables["button_border_radius"])))))))
+        
+        
+        
+        
+        screen.blit(variables["menus_dir"][i],(int(variables["screen_width"] ) / 2 +(variables["bigfont"],int(screen_height) / 2 - int(screen_height) / 4 -(variables["bigfont"] + i * 40 +(variables["bigfont"] / 2)))))
 
 
 def character_select():
     if game_state == 'character_select_menu':
         for i in range(len(Hero_types)):            
-            Button = pg.draw.rect(screen , (Button_color) , ( int(variables["screen_width"] ) /  2 -variables["button_width"]/ 2 , int(screen_height) / 2 - int(screen_height) / 4 -(variables["bigfont"] + i * 40 +(variables["bigfont"] /2 ,variables["button_width"],(variables["bigfont"] + 5 ) , 0 , 0 ,(variables["button_border_radius"] ,(variables["button_border_radius"] ,(variables["button_border_radius"] , button_border_radius)            
-            screen.blit(Hero_types_list[i]    , ( int(variables["screen_width"] ) /  2 -variables["button_width"]/ 2  , int(screen_height) / 2 - int(screen_height) / 4 -(variables["bigfont"] + i * 40 +(variables["bigfont"] / 2 ,variables["button_width"],(variables["bigfont"] ))
-            pg.draw.rect(screen , (Button_frame_color)  ,  ( int(variables["screen_width"] ) /  2 -variables["button_width"]/ 2 , int(screen_height) / 2 - int(screen_height) / 4 -(variables["bigfont"] +variables["screen_width"] * 40 +(variables["bigfont"] / 2 ,variables["button_width"],(variables["bigfont"] + 5 ) , 2 , 0 ,(variables["button_border_radius"] ,(variables["button_border_radius"] ,(variables["button_border_radius"] , button_border_radius)
-            screen.blit(hero_image1 , ( int(variables["screen_width"] ) / 2 + int(variables["screen_width"] ) / 4 - hero_image1.get_width() /2 , hero_image1.get_height() )
+            Button = pg.draw.rect(screen , (Button_color) , ( int(variables["screen_width"] ) /  2 -variables["button_width"]/ 2 , int(screen_height) / 2 - int(screen_height) / 4 -(variables["bigfont"] + i * 40 +(variables["bigfont"] /2 ,variables["button_width"],(variables["bigfont"] + 5 ) , 0 , 0 ,(variables["button_border_radius"] ,(variables["button_border_radius"] ,(variables["button_border_radius"] , variables["button_border_radius"])))))))
+            screen.blit(Hero_types_list[i], (int(variables["screen_width"] ) /  2 -variables["button_width"]/ 2  , int(screen_height) / 2 - int(screen_height) / 4 -(variables["bigfont"] + i * 40 +(variables["bigfont"] / 2 ,variables["button_width"],(variables["bigfont"] )))))
+            
+            pg.draw.rect(screen , (Button_frame_color)  ,  ( int(variables["screen_width"] ) /  2 -variables["button_width"]/ 2 , int(screen_height) / 2 - int(screen_height) / 4 -(variables["bigfont"] +variables["screen_width"] * 40 +(variables["bigfont"] / 2 ,variables["button_width"],(variables["bigfont"] + 5 ) , 2 , 0 ,(variables["button_border_radius"] ,(variables["button_border_radius"] ,(variables["button_border_radius"] , variables["button_border_radius"])))))))
+            
+            #остановился тут!
+            screen.blit(hero_image1, ( int(variables["screen_width"] ) / 2 + int(variables["screen_width"] ) / 4 - hero_image1.get_width() /2 , hero_image1.get_height() ))
 
 
 def game_mode_select():
     if game_state == 'game_mode_select':
         for i in range(len(game_modes1)):            
-            Button = pg.draw.rect(screen , (Button_color) , ( int(variables["screen_width"] ) /  2 -variables["button_width"]/ 2 , int(button screen_height) / 2 - int(screen_height) / 4 -(variables["bigfont"] + i * 40 +(variables["bigfont"] /2 ,variables["button_width"],(variables["bigfont"] + 5 ) , 0 , 0 ,(variables["button_border_radius"] ,(variables["button_border_radius"] ,(variables["button_border_radius"] , button_border_radius)            
-            pg.draw.rect(screen , (Button_frame_color)    , ( int(variables["screen_width"] ) /  2 -variables["button_width"]/ 2 , int(screen_height) / 2 - int(screen_height) / 4 -(variables["bigfont"] +variables["screen_width"] * 40 +(variables["bigfont"] / 2 ,variables["button_width"],(variables["bigfont"] + 5 ) , 2 , 0 ,(variables["button_border_radius"] ,(variables["button_border_radius"] ,(variables["button_border_radius"] , button_border_radius)
-            screen.blit(game_modes1[i]    , ( int(variables["screen_width"] ) /  2 -variables["button_width"]/ 2  , int(screen_height) / 2 - int(screen_height) / 4 -(variables["bigfont"] + i * 40 +(variables["bigfont"] / 2 ,variables["button_width"],(variables["bigfont"] ))
+            Button = pg.draw.rect(screen, (Button_color), (int(variables["screen_width"] ) /  2 -variables["button_width"]/ 2, int(variables["button screen_height"]) / 2 - int(screen_height) / 4 -(variables["bigfont"] + i * 40 +(variables["bigfont"] /2 ,variables["button_width"],(variables["bigfont"] + 5 ) , 0 , 0 ,(variables["button_border_radius"] ,(variables["button_border_radius"] ,(variables["button_border_radius"] , variables["button_border_radius"])))))))
+
+
+
+            pg.draw.rect(screen, (Button_frame_color), (int(variables["screen_width"] ) / 2 - variables["button_width"]/ 2,int(screen_height) / 2 - int(screen_height) / 4 -(variables["bigfont"] +variables["screen_width"] * 40 +(variables["bigfont"] / 2 ,variables["button_width"],(variables["bigfont"] + 5 ) , 2 , 0 ,(variables["button_border_radius"] ,(variables["button_border_radius"] ,(variables["button_border_radius"] , variables["button_border_radius"])))))))
+
+
+            screen.blit(game_modes1[i], (int(variables["screen_width"] ) /  2 -variables["button_width"]/ 2  , int(screen_height) / 2 - int(screen_height) / 4 -(variables["bigfont"] + i * 40 +(variables["bigfont"] / 2 ,variables["button_width"],(variables["bigfont"] )))))
 
 
 
 def Difficulty_select():
     if game_state == 'Select_a_difficulty':
         for i in range(len(difficulties1)):            
-            Button = pg.draw.rect(screen , (Button_color) , ( int(variables["screen_width"] ) /  2 -variables["button_width"]/ 2 , int(screen_height) / 2 - int(screen_height) / 4 -(variables["bigfont"] + i * 40 +(variables["bigfont"] /2 ,variables["button_width"],(variables["bigfont"] + 5 ) , 0 , 0 ,(variables["button_border_radius"] ,(variables["button_border_radius"] ,(variables["button_border_radius"] , button_border_radius)            
-            pg.draw.rect(screen , (Button_frame_color)    , ( int(variables["screen_width"] ) /  2 -variables["button_width"]/ 2 , int(screen_height) / 2 - int(screen_height) / 4 -(variables["bigfont"] +variables["screen_width"] * 40 +(variables["bigfont"] / 2 ,variables["button_width"],(variables["bigfont"] + 5 ) , 2 , 0 ,(variables["button_border_radius"] ,(variables["button_border_radius"] ,(variables["button_border_radius"] , button_border_radius)
-            screen.blit(difficulties1[i]                  , ( int(variables["screen_width"] ) /  2 -variables["button_width"]/ 2 , int(screen_height) / 2 - int(screen_height) / 4 -(variables["bigfont"] + i * 40 +(variables["bigfont"] / 2 ,variables["button_width"],(variables["bigfont"] ))
+            Button = pg.draw.rect(screen, (Button_color), (int(variables["screen_width"] ) /  2 -variables["button_width"] / 2, int(screen_height) / 2 - int(screen_height) / 4 - (variables["bigfont"] + i * 40 + (variables["bigfont"] / 2, variables["button_width"], (variables["bigfont"] + 5 ), 0, 0, (variables["button_border_radius"], (variables["button_border_radius"], (variables["button_border_radius"], variables["button_border_radius"])))))))
+            
+            
+            
+            pg.draw.rect(screen , (Button_frame_color), (int(variables["screen_width"] ) /  2 - variables["button_width"] / 2, int(screen_height) / 2 - int(screen_height) / 4 -(variables["bigfont"] + variables["screen_width"] * 40 + (variables["bigfont"] / 2, variables["button_width"], (variables["bigfont"] + 5 ), 2, 0, (variables["button_border_radius"], (variables["button_border_radius"], (variables["button_border_radius"], variables["button_border_radius"])))))))
+            screen.blit(difficulties1[i], (int(variables["screen_width"]) /  2 -variables["button_width"] / 2, int(screen_height) / 2 - int(screen_height) / 4 - (variables["bigfont"] + i * 40 + (variables["bigfont"] / 2, variables["button_width"], (variables["bigfont"] )))))
 
 
 
 def Open_backpack():
     if game_state == 'Backpack':
         for i in range(len(menu_titles1)):            
-            Button = pg.draw.rect(screen , (Button_color) , (int(variables["screen_width"] ) / 2 -variables["button_width"]-(variables["bigfont"] , int(screen_height) / 4 +(variables["cell_size"] * i ,variables["button_width"], cell_size) , 0 , 0 ,(variables["button_border_radius"] ,(variables["button_border_radius"] ,(variables["button_border_radius"] , button_border_radius)
-            pg.draw.rect(screen , ( Button_frame_color  ) , (int(variables["screen_width"] ) / 2 -variables["button_width"]-(variables["bigfont"] , int(screen_height) / 4 +(variables["cell_size"] *variables["screen_width"] ,variables["button_width"],(variables["cell_size"] ) , 2 , 0 ,(variables["button_border_radius"] ,(variables["button_border_radius"] ,(variables["button_border_radius"] , button_border_radius) #drawing a inventory cell_frame for a selected item in inventory
-            screen.blit(menu_titles1[i]                   , (int(variables["screen_width"] ) / 2 -variables["button_width"]-(variables["bigfont"] , int(screen_height) / 4 +(variables["cell_size"] * i ,variables["button_width"],(variables["bigfont"] ))
+            Button = pg.draw.rect(screen, (Button_color),       (int(variables["screen_width"] ) / 2 - variables["button_width"] - (variables["bigfont"], int(screen_height) / 4 + (variables["cell_size"] * i, variables["button_width"], variables["cell_size"]), 0, 0, (variables["button_border_radius"], (variables["button_border_radius"], (variables["button_border_radius"], variables["button_border_radius"]))))))
+            pg.draw.rect(screen, (Button_frame_color), (int(variables["screen_width"] ) / 2 - variables["button_width"] - (variables["bigfont"], int(screen_height) / 4 + (variables["cell_size"] *    variables["screen_width"], variables["button_width"], (variables["cell_size"] ), 2, 0, (variables["button_border_radius"] ,(variables["button_border_radius"] ,(variables["button_border_radius"] , variables["button_border_radius"]))))))) #drawing a inventory cell_frame for a selected item in inventory
+            screen.blit(menu_titles1[i],(int(variables["screen_width"] ) / 2 -variables["button_width"] - (variables["bigfont"], int(screen_height) / 4 + (variables["cell_size"] * i, variables["button_width"], (variables["bigfont"] )))))
 
-            if show_interface == 1:
+            if variables["show_interface"] == 1:
                 if variables["screen_width"] == 0:
                     for x in range(items_max):
-                        for y in range(items_max):
-                            pg.draw.rect(screen      , ( cell_color )           , ( int(variables["screen_width"] ) / 2 +(variables["cell_size"] * x , int(screen_height) / 4 +(variables["cell_size"] * y ,(variables["cell_size"] ,(variables["cell_size"] ) , 2 , 0 ,(variables["button_border_radius"] ,(variables["button_border_radius"] ,(variables["button_border_radius"] ,(variables["button_border_radius"] ) #drawing a inventory cells
-                            pg.draw.rect(screen      , ( Button_frame_color  ) , ( int(variables["screen_width"] ) / 2 +(variables["cell_size"] * 0 , int(screen_height) / 4 +(variables["cell_size"] * active_button1 ,(variables["cell_size"] ,(variables["cell_size"] ) , 2 , 0 ,(variables["button_border_radius"] ,(variables["button_border_radius"] ,(variables["button_border_radius"] , button_border_radius) #drawing a inventory cell_frame for a selected item in inventory
-                    screen.blit(hero_inventory[item] , (int(screen_width ) / 2 , int(screen_height) -(variables["cell_size"] * 2  )) #drawing a title of the item in inventory            
+                        for y in range(items_max): pg.draw.rect(screen, (cell_color), (int(variables["screen_width"] ) / 2 + (variables["cell_size"] * x, int(screen_height) / 4 + (variables["cell_size"] * y, (variables["cell_size"], (variables["cell_size"] ), 2, 0, (variables["button_border_radius"], (variables["button_border_radius"], (variables["button_border_radius"], (variables["button_border_radius"] ))))))))) #drawing a inventory cells
+                               
+                    pg.draw.rect(screen      , ( Button_frame_color  ) , ( int(variables["screen_width"] ) / 2 +(variables["cell_size"] * 0 , int(screen_height) / 4 +(variables["cell_size"] * active_button1 ,(variables["cell_size"] ,(variables["cell_size"] ) , 2 , 0 ,(variables["button_border_radius"] ,(variables["button_border_radius"] ,(variables["button_border_radius"] , variables["button_border_radius"])))))))) #drawing a inventory cell_frame for a selected item in inventory
                 
-                ifvariables["screen_width"] == 1 :                
-                    for i in range(len(variables["menus_dir"]) //crafts_on_page):
-                            Button = pg.draw.rect(screen  , (Button_color)       , ( int(variables["screen_width"] ) / 2 +(variables["bigfont"] , int(screen_height) / 4 -(variables["bigfont"] + i              * 40 +(variables["bigfont"] / 2 ,variables["button_width"], bigfont) , 0 , 0 ,(variables["button_border_radius"] ,(variables["button_border_radius"] ,(variables["button_border_radius"] , button_border_radius)
-                            pg.draw.rect(screen           , (Button_frame_color) , ( int(variables["screen_width"] ) / 2 +(variables["bigfont"] , int(screen_height) / 4 -(variables["bigfont"] + active_button1 * 40 +(variables["bigfont"] / 2 ,variables["button_width"], bigfont) , 2 , 0 ,(variables["button_border_radius"] ,(variables["button_border_radius"] ,(variables["button_border_radius"] ,(variables["button_border_radius"] )
-                            screen.blit(new_craft         , ( int(variables["screen_width"] ) / 2 +(variables["bigfont"] +variables["button_width"]-(variables["cell_size"] , int(screen_height) / 10 + i * 40 , 100 ,(variables["bigfont"] ))
+                    screen.blit(lists["hero_inventory"][item], (int(screen_width) / 2, int(screen_height) - (variables["cell_size"] * 2))) #drawing a title of the item in inventory            
+                
+                if variables["screen_width"] == 1:                
+                    for i in range(len(variables["menus_dir"]) // variables["crafts_on_page"]):
+                            Button = pg.draw.rect(screen, (Button_color), (int(variables["screen_width"] ) / 2 + (variables["bigfont"], int(screen_height) / 4 - (variables["bigfont"] + i * 40 +(variables["bigfont"] / 2, variables["button_width"], variables["bigfont"]), 0, 0, (variables["button_border_radius"] ,(variables["button_border_radius"] ,(variables["button_border_radius"] , variables["button_border_radius"])))))))
+                            
+                            pg.draw.rect(screen, (Button_frame_color), (int(variables["screen_width"] ) / 2 + (variables["bigfont"], int(screen_height) / 4 - (variables["bigfont"] + active_button1 * 40 +(variables["bigfont"] / 2 ,variables["button_width"], variables["bigfont"]), 2, 0, (variables["button_border_radius"], (variables["button_border_radius"], (variables["button_border_radius"], (variables["button_border_radius"]))))))))
+                            screen.blit(new_craft, (int(variables["screen_width"] ) / 2 + (variables["bigfont"] + variables["button_width"] - (variables["cell_size"], int(screen_height) / 10 + i * 40 , 100 ,(variables["bigfont"] )))))
 
 
 
@@ -518,9 +511,11 @@ def Open_unit_inventory():
     if vihicle_sit == 1:
         for x in range(items_max):
             for y in range(items_max):
-                pg.draw.rect(screen          , ( cell_color)           , ( int(variables["screen_width"] )  / 4 +(variables["cell_size"] * x , int(screen_height) / 4 +(variables["cell_size"] * y ,(variables["cell_size"] ,(variables["cell_size"] ) , 2 , 0 ,(variables["button_border_radius"] ,(variables["button_border_radius"] ,(variables["button_border_radius"] ,(variables["button_border_radius"] ) #drawing a inventory cells
-                pg.draw.rect(screen          , ( Button_frame_color  ) , ( int(variables["screen_width"] )  / 4 +(variables["cell_size"] * 0 , int(screen_height) / 4 +(variables["cell_size"] * active_button1 ,(variables["cell_size"] ,(variables["cell_size"] ) , 2 , 0 ,(variables["button_border_radius"] ,(variables["button_border_radius"] ,(variables["button_border_radius"] , button_border_radius) #drawing a inventory cell_frame for a selected item in inventory
-            screen.blit(hero_inventory[item] , (int(screen_width ) / 2 ,   int(screen_height) -(variables["cell_size"]     * 2  )) #drawing a title of the item in inventory            
+                pg.draw.rect(screen, (cell_color),(int(variables["screen_width"])  / 4 + (variables["cell_size"] * x, int(screen_height) / 4 + (variables["cell_size"] * y, (variables["cell_size"] ,(variables["cell_size"]), 2, 0, (variables["button_border_radius"], (variables["button_border_radius"], (variables["button_border_radius"], (variables["button_border_radius"] ))))))))) #drawing a inventory cells
+                pg.draw.rect(screen, (Button_frame_color),(
+                     int(variables["screen_width"] )  / 4 +(variables["cell_size"] * 0,
+                     int(screen_height) / 4 +(variables["cell_size"] * active_button1 ,(variables["cell_size"] ,(variables["cell_size"] ) , 2 , 0 ,(variables["button_border_radius"] ,(variables["button_border_radius"] ,(variables["button_border_radius"] , variables["button_border_radius"]))))))))#drawing a inventory cell_frame for a selected item in inventory
+            screen.blit(lists["hero_inventory"][item] , (int(screen_width ) / 2 ,   int(screen_height) -(variables["cell_size"]     * 2  ))) #drawing a title of the item in inventory            
                 
 
 
@@ -535,16 +530,15 @@ def Trade_menu():
 
         
     for i in range(len(menu_titles1)):            
-            Button = pg.draw.rect(screen , (Button_color) , (int(variables["screen_width"] ) / 2 -variables["button_width"]-(variables["bigfont"] , int(screen_height) / 4 +(variables["cell_size"] * i ,variables["button_width"], cell_size) , 0 , 0 ,(variables["button_border_radius"] ,(variables["button_border_radius"] ,(variables["button_border_radius"] , button_border_radius)
-            pg.draw.rect(screen , ( Button_frame_color  ) , (int(variables["screen_width"] ) / 2 -variables["button_width"]-(variables["bigfont"] , int(screen_height) / 4 +(variables["cell_size"] *variables["screen_width"] ,variables["button_width"],(variables["cell_size"] ) , 2 , 0 ,(variables["button_border_radius"] ,(variables["button_border_radius"] ,(variables["button_border_radius"] , button_border_radius) #drawing a inventory cell_frame for a selected item in inventory
-            screen.blit(menu_titles1[i]             ,       (int(variables["screen_width"] ) / 2 -variables["button_width"]-(variables["bigfont"] , int(screen_height) / 4 +(variables["cell_size"] * i ,variables["button_width"],(variables["bigfont"] ))
-    for i in range(len(variables["menus_dir"]) //crafts_on_page):
-                        Button = pg.draw.rect(screen  , (Button_color)       , ( int(variables["screen_width"] ) / 2 +(variables["bigfont"] , int(screen_height) / 4 -(variables["bigfont"] + i              * 40 +(variables["bigfont"] / 2 ,variables["button_width"], bigfont) , 0 , 0 ,(variables["button_border_radius"] ,(variables["button_border_radius"] ,(variables["button_border_radius"] , button_border_radius)
+            Button = pg.draw.rect(screen, (Button_color), (int(variables["screen_width"]) / 2 - variables["button_width"] - (variables["bigfont"], int(screen_height) / 4 + (variables["cell_size"] * i, variables["button_width"], variables["cell_size"]), 0, 0, (variables["button_border_radius"], (variables["button_border_radius"], (variables["button_border_radius"], variables["button_border_radius"]))))))
+            pg.draw.rect(screen, (Button_frame_color), (int(variables["screen_width"] ) / 2 -variables["button_width"] - (variables["bigfont"], int(screen_height) / 4 + (variables["cell_size"] *variables["screen_width"], variables["button_width"], (variables["cell_size"]), 2, 0, (variables["button_border_radius"], (variables["button_border_radius"] ,(variables["button_border_radius"] , variables["button_border_radius"]))))))) #drawing a inventory cell_frame for a selected item in inventory
+            
+            screen.blit(menu_titles1[i], (int(variables["screen_width"] ) / 2 - variables["button_width"] - (variables["bigfont"], int(screen_height) / 4 + (variables["cell_size"] * i, variables["button_width"], (variables["bigfont"])))))
+    
+    for i in range(len(variables["menus_dir"]) // variables["crafts_on_page"]):
+                        Button = pg.draw.rect(screen, (Button_color), (int(variables["screen_width"] ) / 2 +(variables["bigfont"], int(screen_height) / 4 - (variables["bigfont"] + i * 40 + (variables["bigfont"] / 2 ,variables["button_width"], variables["bigfont"]), 0, 0, (variables["button_border_radius"] ,(variables["button_border_radius"] ,(variables["button_border_radius"] , variables["button_border_radius"])))))))
                         
-                        
-                        pg.draw.rect(screen           , (Button_frame_color) , ( int(variables["screen_width"] ) / 2 +(variables["bigfont"] , int(screen_height) / 4 -(variables["bigfont"] + active_button1 * 40 +(variables["bigfont"] / 2 ,variables["button_width"], bigfont) , 2 , 0 ,(variables["button_border_radius"] ,(variables["button_border_radius"] ,(variables["button_border_radius"] ,(variables["button_border_radius"] )
-                        
-                        
+                        pg.draw.rect(screen, (Button_frame_color), (int(variables["screen_width"] ) / 2 + (variables["bigfont"], int(screen_height) / 4 - (variables["bigfont"] + active_button1 * 40 + (variables["bigfont"] / 2, variables["button_width"], variables["bigfont"]), 2, 0, (variables["button_border_radius"], (variables["button_border_radius"] ,(variables["button_border_radius"] ,(variables["button_border_radius"] ))))))))
                         
                         screen.blit(new_craft,(int(variables["screen_width"]  / 2 + variables["bigfont"]),int(screen_height / 10 + i * 40)))
 
@@ -554,28 +548,33 @@ def Trade_menu():
 def toggle_main_menu():
         draw_menu()
         for i in range(len(os.listdir(variables["menus_dir"]))):
-            pg.draw.rect(screen , (Button_color) , (int(variables["screen_width"] ) /  2 -variables["button_width"]/ 2 , int(screen_height) / 2 - int(screen_height) / 4 -(variables["bigfont"] + i * 40 +(variables["bigfont"] / 2 ,variables["button_width"],(variables["bigfont"] + 5 ) , 0 , 0 ,(variables["button_border_radius"] ,(variables["button_border_radius"] ,(variables["button_border_radius"] , button_border_radius))))))
-            pg.draw.rect(screen , (Button_frame_color)    , (int(variables["screen_width"] ) /  2 -variables["button_width"]/ 2 , int(screen_height) / 2 - int(screen_height) / 4 -(variables["bigfont"] +variables["screen_width"] * 40 +(variables["bigfont"] / 2 ,variables["button_width"],(variables["bigfont"] + 5 ) , 2 , 0 ,(variables["button_border_radius"] ,(variables["button_border_radius"] ,(variables["button_border_radius"] , button_border_radius)
-            screen.blit(show_mods_count                   , (int(variables["screen_width"] ) /  2 -variables["button_width"]/ 2 + 75 , int(screen_height) / 2 - int(screen_height) / 4 -(variables["bigfont"] + 3 * 40 +(variables["bigfont"] / 2 ,variables["button_width"],(variables["bigfont"] ))
-
-
-
+            pg.draw.rect(screen , (Button_color), (int(variables["screen_width"] ) /  2 -variables["button_width"] / 2, int(screen_height) / 2 - int(screen_height) / 4 - (variables["bigfont"] + i * 40 + (variables["bigfont"] / 2, variables["button_width"], (variables["bigfont"] + 5 ), 0, 0, (variables["button_border_radius"], (variables["button_border_radius"], (variables["button_border_radius"], variables["button_border_radius"])))))))
+            pg.draw.rect(screen , (Button_frame_color), (
+            int(variables["screen_width"] ) /  2 -variables["button_width"]/ 2, 
+            int(screen_height) / 2 - int(screen_height) / 4 -(variables["bigfont"] +variables["screen_width"] * 40 +(variables["bigfont"] / 2 ,variables["button_width"], 
+            (variables["bigfont"] + 5 ), 2, 0, (variables["button_border_radius"], (variables["button_border_radius"], (variables["button_border_radius"] , variables["button_border_radius"])))))))    
+            screen.blit(show_mods_count, (int(variables["screen_width"] ) /  2 -variables["button_width"] / 2 + 75, int(screen_height) / 2 - int(screen_height) / 4 -(variables["bigfont"] + 3 * 40 +(variables["bigfont"] / 2 ,variables["button_width"],(variables["bigfont"] )))))
 
 
 def toggle_mods_menu():
     if game_state == 'toggle_mods_menu':
-        for i in range(len(mods_dir_path)):
-            Button = pg.draw.rect(screen , (Button_color) , (int(variables["screen_width"] ) /  2 -variables["button_width"]/ 2 , int(screen_height) / 2 - int(screen_height) / 4 -(variables["bigfont"] + i * 40 +(variables["bigfont"] / 2 ,variables["button_width"],(variables["bigfont"] + 5 ) , 0 , 0 ,(variables["button_border_radius"] ,(variables["button_border_radius"] ,(variables["button_border_radius"] , button_border_radius)            
-            screen.blit(mods_dir_path[i]                      , (int(variables["screen_width"] ) /  2 -variables["button_width"]/ 2 , int(screen_height) / 2 - int(screen_height) / 4 -(variables["bigfont"] + i * 40 +(variables["bigfont"] / 2 ,variables["button_width"],(variables["bigfont"] ))
-            pg.draw.rect(screen , (Button_frame_color)    , (int(variables["screen_width"] ) /  2 -variables["button_width"]/ 2 , int(screen_height) / 2 - int(screen_height) / 4 -(variables["bigfont"] +variables["screen_width"] * 40 +(variables["bigfont"] / 2 ,variables["button_width"],(variables["bigfont"] + 5 ) , 2 , 0 ,(variables["button_border_radius"] ,(variables["button_border_radius"] ,(variables["button_border_radius"] , button_border_radius)
-
+        for i in range(len(dirs_dict["mods_dir_path"])):
+            Button = pg.draw.rect(screen, (Button_color), (int(variables["screen_width"]) /  2 - variables["button_width"] / 2, int(screen_height) / 2 - int(screen_height) / 4 - (variables["bigfont"] + i * 40 + (variables["bigfont"] / 2 , variables["button_width"],(variables["bigfont"] + 5 ) , 0 , 0 ,(variables["button_border_radius"] ,(variables["button_border_radius"], (variables["button_border_radius"], variables["button_border_radius"])))))))            
+            screen.blit(dirs_dict["mods_dir_path"][i], (int(variables["screen_width"] ) /  2 -variables["button_width"]/ 2, int(screen_height) / 2 - int(screen_height) / 4 - (variables["bigfont"] + i * 40 + (variables["bigfont"] / 2 ,variables["button_width"],(variables["bigfont"] )))))
+            pg.draw.rect(screen, (Button_frame_color), (int(variables["screen_width"] ) /  2 -variables["button_width"] / 2, int(screen_height) / 2 - int(screen_height) / 4 - (variables["bigfont"] + variables["screen_width"] * 40 + (variables["bigfont"] / 2, variables["button_width"],(variables["bigfont"] + 5 ) , 2 , 0 , (variables["button_border_radius"] ,(variables["button_border_radius"] ,(variables["button_border_radius"] , variables["button_border_radius"])))))))
 
 
 def text_updating(): 
     global new_craft,new_quest,checkpoints_list,achievements_list,hero_inventory_nums,show_game_state,ok
     global apply,cancel,action_counter,checkpoints_file1,dialoge_started,achievements_file1,checkpoint_size,dialoge_num,action,checkpoint_num
-    global titles_list,variables["menus_dir"]
-    hero_inventory = [] ; hero_inventory_nums = [] ; hero_inventory_file_name = 'txt/langs/' + str(language) + '/Hero inventory.txt' ; hero_inventory_file_mode = 'r' ; hero_inventory_file = open (hero_inventory_file_name , hero_inventory_file_mode , encoding= "utf-8") ; hero_inventory_file1 = hero_inventory_file.readlines()
+    global titles_list,menus_dir
+    global vol_limit,frame1,frame2
+    global fuel,listen_midi,frame1,frame2
+
+
+    hero_inventory = [] ; hero_inventory_nums = [] ; hero_inventory_file_name = 'txt/langs/' + str(variables["language"]) + '/Hero inventory.txt' ; hero_inventory_file_mode = 'r' ; hero_inventory_file = open (hero_inventory_file_name , hero_inventory_file_mode , encoding= "utf-8") ; hero_inventory_file1 = hero_inventory_file.readlines()
+    
+    
     text = "Пример"
     text_surface = big_font.render(text, True, (255, 255, 255))  # белый текст
     rotated_surface = pg.transform.rotate(text_surface, variables["fuel"])  # поворот на 45 градусов
@@ -589,7 +588,6 @@ def text_updating():
     new_craft = small_font.render('Uus' , False , small_font_color ) ; ok = small_font.render('OK' , False , small_font_color ) ; apply = small_font.render('Apply'  , False , small_font_color) ; cancel = small_font.render('Tagasi'  , False , small_font_color)
     show_game_state = big_font.render('Menüü' , False , small_font_color)
 
-    global vol_limit,frame1,frame2
     import pyaudio, numpy as np
 
     pa = pyaudio.PyAudio()
@@ -599,20 +597,15 @@ def text_updating():
     vol_limit = 400
     volume = np.abs(data).mean()
     print(f" Громкость микрофона : int({volume})")
-    if volume > vol_limit :     print(f" ГРОМКО! : int({volume})")
+    if volume > vol_limit :
+        print(f" ГРОМКО! : int({volume})")
 
 
-            
-
-
-
-        global variables["fuel"],listen_midi,frame1,frame2
         print("доступные миди устройства: ")
         
-        for num,i in enumerate(mido.get_input_names()):
+        for num, i in enumerate(mido.get_input_names()):
             print(f"устройство {num} : {i}")# можно выбрать по индексу или строке
         print()
-
 
         # выбираем устройство
         midi_device = 7 ; port_name = mido.get_input_names()[int(midi_device)]  # можно выбрать по индексу или строке
@@ -627,17 +620,17 @@ def text_updating():
                     if midi_device == 0:
                         if msg.type == "control_change" and msg.control  == 30:
                             variables["fuel"] += 1
-                            print(f"variables["fuel"]: {variables["fuel"]}")
+                            print(f"variables['fuel']: {variables["fuel"]}")
                         
                         if msg.type == "note_on" and msg.note == 55:
                                 print(f"включаем {port_name}")
                                 listen_midi = 1
-                                sleep(1)
+                                time.sleep(1)
 
                         if msg.type == "note_on" and msg.note == 55:
                                 print(f"выключаем {port_name}")
                                 listen_midi = 0
-                                sleep(1)
+                                time.sleep(1)
 
 
 

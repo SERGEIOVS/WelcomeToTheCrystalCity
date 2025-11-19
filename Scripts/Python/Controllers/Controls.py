@@ -29,7 +29,7 @@ for x in range(variables["dots_num"]):
 
 (
 
-[400 + variables["sea_size"] * math.cos(math.radians(x*10)) + random.randint(0,10) , 400 + sea_size// sea_scale * math.sin(math.radians(x*10)) + random.randint(0,10)]
+[400 + variables["sea_size"] * math.cos(math.radians(x*10)) + random.randint(0,10) , 400 + variables["sea_size"] // variables["sea_scale"] * math.sin(math.radians(x*10)) + random.randint(0,10)]
 
 )
 
@@ -85,7 +85,7 @@ def mini_map_keyboard_controls():
 if event.type == pg.MOUSEBUTTONDOWN:
             
             #shooting
-            if event.button == 1 and int(ammo) > 0  and int(ammo) <= max_ammo and game_state == 'Play' and map_size == variables["min_map_size"] :
+            if event.button == 1 and int(ammo) > 0  and int(ammo) <= max_ammo and variables["game_state"]  == 'Play' and map_size == variables["min_map_size"] :
                 ammo -= 1
                 gun_shot = pg.mixer.Sound( 'Audio/sounds/firegun/single/0.mp3' )
                 gun_shot.play()
@@ -96,14 +96,14 @@ if event.type == pg.MOUSEBUTTONDOWN:
                 hero            = 'Objects/Characters/Hero/'     + str(name) + '/' + str(state) + '/' + str(turn) + '/' + str(animation) + '.png'
                 hero_x , hero_y = int(screen_width) / 2  - heroimage.width / 2 , int(screen_height)  / 2 - heroimage.height / 2
 
-            if event.button     == 1 and int(ammo) <= 1 and game_state == 'Play' and map_size == variables["min_map_size"]:
+            if event.button     == 1 and int(ammo) <= 1 and variables["game_state"]  == 'Play' and map_size == variables["min_map_size"]:
                 show_hero_armor = big_font.render('armor : ' + str(armor).strip() + " / " + str( max_armor).strip() , False , ( 250 , 0, 0  ) ) ; show_ammo = big_font.render('ammo : ' + str(ammo).strip() + " / " + str(max_ammo * mags).strip() , False , ( 250 , 0 , 0 ) ) ; show_health = big_font.render('health : ' + str(health).strip() + " / " + str(max_health).strip() , False , ( 255 , 0 , 0 ) ) ; show_radiation  = big_font.render('radiation : ' + str(radiation).strip() + " / " + str(max_radiation).strip() , False , ( 255 , 0 , 0 ) )
                 ammo -= 1 ; gun_shot = pg.mixer.Sound( 'Audio/sounds/firegun/single/0.mp3' ) ; gun_shot.play()
 
             #if event.button == 1 and pos[0] >= cancel_icon_x and pos[0] <= cancel_icon_x + cancel_icon.get_width() and pos[1] >= cancel_icon_y and pos[1] <= cancel_icon_y + cancel_icon.get_height() and game_state == 'Play' and vihicle_sit == 1:
             #    vihicle_sit =  0
 
-            if event.button == 3 and pos[0] >= hero_x and pos[0] <= hero_x + hero_image.get_width() and pos[1] >=  hero_y and pos[1] <= hero_y + hero_image.get_height() and variables["open_backpack"] == 0 and game_state == 'Play':                
+            if event.button == 3 and pos[0] >= hero_x and pos[0] <= hero_x + hero_image.get_width() and pos[1] >=  hero_y and pos[1] <= hero_y + hero_image.get_height() and variables["open_backpack"] == 0 and variables["game_state"]  == 'Play':                
                 game_state = 'Backpack'
             
 
@@ -219,7 +219,7 @@ if event.type == pg.MOUSEBUTTONDOWN:
             if game_state == 'Backpack':
                 if event.button == 1 and active_button == 1 : game_state = 'Play' ; click_sound.play()
                 if event.button == 4 and active_button >= 1 and pos[0] >= int(screen_width) / 2 : active_button -= 1 ; click_sound.play() 
-                if event.button == 5 and active_button <= len(dirs_dict["menus_dir") -2 and pos[0] >= int(screen_width) / 2 : active_button += 1 ; click_sound.play()
+                if event.button == 5 and active_button <= len(dirs_dict["menus_dir"]) -2 and pos[0] >= int(screen_width) / 2 : active_button += 1 ; click_sound.play()
 
 
 
@@ -240,22 +240,22 @@ if event.type == pg.MOUSEBUTTONDOWN:
 
 
 
-                if event.button == 5 and active_button  <= len(settings_file1) -2 and pos[0] <= int(screen_width) / 2 : active_button += 1 ; click_sound.play()
+                if event.button == 5 and active_button  <= len(files_dict["settings_file1"]) -2 and pos[0] <= int(screen_width) / 2 : active_button += 1 ; click_sound.play()
                 
-                if event.button == 5 and active_button1  <= len(settings_file1) -2 and pos[0] >= int(screen_width) / 2 : active_button1 += 1 ; click_sound.play()
+                if event.button == 5 and active_button1  <= len(files_dict["settings_file1"]) -2 and pos[0] >= int(screen_width) / 2 : active_button1 += 1 ; click_sound.play()
 
-                if event.button == 5 and active_button == 3 and active_button1  <= len(menus_dir) -2 and pos[0] >= int(screen_width) / 2 : active_button1 += 1 ; click_sound.play()
+                if event.button == 5 and active_button == 3 and active_button1  <= len(dirs_dict["menus_dir"]) -2 and pos[0] >= int(screen_width) / 2 : active_button1 += 1 ; click_sound.play()
     
 
 if game_state == 'Play':
         player_movement()
         keys = pg.key.get_pressed()
         if keys[pg.K_e] and vihicle_sit == 1 : Open_unit_inventory()
-        if keys [pg.K_ESCAPE]   and open_backpack == 1: open_backpack  = 0
-        if keys [reload_btn] and mags >= 1 : reloadsound = pg.mixer.Sound( 'Audio/sounds/firegun/reload.mp3' ) ; reloadsound.play() ; mags -= 1 ; hero_file_name = 'txt/hero.txt' ; hero_file_mode = 'w' ; hero_file = open (hero_file_name , hero_file_mode) ; hero_file.write(str(mags)) ; hero_file.write(str(health)) ; hero_file.write(str(health)) ; hero_file.write(str(health)) ; hero_file.write(str(mags)) ; hero_file.write(str(mags)) ; hero_file.close() ; ammo = max_ammo ; show_ammo  = big_font.render(str(ammo) + " / "  + str( ammo * mags ) , False , colors[2] ) ; show_armor = big_font.render(str(armor).strip() + " / "  + str( max_armor ).strip() , False , ( 250 , 0, 0 ) ) ; show_health    = big_font.render(str(health).strip()     + " / "  + str( max_health ).strip() , False , ( 255 , 0 , 0 ) ) ; show_radiation = big_font.render(str(radiation ).strip() + " / "  + str( max_radiation ).strip() , False , ( 255 , 0 , 0 ) ) ; cursor = pg.image.load( 'Interface/icons/refresh_icon.png' )
+        if keys [pg.K_ESCAPE]   and variables["open_backpack"] == 1: open_backpack  = 0
+        if keys [reload_btn] and mags >= 1 : reloadsound = pg.mixer.Sound( 'Audio/sounds/firegun/reload.mp3' ) ; reloadsound.play() ; mags -= 1 ; hero_file_name = 'txt/hero.txt' ; hero_file_mode = 'w' ; hero_file = open (hero_file_name , hero_file_mode) ; hero_file.write(str(mags)) ; hero_file.write(str(health)) ; hero_file.write(str(health)) ; hero_file.write(str(health)) ; hero_file.write(str(mags)) ; hero_file.write(str(mags)) ; hero_file.close() ; ammo = max_ammo ; show_ammo  = big_font.render(str(ammo) + " / "  + str( ammo * mags ) , False , lists["colors"][2] ) ; show_armor = big_font.render(str(armor).strip() + " / "  + str( max_armor ).strip() , False , ( 250 , 0, 0 ) ) ; show_health    = big_font.render(str(health).strip()     + " / "  + str( max_health ).strip() , False , ( 255 , 0 , 0 ) ) ; show_radiation = big_font.render(str(radiation ).strip() + " / "  + str( max_radiation ).strip() , False , ( 255 , 0 , 0 ) ) ; cursor = pg.image.load( 'Interface/icons/refresh_icon.png' )
         if keys [screenshot_btn ] : make_screenshot() ; logging.info( msg = 'SCREENSHOT SAVED!') ; print('Screenshot saved ! ')
 
-        if keys [pg.K_f] : fuel += 0.1 ; show_fuel = big_font.render('Fuel  : ' + str(fuel)    , False , small_font_color ) ; print('Fuel : ' , fuel)
+        if keys [pg.K_f] : variables["fuel"] += 0.1 ; show_fuel = big_font.render('Fuel  : ' + str(variables["fuel"])    , False , small_font_color ) ; print('Fuel : ' , variables["fuel"])
         
         if keys [pg.K_g  ] and keys[pg.K_LCTRL]  : toggle_god_mode() ;  spawn_sound.play() #GOD MODE - no damage , no limit etc
         if keys[back_btn]  : bg_image = bg_images[ random.randint( 0 , len(bg_images) - 1 ) ] ; game_state = 'Main_menu'
@@ -337,15 +337,15 @@ def player_movement():
 
 
     #список доступных джойстиков
-    joystick_count = pg.joystick.get_count()
-    print(f"Найдено джойстиков: {joystick_count}")
+joystick_count = pg.joystick.get_count()
+print(f"Найдено джойстиков: {joystick_count}")
 
-    if joystick_count > 0:
+if joystick_count > 0:
                     joystick = pg.joystick.Joystick(0)
                     joystick.init()
-    print(f"Использую: {joystick.get_name()}")
+print(f"Использую: {joystick.get_name()}")
 
-    if event.type == pg.JOYBUTTONDOWN:
+if event.type == pg.JOYBUTTONDOWN:
             print(f"{event.button}")
             if event.button == 0:
                 if welcome_num  < len(welcome_speech_dir) - 1 :
@@ -355,7 +355,7 @@ def player_movement():
                 else:
                     welcome_num = 0
                                 
-                    welcome = pg.mixer.Sound(f'Audio/speech/langs/{language}/welcome/{int(welcome_num)}.mp3')
+                    welcome = pg.mixer.Sound(f'Audio/speech/langs/{variables["language"]}/welcome/{int(welcome_num)}.mp3')
 
                 welcome.play()
 
@@ -364,7 +364,7 @@ def player_movement():
 #    info = p.get_device_info_by_index(i)
 #    print(i, info["name"])
 
-"""
+
 
 
 angle = 60
@@ -400,19 +400,17 @@ for x in range(36):
 
 )
 
+screen.fill(variables["BG_COLOR"])
+pg.draw.polygon(screen, variables["BLUE"] , dots)
+pg.draw.polygon(screen, (10,60,0) , rocks)
 
-    screen.fill(BG_COLOR)
-    pygame.draw.polygon(screen, BLUE , dots)
-    pygame.draw.polygon(screen, (10,60,0) , rocks)
-
+pg.draw.circle(screen, (10,100,0), (300 ,300), 4)
     
-    pygame.draw.circle(screen, (10,100,0), (300 ,300), 4)
-    
-    for x in range(36):
-        pygame.draw.circle(screen, (255,0,0), (300 + sea_size * math.cos(math.radians(x*10)) ,300 + sea_size  // 2 * math.sin(math.radians(x*10))), 3)
+for x in range(36):
+        pg.draw.circle(screen, (255,0,0), (300 + sea_size * math.cos(math.radians(x*10)) ,300 + sea_size  // 2 * math.sin(math.radians(x*10))), 3)
 
 
-"""
+
 
 
 
@@ -428,32 +426,32 @@ class cameras:
     def move( self , vector ) : self.rect[0] += hero_path_lenght * -math.cos(hero_path_angle) / 100 ; self.rect[1] += hero_path_lenght * -math.sin(hero_path_angle) / 100
 
 camera1  = cameras(int(camera_x) + hero_path_lenght * -math.cos(hero_path_angle)                                         , int(camera_x) + hero_path_lenght * -math.sin(hero_path_angle)                                         )
-camera2  = cameras(int(camera_x) + hero_path_lenght * -math.cos(hero_path_angle) +int(screen_file1[0].split(',')[0]) /2  , int(camera_x) + hero_path_lenght * -math.sin(hero_path_angle) + int(screen_file1[0].split(',')[1]) /2 )
-camera3  = cameras(int(camera_x) + hero_path_lenght * -math.cos(hero_path_angle) +int(screen_file1[0].split(',')[0]) /2  , int(camera_x) + hero_path_lenght * -math.sin(hero_path_angle) + int(screen_file1[0].split(',')[1]) /2 )
-camera4  = cameras(int(camera_x) + hero_path_lenght * -math.cos(hero_path_angle) +int(screen_file1[0].split(',')[0]) /2  , int(camera_x) + hero_path_lenght * -math.sin(hero_path_angle) + int(screen_file1[0].split(',')[1]) /2 )
+camera2  = cameras(int(camera_x) + hero_path_lenght * -math.cos(hero_path_angle) +int(files_dict["screen_file1"][0].split(',')[0]) /2  , int(camera_x) + hero_path_lenght * -math.sin(hero_path_angle) + int(files_dict["screen_file1"][0].split(',')[1]) /2 )
+camera3  = cameras(int(camera_x) + hero_path_lenght * -math.cos(hero_path_angle) +int(files_dict["screen_file1"][0].split(',')[0]) /2  , int(camera_x) + hero_path_lenght * -math.sin(hero_path_angle) + int(files_dict["screen_file1"][0].split(',')[1]) /2 )
+camera4  = cameras(int(camera_x) + hero_path_lenght * -math.cos(hero_path_angle) +int(files_dict[0].split(',')[0]) /2  , int(camera_x) + hero_path_lenght * -math.sin(hero_path_angle) + int(files_dict["screen_file1"][0].split(',')[1]) /2 )
 
 
 print()
 print()
 print()
 
-print(f'menus dir files: {os.listdir(menus_dir)}')
+print(f'menus dir files: {os.listdir(dirs_dict["menus_dir"])}')
 
 print()
 print()
 print()
 
-print(f'obj dir files : {os.listdir(obj_dir)  }')
+print(f'obj dir files : {os.listdir(dirs_dict["obj_dir"])  }')
 
 print()
 
-for i in os.listdir(menus_dir) : print(f'menus_dir file: {i}')
+for i in os.listdir(dirs_dict["menus_dir"]) : print(f'menus_dir file: {i}')
 
 print()
 print()
 print()
 
-for i in os.listdir(obj_dir) : print(f'obj_dir : {i}')
+for i in os.listdir(dirs_dict["obj_dir"]) : print(f'obj_dir : {i}')
 
 print()
 print()
@@ -466,12 +464,12 @@ listen_midi = 0
 
 vector = [ 0 , 0]#cam vectors
 
-if mods_dir_path not in sys.path : sys.path.append(mods_dir_path)
-if mods_dir_path in sys.path : print() ; print() ; print('mods folder added ! ')
+if dirs_dict["mods_dir_path"] not in sys.path : sys.path.append(dirs_dict["mods_dir_path"])
+if dirs_dict["mods_dir_path"] in sys.path : print() ; print() ; print('mods folder added ! ')
 
-print(os.listdir(mods_dir_path))
+print(os.listdir(dirs_dict["mods_dir_path"]))
 
-for i in range(10) : MyShapes.append('circle') ; MyShapes.append('square') ; MyShapes.append('triangle') ; MyShapes.append('rectangle')    
+#for i in range(10) : MyShapes.append('circle') ; MyShapes.append('square') ; MyShapes.append('triangle') ; MyShapes.append('rectangle')    
 
         
 multiplayer = 1
@@ -479,8 +477,8 @@ clock = pg.time.Clock() ; FPS = 60 ; clock.tick(FPS)
 hide_nicknames = 0 ; ground = 1 ; floor = 0 
 fuel_bar_width = 100
 
-for i in custom_checkpoints_list:
-    i = mini_map_font_size.render('Custom checkpoint' + int(i) , False , small_font_color ) 
+#for i in custom_checkpoints_list:
+#    i = mini_map_font_size.render('Custom checkpoint' + int(i) , False , small_font_color ) 
 
 interface_images = []
 game_modes_file = open('txt/menus/Game_modes.txt','r') ; game_modes_file1 = game_modes_file.readlines() ; game_modes  = ['Survival' , 'God mode' , 'Hardcore'] ; game_modes1 = [] ; game_mode_num = 0 ; game_mode = game_modes_file1[game_mode_num]
@@ -496,18 +494,18 @@ difficulties_modes_file = open('txt/menus/difficulties.txt','r')
 
 necessary_craft_items = [] ; prices_list  = [] ; prices_list1 = [] 
 
-for i in range(len(prices_file1)) : prices_list.append(prices_file1[i])
-for i in range(len(prices_list))  : i = big_font.render('Price : ' + prices_file1[i].strip() , False , small_font_color ) ; prices_list1.append(i)     
+for i in range(len(files_dict["prices_file1"])) : prices_list.append(files_dict["prices_file1"][i])
+for i in range(len(prices_list))  : i = big_font.render('Price : ' + files_dict["prices_file1"][i].strip() , False , small_font_color ) ; prices_list1.append(i)     
 
-minimap_grid_width = 100 ; minimap_grid_height = 100 ; min_map_size = 3 ; max_map_size = 1.2 ; mini_map_grid_cell_size = meter * map_scale
+minimap_grid_width = 100 ; minimap_grid_height = 100 ; min_map_size = 3 ; max_map_size = 1.2 ; mini_map_grid_cell_size = measure_units["meter"] * map_scale
 
 cursor_types = ['Default' , 'Custom'] ; cursor_num = 0 ; cursor_type = cursor_types[cursor_num]
 
 hero_inventory_types = ['Grid' , 'Circle'] ; hero_inventory_num = 0 ; hero_inventory_type = hero_inventory_types[hero_inventory_num] ; hero_marker_color = (255 , int(255 / 2) , 0)
 
-room_height , room_width = 3 * meter  , 5 * meter ; room_size   = room_height * room_width ; walll_size  = 22
+room_height , room_width = 3 * measure_units["meter"]  , 5 * measure_units["meter"] ; room_size   = room_height * room_width ; walll_size  = 22
 
-sidewalk_width , sidewalk_height = 3 * meter , 3 * meter
+sidewalk_width , sidewalk_height = 3 * measure_units["meter"] , 3 * measure_units["meter"]
 
 hero_path_lenght  = 90 ; hero_path_angle  = 90 ; hero_path_lenght1 = 90 ; hero_path_angle1 = 90 ; unit_path_lenght = 90 ; unit_path_angle = 90
 
