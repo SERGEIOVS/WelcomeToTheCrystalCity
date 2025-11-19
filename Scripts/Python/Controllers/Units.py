@@ -1,13 +1,22 @@
 import pygame as pg ; from PIL import Image ; import random ; import os ; import sys;import sqlite3
 from PIL import Image
-from Settings import *
+
+from pathlib import Path
+
+# путь к Scripts/Python
+sys.path.append(str(Path(__file__).resolve().parent))
+
+from Controllers.Settings import saving_type,screen_width,screen_height,variables
 
 
 pg.font.init() 
 
 
 
-hero_file_name = 'txt/Objects/' + str(saving_type) + '/characters/Hero.txt'   ; hero_file_mode = 'r' ; hero_file = open (hero_file_name , hero_file_mode) ; hero_file1 = hero_file.readlines() ; hero_file.close()
+hero_file_name = 'txt/Objects/' + str(saving_type) + '/characters/Hero.txt'
+hero_file_mode = 'r'
+hero_file = open (hero_file_name , hero_file_mode)
+hero_file1 = hero_file.readlines() ; hero_file.close()
 hero_belt_inventory_images = []
 hero_backpack_inventory_images = []
 
@@ -22,7 +31,7 @@ pistol_mags , max_pistol_mags = 3 , 3 ; pistol_ammo , pistol_max_ammo  = int(her
 hero_image1 = pg.image.load( 'Objects/Characters/Hero/' + str(name) + '/' + str(state) + '/' + str(turn) + '/' + str(animation) + '.png') ; heroimage = Image.open('Objects/Characters/Hero/' + str(name) + '/' + str(state) + '/' + str(turn) + '/' + str(animation) + '.png')
 hero_x , hero_y = int(screen_width) / 2 - heroimage.width / 2 , int(screen_height)  / 2 - heroimage.height / 2
 herojump , herojumpcounter = False , 10 ; jump_height = 6 # you can not jump , jump height
-scaled_image = pg.transform.scale(rot_hero, (hero_image.get_width() * scale_factor, hero_image.get_height() * scale_factor))
+scaled_image = pg.transform.scale(variables["rot_hero"], (variables["hero_image"].get_width() * variables["scale_factor"], variables["hero_image"].get_height() * variables["scale_factor"]))
 
 hero_night_vision   = 0
 hero_skills         = [ 'fast run' , 'night vision']
@@ -31,16 +40,16 @@ hero                = 'Objects/Characters/characters/Hero/' + str(name) + '/' + 
 hero_image          = pg.image.load( 'Objects/Characters/Hero/' + str(name) + '/' + str(state) + '/' + str(turn) + '/' + str(animation) + '.png') ; heroimage = Image.open('Objects/Characters/Hero/' + str(name) + '/' + str(state) + '/' + str(turn) + '/' + str(animation) + '.png')
 hero_money_used = 0 
 hero_money = 1000 - hero_money_used ; currency = 'Coins'
-show_money = small_font.render('$ : ' + str(hero_money) , False , ( 250 , 0 , 0 ) )
+show_money = variables["small_font"].render('$ : ' + str(hero_money) , False , ( 250 , 0 , 0 ) )
 hero_x , hero_y     = int(screen_width) / 2  - heroimage.width / 2 , int(screen_height)  / 2 - heroimage.height / 2
 
 Hero_types = os.listdir('Objects/Characters/Hero/')
 Hero_types_list = []
-show_speed  = big_font.render('Speed : ' + str(hero_speed)     , False , small_font_color ) ; add = big_font.render('+', False , small_font_color ) ; remove = big_font.render('-' , False , small_font_color ) ; new_craft = small_font.render('Create' , False , small_font_color ) ; ok = small_font.render('OK' , False , small_font_color ) ; apply = small_font.render('Apply' , False , small_font_color) ; cancel = small_font.render('Cancel' , False , small_font_color)
+show_speed  = variables["big_font"].render('Speed : ' + str(hero_speed)     , False , variables["small_font_color"] ) ; add = variables["big_font"].render('+', False , variables["small_font_color"] ) ; remove = variables["big_font"].render('-' , False , variables["small_font_color"] ) ; new_craft = variables["small_font"].render('Create' , False , variables["small_font_color"] ) ; ok = variables["small_font"].render('OK' , False , variables["small_font_color"] ) ; apply = variables["small_font"].render('Apply' , False , variables["small_font_color"]) ; cancel = variables["small_font"].render('Cancel' , False , variables["small_font_color"])
 hero_path_lenght  = 90 ; hero_path_angle  = 90 ; hero_path_lenght1 = 90 ; hero_path_angle1 = 90 ; unit_path_lenght = 90 ; unit_path_angle = 90
 
-show_hero_armor = big_font.render( str( armor     ).strip() + " / " + str( max_armor       ).strip() , False , ( 250 , 0 , 0 ) ) ; show_ammo    = big_font.render( str( ammo  ).strip()     + " / " + str( max_ammo * mags ).strip() , False , ( 250 , 0 , 0 ) ) ; show_health = big_font.render( str( health ).strip()    + " / " + str( max_health).strip() , False , ( 255 , 0 , 0 ) )
-show_radiation  = big_font.render( str( radiation ).strip() + " / " + str( max_radiation   ).strip() , False , ( 255 , 0 , 0 ) ) ; show_energy  = big_font.render( str( energy).strip()     + ' / ' + str( max_energy      ).strip() , False , ( 255 , 0 , 0 ) )
+show_hero_armor = variables["big_font"].render( str( armor     ).strip() + " / " + str( max_armor       ).strip() , False , ( 250 , 0 , 0 ) ) ; show_ammo    = variables["big_font"].render( str( ammo  ).strip()     + " / " + str( max_ammo * mags ).strip() , False , ( 250 , 0 , 0 ) ) ; show_health = variables["big_font"].render( str( health ).strip()    + " / " + str( max_health).strip() , False , ( 255 , 0 , 0 ) )
+show_radiation  = variables["big_font"].render( str( radiation ).strip() + " / " + str( max_radiation   ).strip() , False , ( 255 , 0 , 0 ) ) ; show_energy  = variables["big_font"].render( str( energy).strip()     + ' / ' + str( max_energy      ).strip() , False , ( 255 , 0 , 0 ) )
 nicknames_file_name = 'txt/nicknames.txt' ; nicknamesfile_mode = 'r' ; nicknames_file = open (nicknames_file_name , nicknamesfile_mode) ; nicknames_file1 = nicknames_file.readlines() ; nicknameslist = []
 
 class Companions:
@@ -245,7 +254,8 @@ class Enemy:
         self.angle +=10
 
     
-    #def take_dmg(30):
+    def take_dmg():
+        variables["hero_damage"] -= 30
 
 
 # Путь к изображению

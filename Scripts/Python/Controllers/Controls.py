@@ -1,14 +1,22 @@
 import sys , os
 import pygame as pg ; from PIL import Image ; from Units import * ; from logging import *; 
-from Vehicles import * ; import pyautogui ;
-from Scripts.Python.Controllers.Background import * ; import math;import numpy as np
+import pyautogui ;
 import time ; from Items import *
 import pprint
 import cv2
 import mido
 from pygame.locals import *
+
+from pathlib import Path
+
+# путь к Scripts/Python
+sys.path.append(str(Path(__file__).resolve().parent))
+from Controllers.Vehicles import * 
 import pyaudio
-from Scripts.Python.Controllers.Funcs import welcome_speech_dir,cancel_icon,click_sound,spawn_sound,active_button,active_button1,text_updating,Open_unit_inventory,make_screenshot,toggle_god_mode,bg_images,screenshot_btn,back_btn,reload_btn,player_movement
+from Controllers.Funcs import welcome_speech_dir,cancel_icon,click_sound,spawn_sound,active_button,active_button1,text_updating,Open_unit_inventory,make_screenshot,toggle_god_mode,bg_images,screenshot_btn,back_btn,reload_btn,player_movement
+from Controllers.Background import * ; import math;import numpy as np
+
+
 
 pg.init()
 pg.joystick.init()
@@ -16,12 +24,12 @@ p = pyaudio.PyAudio()
 
 
 
-for x in range(dots_num):
-            dots.append(
+for x in range(variables["dots_num"]):
+            variables["dots"].append(
 
 (
 
-[400 + sea_size * math.cos(math.radians(x*10)) + random.randint(0,10) , 400 + sea_size// sea_scale * math.sin(math.radians(x*10)) + random.randint(0,10)]
+[400 + variables["sea_size"] * math.cos(math.radians(x*10)) + random.randint(0,10) , 400 + sea_size// sea_scale * math.sin(math.radians(x*10)) + random.randint(0,10)]
 
 )
 
@@ -31,12 +39,12 @@ for event in pg.event.get():
         if event.type == pg.QUIT:running = False
 
 
-for x in range(rocks_num):
-            rocks.append(
+for x in range(variables["rocks_num"]):
+            variables["rocks"].append(
 
 (
 
-[400 + rock_size * math.cos(math.radians(x*10)) + random.randint(0,10) , 400 + rock_size//rock_scale * math.sin(math.radians(x*10)) + random.randint(0,10)]
+[400 + variables["rock_size"] * math.cos(math.radians(x*10)) + random.randint(0,10) , 400 + variables["rock_size"] // variables["rock_scale"] * math.sin(math.radians(x*10)) + random.randint(0,10)]
 
 )
 
@@ -47,7 +55,7 @@ def mini_map_keyboard_controls():
     global map_scale , minimap_x , minimap_y , map_size , minimap_horizontal_offset , minimap_vertical_offset , cancel_icon , cancel_icon_x , cancel_icon_y , mini_map_surf
     global minimap_object_offset , minimap_object_offset1
 
-    if show_map == 1 and game_state == 'Play' :
+    if variables["show_map"] == 1 and game_state == 'Play' :
         
         if keys [pg.K_LEFT ] : minimap_object_offset  -= 1 
         if keys [pg.K_RIGHT] : minimap_object_offset  += 1
@@ -77,7 +85,7 @@ def mini_map_keyboard_controls():
 if event.type == pg.MOUSEBUTTONDOWN:
             
             #shooting
-            if event.button == 1 and int(ammo) > 0  and int(ammo) <= max_ammo and game_state == 'Play' and map_size == min_map_size :
+            if event.button == 1 and int(ammo) > 0  and int(ammo) <= max_ammo and game_state == 'Play' and map_size == variables["min_map_size"] :
                 ammo -= 1
                 gun_shot = pg.mixer.Sound( 'Audio/sounds/firegun/single/0.mp3' )
                 gun_shot.play()
@@ -88,14 +96,14 @@ if event.type == pg.MOUSEBUTTONDOWN:
                 hero            = 'Objects/Characters/Hero/'     + str(name) + '/' + str(state) + '/' + str(turn) + '/' + str(animation) + '.png'
                 hero_x , hero_y = int(screen_width) / 2  - heroimage.width / 2 , int(screen_height)  / 2 - heroimage.height / 2
 
-            if event.button     == 1 and int(ammo) <= 1 and game_state == 'Play' and map_size == min_map_size :
+            if event.button     == 1 and int(ammo) <= 1 and game_state == 'Play' and map_size == variables["min_map_size"]:
                 show_hero_armor = big_font.render('armor : ' + str(armor).strip() + " / " + str( max_armor).strip() , False , ( 250 , 0, 0  ) ) ; show_ammo = big_font.render('ammo : ' + str(ammo).strip() + " / " + str(max_ammo * mags).strip() , False , ( 250 , 0 , 0 ) ) ; show_health = big_font.render('health : ' + str(health).strip() + " / " + str(max_health).strip() , False , ( 255 , 0 , 0 ) ) ; show_radiation  = big_font.render('radiation : ' + str(radiation).strip() + " / " + str(max_radiation).strip() , False , ( 255 , 0 , 0 ) )
                 ammo -= 1 ; gun_shot = pg.mixer.Sound( 'Audio/sounds/firegun/single/0.mp3' ) ; gun_shot.play()
 
             #if event.button == 1 and pos[0] >= cancel_icon_x and pos[0] <= cancel_icon_x + cancel_icon.get_width() and pos[1] >= cancel_icon_y and pos[1] <= cancel_icon_y + cancel_icon.get_height() and game_state == 'Play' and vihicle_sit == 1:
             #    vihicle_sit =  0
 
-            if event.button == 3 and pos[0] >= hero_x and pos[0] <= hero_x + hero_image.get_width() and pos[1] >=  hero_y and pos[1] <= hero_y + hero_image.get_height() and open_backpack == 0 and game_state == 'Play':                
+            if event.button == 3 and pos[0] >= hero_x and pos[0] <= hero_x + hero_image.get_width() and pos[1] >=  hero_y and pos[1] <= hero_y + hero_image.get_height() and variables["open_backpack"] == 0 and game_state == 'Play':                
                 game_state = 'Backpack'
             
 
@@ -113,7 +121,7 @@ if event.type == pg.MOUSEBUTTONDOWN:
                         else:
                                 welcome_num = 0
                                 
-                        welcome = pg.mixer.Sound(f'Audio/speech/langs/{language}/welcome/{int(welcome_num)}.mp3')
+                        welcome = pg.mixer.Sound(f'Audio/speech/langs/{variables["language"]}/welcome/{int(welcome_num)}.mp3')
 
                         welcome.play()
 
@@ -131,9 +139,9 @@ if event.type == pg.MOUSEBUTTONDOWN:
                 if event.button == 3 and  pos[0] >=  -camera1.rect[0] + int(vihicles_file1[i].split(',')[0])  and pos[0] <=  -camera1.rect[0] + int(vihicles_file1[i].split(',')[0]) + vihicles_images_list[i].get_width() and pos[1] >=  -camera1.rect[1] + int(vihicles_file1[i].split(',')[1]) and pos[1] <=  -camera1.rect[1] + int(vihicles_file1[i].split(',')[1]) + vihicles_images_list[i].get_height() and vihicle_sit == 0:
                     vihicle_sit = 1 ; camera1.rect[0] = int(vihicles_file1[i].split(',')[0]) - int(screen_width) / 2 ; camera1.rect[1] = int(vihicles_file1[i].split(',')[1]) - int(screen_height) / 2 ; hero_image = vihicles_images_list[i]
             
-            if map_size == min_map_size :  
+            if map_size == variables["min_map_size"]:  
                 if event.button == 4  and item >= 0: item -= 1 ; click_sound.play()
-                if event.button == 5  and item <= len(hero_inventory_file1) - 3 : item += 1 ; click_sound.play()
+                if event.button == 5  and item <= len(files_dict["hero_inventory_file1"]) - 3 : item += 1 ; click_sound.play()
 
             #button 4 or 5 = mouse_wheel_scrolling button 1 = left mouse button button 3 = right mouse button 
             if game_state == 'Main_menu':
@@ -142,22 +150,22 @@ if event.type == pg.MOUSEBUTTONDOWN:
 
             if game_state == 'Play' :
                 if event.button == 2 : game_state = 'Trade_menu' ; print('active buton ', active_button) ; click_sound.play()
-                if map_size == max_map_size :  
+                if map_size == variables["max_map_size"] :  
                         if event.button == 4 : map_scale -= 0.1 ; #draw_mini_map()
                         minimapfontsize = int( 30 / map_scale)
-                        mini_map_font_size = pg.font.SysFont(font_name , minimapfontsize) 
+                        mini_map_font_size = pg.font.SysFont(variables["font_name"] , minimapfontsize) 
                         custom_checkpoint_title = mini_map_font_size.render('Custom checkpoint'    , False , small_font_color ) 
 
                         if event.button == 5 : map_scale += 0.1 ; #draw_mini_map()
                         minimapfontsize = int( 30 / map_scale)
-                        mini_map_font_size = pg.font.SysFont(font_name , minimapfontsize) 
+                        mini_map_font_size = pg.font.SysFont(variables["font_name"] , minimapfontsize) 
                         custom_checkpoint_title = mini_map_font_size.render('Custom checkpoint'    , False , small_font_color ) 
                 
 
                         #if event.button == 1:
-                        if action_counter == 2 : game_state = 'Trade_menu' ;dialoge_started = 0 ; spawn_sound.play() 
-                        if action_counter == 3 : game_state = 'Crafting'   ; dialoge_stated = 0 ; spawn_sound.play() 
-                        if action_counter == 4 : dialoge_started = 0
+                        if variables["action_counter"] == 2 : game_state = 'Trade_menu' ;dialoge_started = 0 ; spawn_sound.play() 
+                        if variables["action_counter"]  == 3 : game_state = 'Crafting'   ; dialoge_stated = 0 ; spawn_sound.play() 
+                        if variables["action_counter"]  == 4 : dialoge_started = 0
                     
 
 
@@ -185,7 +193,7 @@ if event.type == pg.MOUSEBUTTONDOWN:
             if game_state == 'Saves':
                 if event.button == 1 and active_button == 1 : game_state = 'game_mode_select' ; click_sound.play()
                 if event.button == 4 and active_button == 3 and active_button1  >= 1 and pos[0] >= int(screen_width) / 2 : active_button1 -= 1 ; click_sound.play() 
-                if event.button == 5 and active_button == 3 and active_button1  <= len(menus_dir) -2 and pos[0] >= int(screen_width) / 2 : active_button1 += 1 ; click_sound.play()
+                if event.button == 5 and active_button == 3 and active_button1  <= len(dirs_dict["menus_dir"]) -2 and pos[0] >= int(screen_width) / 2 : active_button1 += 1 ; click_sound.play()
             
 
 
@@ -194,7 +202,7 @@ if event.type == pg.MOUSEBUTTONDOWN:
 
                 if event.button == 4 and active_button1  >= 1 and pos[0] >= int(screen_width) / 2 : active_button1 -= 1 ; click_sound.play() 
 
-                if event.button == 5 and active_button1  <= len(menus_dir) -2 and pos[0] >= int(screen_width) / 2 : active_button1 += 1 ; click_sound.play()
+                if event.button == 5 and active_button1  <= len(dirs_dict["menus_dir"]) -2 and pos[0] >= int(screen_width) / 2 : active_button1 += 1 ; click_sound.play()
             
 
 
@@ -204,14 +212,14 @@ if event.type == pg.MOUSEBUTTONDOWN:
 
                 if event.button == 4 and active_button1 >= 1 and pos[0] >= int(screen_width) / 2 : active_button1 -= 1 ; click_sound.play() 
 
-                if event.button == 5 and active_button1 <= len(menus_dir) -2 and pos[0] >= int(screen_width) / 2 : active_button1 += 1 ; click_sound.play()
+                if event.button == 5 and active_button1 <= len(dirs_dict["menus_dir"]) -2 and pos[0] >= int(screen_width) / 2 : active_button1 += 1 ; click_sound.play()
 
 
 
             if game_state == 'Backpack':
                 if event.button == 1 and active_button == 1 : game_state = 'Play' ; click_sound.play()
                 if event.button == 4 and active_button >= 1 and pos[0] >= int(screen_width) / 2 : active_button -= 1 ; click_sound.play() 
-                if event.button == 5 and active_button <= len(menus_dir) -2 and pos[0] >= int(screen_width) / 2 : active_button += 1 ; click_sound.play()
+                if event.button == 5 and active_button <= len(dirs_dict["menus_dir") -2 and pos[0] >= int(screen_width) / 2 : active_button += 1 ; click_sound.play()
 
 
 
@@ -328,7 +336,28 @@ def player_movement():
 
 
 
+    #список доступных джойстиков
+    joystick_count = pg.joystick.get_count()
+    print(f"Найдено джойстиков: {joystick_count}")
 
+    if joystick_count > 0:
+                    joystick = pg.joystick.Joystick(0)
+                    joystick.init()
+    print(f"Использую: {joystick.get_name()}")
+
+    if event.type == pg.JOYBUTTONDOWN:
+            print(f"{event.button}")
+            if event.button == 0:
+                if welcome_num  < len(welcome_speech_dir) - 1 :
+
+                    welcome_num += 0.5
+                            
+                else:
+                    welcome_num = 0
+                                
+                    welcome = pg.mixer.Sound(f'Audio/speech/langs/{language}/welcome/{int(welcome_num)}.mp3')
+
+                welcome.play()
 
 
 #for i in range(p.get_device_count()):

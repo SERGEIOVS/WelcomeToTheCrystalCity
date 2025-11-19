@@ -1,9 +1,16 @@
 import pygame as pg
 from PIL import Image
 import os
-from Settings import *
 import math
-import pygame as pg , os ; from Settings import * ;
+import pygame as pg , os
+import sys
+from pathlib import Path
+
+# путь к Scripts/Python
+sys.path.append(str(Path(__file__).resolve().parent))
+
+
+from Controllers.Settings import *
 
 class Background:
     def __init__(self , x , y , image) :
@@ -15,11 +22,11 @@ class Background:
 #i = Background( islands_file1[i].split(',')[0] , islands_file1[i].split(',')[1] , islands_images[0] )
 #islands_list.append( i )
 
-BGcolor   = colors[0] ; minimapBGcolor = colors[0]
+BGcolor   = lists["colors"][0] ; minimapBGcolor = lists["colors"][0]
 screen.fill((BGcolor))
 
 buildings_list = []
-buildings_file_name ='txt/Objects/'+ str(saving_type) + '/Buildings.txt'
+buildings_file_name ='txt/Objects/'+ str(variables["saving_type"]) + '/Buildings.txt'
 buildings_file_mode = 'r'
 buildings_file  = open (buildings_file_name , buildings_file_mode)
 buildings_file1 = buildings_file.readlines()
@@ -44,7 +51,7 @@ for i in range( len ( buildings_file1 ) ) :
     buildings_list.append(i)
 
 Plants_list = []
-Plants_file_name ='txt/Objects/'+ str(saving_type) + '/Buildings.txt'
+Plants_file_name ='txt/Objects/'+ str(variables["saving_type"]) + '/Buildings.txt'
 Plants_file_mode = 'r'
 Plants_file  = open (buildings_file_name , buildings_file_mode)
 Plants_file1 = buildings_file.readlines()
