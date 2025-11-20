@@ -1,4 +1,6 @@
-import pygame as pg
+
+#LogsManager.py
+#import pygame as pg
 import logging,sys
 from pathlib import Path
 
