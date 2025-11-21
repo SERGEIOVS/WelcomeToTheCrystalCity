@@ -6,11 +6,11 @@ from PIL import Image
 import cv2
 import pprint
 
-
 from pathlib import Path
 
 # путь к Scripts/Python
 sys.path.append(str(Path(__file__).resolve().parent))
+
 
 # my custom imorts
 from Controllers.Background import * 
@@ -20,7 +20,7 @@ from Controllers.Vehicles import * ;
 from Controllers.Controls import toggle_main_menu,mini_map_keyboard_controls,mini_map_mouse_controls,player_movement,Trade_menu
 from Controllers.Funcs import start
 from Controllers.Settings import *
-
+from Controllers.LogsManager import logger
 
 
 # inits
@@ -31,6 +31,8 @@ pg.mixer.init()
 
 # Простейший игровой цикл
 running = True
+logger.info("Game started!")
+
 clock = pg.time.Clock()
 
 while running:
@@ -49,4 +51,6 @@ while running:
 
     pg.display.update()
 
+
+logger.info("Game qiut!")
 pg.quit()

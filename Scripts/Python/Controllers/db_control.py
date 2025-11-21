@@ -1,37 +1,39 @@
-import sqlite3,sys
-
+import sys,sqlite3
 from pathlib import Path
 
 # путь к Scripts/Python
 sys.path.append(str(Path(__file__).resolve().parent))
 
+from Controllers.Settings import dirs_dict
 
 # Словарь таблиц: имя таблицы -> список колонок
-tables = {
-    "Buildings": ["title", "category", "size"],
-    "Vehicles": ["name", "type", "speed"]
-}
+
+
+
+
+tables = {i : dirs_dict[i] for i in dirs_dict.keys() }
+
 db_name = input("db_name: ")
+
 # Подключение к базе
-conn = sqlite3.connect(db_name)
+conn   = sqlite3.connect(db_name)
 cursor = conn.cursor()
 
-
-
-
+auto_input = 1
 
 def create_table():
     global table_name
-    table_name = input("table title: ").strip()
+    if auto_input == 1:
 
-    if table_name not in tables:
-        cols = input("Введите имена колонок через запятую: ").split(",")
-        cols = [c.strip() for c in cols]
-        tables[table_name] = cols  # сохраняем колонки
-    columns_def = ", ".join(f"{col} TEXT" for col in tables[table_name])
-    cursor.execute(f'CREATE TABLE IF NOT EXISTS "{table_name}" ({columns_def})')
-    conn.commit()
-    print(f"Таблица '{table_name}' создана или уже существует.")
+        table_name = input("table title: ").strip()
+
+        if table_name not in tables:
+            cols = [c.strip() for c in cols]
+            tables[table_name] = cols  # сохраняем колонки
+        columns_def = ", ".join(f"{col} TEXT" for col in tables[table_name])
+        cursor.execute(f'CREATE TABLE IF NOT EXISTS "{table_name}" ({columns_def})')
+        conn.commit()
+        print(f"Таблица '{table_name}' создана или уже существует.")
 
 
 def insert_into_table(values):

@@ -2,6 +2,7 @@
 import pygame as pg , datetime ; import os , math , logging ;import sys ; import sqlite3 
 import  getpass ;import random
 from pathlib import Path
+
 #custom modules import
 import LogsManager
 
@@ -16,7 +17,7 @@ pg.init() ; pg.font.init()
 
 pos = pg.mouse.get_pos()
 
-dirs_dict= {
+dirs_dict = {
 
 "mods_dir_path" : 'mods',
 
