@@ -9,8 +9,6 @@ from Controllers.Settings import dirs_dict
 # Словарь таблиц: имя таблицы -> список колонок
 
 
-
-
 tables = {i : dirs_dict[i] for i in dirs_dict.keys() }
 
 db_name = input("db_name: ")
@@ -19,25 +17,40 @@ db_name = input("db_name: ")
 conn   = sqlite3.connect(db_name)
 cursor = conn.cursor()
 
+cur_table_name = input("table title: ").strip()
+
+cols   = ["col1",   "col2"  ]
+values = ["value1", "value2"]
+
 auto_input = 1
 
 def create_table():
-    global table_name
-    if auto_input == 1:
+    
+    #глобальное объявление переменных
+    global cur_table_name, cols
 
-        table_name = input("table title: ").strip()
+    #если таблица есть в tables
+    if cur_table_name in tables and tables[cur_table_name]:
+        cols = tables[cur_table_name]
 
-        if table_name not in tables:
-            cols = [c.strip() for c in cols]
-            tables[table_name] = cols  # сохраняем колонки
-        columns_def = ", ".join(f"{col} TEXT" for col in tables[table_name])
-        cursor.execute(f'CREATE TABLE IF NOT EXISTS "{table_name}" ({columns_def})')
+    else:
+        raw  = input("columns (comma separated): ")
+        cols = [c.strip() for c in raw.split(",")]
+        tables[cur_table_name] = cols
+
+    if auto_input == 1:        
+        #        if cur_table_name not in tables:
+        #            tables[cur_table_name] = cols  # сохраняем колонки
+
+        columns_def = ", ".join(f"{col} TEXT" for col in tables[cur_table_name])
+        cursor.execute(f'CREATE TABLE IF NOT EXISTS "{cur_table_name}" ({columns_def})')
         conn.commit()
-        print(f"Таблица '{table_name}' создана или уже существует.")
+        print(f"Таблица '{cur_table_name}' создана или уже существует.")
 
 
-def insert_into_table(values):
-    global cur_table_name
+def insert_into_table():
+    global cur_table_name, values
+
     if cur_table_name not in tables:
         print(f"Таблица '{cur_table_name}' не найдена!")
         return
@@ -46,10 +59,13 @@ def insert_into_table(values):
     cursor.execute(f'INSERT INTO "{cur_table_name}" ({cols}) VALUES ({placeholders})', values)
     conn.commit()
 
+
+
 def show_table():
     global cur_table_name
-    if table_name not in tables:
-        print(f"Таблица '{table_name}' не найдена!")
+
+    if cur_table_name not in tables:
+        print(f"Таблица '{cur_table_name}' не найдена!")
         return
     cursor.execute(f'SELECT * FROM "{cur_table_name}"')
     rows = cursor.fetchall()
@@ -58,17 +74,16 @@ def show_table():
             print(f"{idx}. " + " | ".join(f"{col}={val}" for col, val in zip(tables[cur_table_name], row)))
     else:
         print(f"Таблица '{cur_table_name}' пуста!")
-        cur_table_name = input("table title: ").strip()
-
-        change_table(curtable_name=cur_table_name)
 
 
 def change_table():
-    global cur_table_name,table_name
+    global cur_table_name
     new_table_name = input("table title: ").strip()
+
     if new_table_name in tables:
-        table_name = new_table_name
+        cur_table_name = new_table_name
         print(f"Текущая таблица: {cur_table_name}")
+    else:print(f"Table '{new_table_name}' is not defined!")
 
     
     
